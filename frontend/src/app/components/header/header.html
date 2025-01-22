@@ -1,16 +1,17 @@
-<!-- Ignore this part, it is only here to position drawer inside the example block -->
 <header class="header" tuiNavigationHeader>
-    <span tuiNavigationLogo>
+    <span tuiNavigationLogo [ngClass]="{'center-text': loginPage}">
         <span>Интерактивная карта офисов</span>
     </span>
-    <hr />
-    <button class="admin-button">
-        @if (user !== '') {
-            <tui-icon icon="./media/account.svg"/>
-            <p>{{user}}</p>
-        }
-        @else {
-            <p>Войти</p>
-        }
-    </button>
+    @if (!loginPage) {
+        <hr />
+        <a href="/login" class="admin-button">
+            @if (user !== '') {
+                <tui-icon icon="./media/account.svg"/>
+                <p>{{user}}</p>
+            }
+            @else {
+                <p>Войти</p>
+            }
+        </a>
+    }
 </header>

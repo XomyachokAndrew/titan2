@@ -1,6 +1,11 @@
 @import '../../styles/font.css';
+
 tui-icon {
     --t-icon: url('../../assets/account.svg');
+}
+
+a {
+    text-decoration: none;
 }
 
 header[tuiNavigationHeader][tuiNavigationHeader] {
@@ -9,6 +14,9 @@ header[tuiNavigationHeader][tuiNavigationHeader] {
     font-size: 30pt;
     height: 8.5rem;
     padding: 0 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 [tuiNavigationLogo] {
@@ -46,40 +54,22 @@ header[tuiNavigationHeader][tuiNavigationHeader]:before {
     background-color: #ffffff;
     font-family: 'RockStar-sb';
     font-size: 15pt;
-    /* Цвет фона кнопки */
     color: rgb(0, 0, 0);
-    /* Цвет текста кнопки */
     border: none;
-    /* Убираем границу */
     padding: 0.001rem 1.75rem;
-    /* Внутренние отступы */
     border-radius: 8rem;
-    /* Скругление углов */
     cursor: pointer;
-    /* Курсор при наведении */
     display: flex;
-    /* Используем flexbox для выравнивания содержимого */
     align-items: center;
     transition: 0.3s;
-    /* Выравнивание по вертикали */
 }
 
 .admin-button:hover {
     background-color: #97999b;
 }
 
-.admin-button {
-    display: flex;
-    /* Используем flexbox для выравнивания иконок и текста */
-    align-items: center;
-    border-radius: 10rem;
-
-    /* Выравнивание по вертикали */
-}
-
 .admin-button tui-icon {
     margin-right: 8px;
-    /* Отступ между иконкой и текстом */
 }
 
 tui-icon:after,
@@ -94,4 +84,10 @@ tui-icon[tuiIcons]:after {
     -webkit-mask: var(--t-icon) no-repeat center / contain;
     mask: var(--t-icon) no-repeat center / contain;
     background: currentColor;
+}
+
+.center-text {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
