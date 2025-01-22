@@ -1,0 +1,12 @@
+.button-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 200px;
+    gap: 75px;
+    /* Расстояние между кнопками */
+    justify-content: center;
+    /* Выравнивание по горизонтали */
+    align-items: flex-start;
+    /* Выравнивание по вертикали */
+    justify-content: flex-start;
+}
