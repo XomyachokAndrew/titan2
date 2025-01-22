@@ -5,7 +5,7 @@ tui-icon {
 
 header[tuiNavigationHeader][tuiNavigationHeader] {
     background: linear-gradient(90deg, #0057A6 60.5%, #002240 100%);
-    font-family: 'RockStar';
+    font-family: 'RockStar-eb';
     font-size: 30pt;
     height: 8.5rem;
     padding: 0 10rem;
@@ -44,7 +44,7 @@ header[tuiNavigationHeader][tuiNavigationHeader]:before {
 
 .admin-button {
     background-color: #ffffff;
-    font-family: 'RockStar';
+    font-family: 'RockStar-sb';
     font-size: 15pt;
     /* Цвет фона кнопки */
     color: rgb(0, 0, 0);
