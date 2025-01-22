@@ -1,0 +1,97 @@
+@import '../../styles/font.css';
+tui-icon {
+    --t-icon: url('../../assets/account.svg');
+}
+
+header[tuiNavigationHeader][tuiNavigationHeader] {
+    background: linear-gradient(90deg, #0057A6 60.5%, #002240 100%);
+    font-family: 'RockStar';
+    font-size: 30pt;
+    height: 8.5rem;
+    padding: 0 10rem;
+}
+
+[tuiNavigationLogo] {
+    width: 400px;
+    display: inline-block;
+    white-space: normal;
+    line-height: 1;
+    word-wrap: break-word;
+}
+
+[tuiAppearance][data-appearance=primary] {
+    --t-bg: white;
+    background: white;
+    color: black;
+}
+
+header[tuiNavigationHeader][tuiNavigationHeader]:before {
+    content: '';
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    block-size: 0rem;
+    pointer-events: none;
+    box-shadow: 0 0rem;
+    border-radius: 0;
+}
+
+[tuiNavigationLogo] {
+    overflow: visible;
+}
+
+.admin-button {
+    background-color: #ffffff;
+    font-family: 'RockStar';
+    font-size: 15pt;
+    /* Цвет фона кнопки */
+    color: rgb(0, 0, 0);
+    /* Цвет текста кнопки */
+    border: none;
+    /* Убираем границу */
+    padding: 0.001rem 1.75rem;
+    /* Внутренние отступы */
+    border-radius: 8rem;
+    /* Скругление углов */
+    cursor: pointer;
+    /* Курсор при наведении */
+    display: flex;
+    /* Используем flexbox для выравнивания содержимого */
+    align-items: center;
+    transition: 0.3s;
+    /* Выравнивание по вертикали */
+}
+
+.admin-button:hover {
+    background-color: #97999b;
+}
+
+.admin-button {
+    display: flex;
+    /* Используем flexbox для выравнивания иконок и текста */
+    align-items: center;
+    border-radius: 10rem;
+
+    /* Выравнивание по вертикали */
+}
+
+.admin-button tui-icon {
+    margin-right: 8px;
+    /* Отступ между иконкой и текстом */
+}
+
+tui-icon:after,
+tui-icon[tuiIcons]:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    content: "";
+    display: block;
+    -webkit-mask: var(--t-icon) no-repeat center / contain;
+    mask: var(--t-icon) no-repeat center / contain;
+    background: currentColor;
+}
