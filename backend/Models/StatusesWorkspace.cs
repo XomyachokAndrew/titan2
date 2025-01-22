@@ -19,7 +19,7 @@ public partial class StatusesWorkspace
 
     public int IdUser { get; set; }
 
-    public virtual Status IdStatusesNavigation { get; set; } = null!;
+    public virtual WorkspaceStatusesType IdStatusesNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;
 

@@ -13,13 +13,13 @@ public partial class StatusesWorker
 
     public int PostsIdPost { get; set; }
 
-    public int DepartmentsIdDepartment { get; set; }
+    public int IdDepartment { get; set; }
 
     public int IdWorker { get; set; }
 
     public int IdUser { get; set; }
 
-    public virtual Department DepartmentsIdDepartmentNavigation { get; set; } = null!;
+    public virtual Department IdDepartmentNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;
 

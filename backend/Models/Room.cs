@@ -15,6 +15,8 @@ public partial class Room
 
     public int IdFloor { get; set; }
 
+    public int? Square { get; set; }
+
     public virtual Floor IdFloorNavigation { get; set; } = null!;
 
     public virtual ICollection<Workspace> Workspaces { get; set; } = new List<Workspace>();

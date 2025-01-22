@@ -1,0 +1,861 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "backend",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Offices": {
+      "get": {
+        "tags": [
+          "Offices"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Office"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Office"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Office"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistrationDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistrationDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistrationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/User/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DateOnly": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "day": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dayOfWeek": {
+            "$ref": "#/components/schemas/DayOfWeek"
+          },
+          "dayOfYear": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "dayNumber": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DayOfWeek": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Department": {
+        "type": "object",
+        "properties": {
+          "idDepartment": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "descriptions": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusesWorkers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorker"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Floor": {
+        "type": "object",
+        "properties": {
+          "idFloor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberFloor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scheme": {
+            "type": "string",
+            "nullable": true
+          },
+          "idOffice": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "square": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idOfficeNavigation": {
+            "$ref": "#/components/schemas/Office"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Room"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Office": {
+        "type": "object",
+        "properties": {
+          "idOffice": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "officeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "idOfficeStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "square": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "floors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Floor"
+            },
+            "nullable": true
+          },
+          "idOfficeStatusNavigation": {
+            "$ref": "#/components/schemas/OfficesStatus"
+          },
+          "rentalAgreements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RentalAgreement"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfficesStatus": {
+        "type": "object",
+        "properties": {
+          "idOfficeStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "offices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Office"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "idPost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "descriptions": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusesWorkers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorker"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RentalAgreement": {
+        "type": "object",
+        "properties": {
+          "idRentalAgreement": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "price": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "document": {
+            "type": "string",
+            "nullable": true
+          },
+          "idOffice": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idOfficeNavigation": {
+            "$ref": "#/components/schemas/Office"
+          },
+          "idUserNavigation": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "idReport": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idReportsTypes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idReportsTypesNavigation": {
+            "$ref": "#/components/schemas/ReportsType"
+          },
+          "idUserNavigation": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReportsType": {
+        "type": "object",
+        "properties": {
+          "idReportsTypes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "reports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Report"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "idReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "idReservationStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idReservationStatusNavigation": {
+            "$ref": "#/components/schemas/ReservationStatuse"
+          },
+          "idUserNavigation": {
+            "$ref": "#/components/schemas/User"
+          },
+          "idWorkspaceNavigation": {
+            "$ref": "#/components/schemas/Workspace"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReservationStatuse": {
+        "type": "object",
+        "properties": {
+          "idReservationsStatuses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "reservations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Room": {
+        "type": "object",
+        "properties": {
+          "idRoom": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idFloor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "square": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idFloorNavigation": {
+            "$ref": "#/components/schemas/Floor"
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workspace"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatusesWorker": {
+        "type": "object",
+        "properties": {
+          "idStatusWorker": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "postsIdPost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDepartment": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idWorker": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDepartmentNavigation": {
+            "$ref": "#/components/schemas/Department"
+          },
+          "idUserNavigation": {
+            "$ref": "#/components/schemas/User"
+          },
+          "idWorkerNavigation": {
+            "$ref": "#/components/schemas/Worker"
+          },
+          "postsIdPostNavigation": {
+            "$ref": "#/components/schemas/Post"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatusesWorkspace": {
+        "type": "object",
+        "properties": {
+          "idStatusWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "idWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idStatuses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idWorker": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idStatusesNavigation": {
+            "$ref": "#/components/schemas/WorkspaceStatusesType"
+          },
+          "idUserNavigation": {
+            "$ref": "#/components/schemas/User"
+          },
+          "idWorkerNavigation": {
+            "$ref": "#/components/schemas/Worker"
+          },
+          "idWorkspaceNavigation": {
+            "$ref": "#/components/schemas/Workspace"
+          }
+        },
+        "additionalProperties": false
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "login": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "patronymic": {
+            "type": "string",
+            "nullable": true
+          },
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "rentalAgreements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RentalAgreement"
+            },
+            "nullable": true
+          },
+          "reports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Report"
+            },
+            "nullable": true
+          },
+          "reservations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            },
+            "nullable": true
+          },
+          "statusesWorkers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorker"
+            },
+            "nullable": true
+          },
+          "statusesWorkspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorkspace"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserLoginDto": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserRegistrationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "patronymic": {
+            "type": "string",
+            "nullable": true
+          },
+          "login": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "temperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperatureF": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Worker": {
+        "type": "object",
+        "properties": {
+          "idWorker": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "patronymic": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusesWorkers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorker"
+            },
+            "nullable": true
+          },
+          "statusesWorkspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorkspace"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Workspace": {
+        "type": "object",
+        "properties": {
+          "idWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "idRoom": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idRoomNavigation": {
+            "$ref": "#/components/schemas/Room"
+          },
+          "reservations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reservation"
+            },
+            "nullable": true
+          },
+          "statusesWorkspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorkspace"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkspaceStatusesType": {
+        "type": "object",
+        "properties": {
+          "idStatuses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "descriptions": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusesWorkspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusesWorkspace"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
