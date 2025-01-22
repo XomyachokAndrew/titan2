@@ -11,11 +11,17 @@ public partial class Office
 
     public string Address { get; set; } = null!;
 
-    public int TotalWorkspace { get; set; }
+    public int IdOfficeStatus { get; set; }
 
-    public string Status { get; set; } = null!;
+    public int? Square { get; set; }
+
+    public string? Image { get; set; }
+
+    public int? TotalWorkspace { get; set; }
 
     public virtual ICollection<Floor> Floors { get; set; } = new List<Floor>();
+
+    public virtual OfficesStatus IdOfficeStatusNavigation { get; set; } = null!;
 
     public virtual ICollection<RentalAgreement> RentalAgreements { get; set; } = new List<RentalAgreement>();
 }

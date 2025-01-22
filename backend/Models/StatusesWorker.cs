@@ -11,19 +11,19 @@ public partial class StatusesWorker
 
     public DateOnly? EndDate { get; set; }
 
-    public int PostsIdPost { get; set; }
+    public int IdPost { get; set; }
 
-    public int DepartmentsIdDepartment { get; set; }
+    public int IdDepartment { get; set; }
 
     public int IdWorker { get; set; }
 
     public int IdUser { get; set; }
 
-    public virtual Department DepartmentsIdDepartmentNavigation { get; set; } = null!;
+    public virtual Department IdDepartmentNavigation { get; set; } = null!;
+
+    public virtual Post IdPostNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;
 
     public virtual Worker IdWorkerNavigation { get; set; } = null!;
-
-    public virtual Post PostsIdPostNavigation { get; set; } = null!;
 }

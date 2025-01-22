@@ -13,13 +13,13 @@ public partial class StatusesWorkspace
 
     public int IdWorkspace { get; set; }
 
-    public int IdStatuses { get; set; }
+    public int IdStatus { get; set; }
 
     public int IdWorker { get; set; }
 
     public int IdUser { get; set; }
 
-    public virtual Status IdStatusesNavigation { get; set; } = null!;
+    public virtual WorkspaceStatusesType IdStatusNavigation { get; set; } = null!;
 
     public virtual User IdUserNavigation { get; set; } = null!;
 

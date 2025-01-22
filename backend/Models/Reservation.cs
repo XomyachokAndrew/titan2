@@ -11,11 +11,13 @@ public partial class Reservation
 
     public DateOnly? EndDate { get; set; }
 
-    public string? Status { get; set; }
+    public int? IdReservationStatus { get; set; }
 
     public int IdWorkspace { get; set; }
 
     public int IdUser { get; set; }
+
+    public virtual ReservationStatuse? IdReservationStatusNavigation { get; set; }
 
     public virtual User IdUserNavigation { get; set; } = null!;
 
