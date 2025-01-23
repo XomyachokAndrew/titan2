@@ -1,17 +1,17 @@
+@if (!loginPage) {
 <header class="header" tuiNavigationHeader>
     <span tuiNavigationLogo [ngClass]="{'center-text': loginPage}">
         <span>Интерактивная карта офисов</span>
     </span>
-    @if (!loginPage) {
-        <hr />
-        <a href="/login" class="admin-button">
-            @if (user !== '') {
-                <tui-icon icon="./media/account.svg"/>
-                <p>{{user}}</p>
-            }
-            @else {
-                <p>Войти</p>
-            }
-        </a>
-    }
+    <hr />
+    <a href="/login" class="admin-button">
+        @if (user !== '') {
+        <tui-icon icon="./media/account.svg" />
+        <p>{{user}}</p>
+        }
+        @else {
+        <p>Войти</p>
+        }
+    </a>
 </header>
+}
