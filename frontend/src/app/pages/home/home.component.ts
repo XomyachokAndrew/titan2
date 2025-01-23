@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonMComponent } from "../../components/mainButton/button.main";
 
 @Component({
-  selector: 'app-root',
+  selector: 'home',
   imports: [ButtonMComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.scss'
