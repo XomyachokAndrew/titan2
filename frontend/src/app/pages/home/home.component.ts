@@ -11,7 +11,7 @@ export class HomeComponent {
   protected mainButtons = [
     {
       title: "Офисы",
-      href: "/",
+      href: "/offices",
       color: {
         main: "#217FB5",
         enter: "#195274",

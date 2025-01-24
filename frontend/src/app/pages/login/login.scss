@@ -9,7 +9,28 @@ svg {
     justify-content: center;
     align-items: center;
     height: 100vh;
+
 }
+
+.custom-input {
+    width: 22rem;
+    --tui-font-text-m: normal 1rem / 0.5rem 'RockStar-sb';
+    --tui-radius-m: 8rem;
+    --tui-text-secondary: black;
+    --tui-background-accent-1: black;
+    --tui-background-base: white;
+    --tui-padding-l: 2rem;
+}
+
+[data-size=m]._focused[_nghost-ng-c522594058]:not(._label-outside) .t-placeholder[_ngcontent-ng-c522594058],
+[data-size=l]._focused[_nghost-ng-c522594058]:not(._label-outside) .t-placeholder[_ngcontent-ng-c522594058] {
+    color: #000000;
+}
+
+.t-placeholder_raised {
+    transform: translateY(-1rem);
+}
+
 
 form {
     position: absolute;
@@ -48,28 +69,40 @@ form {
     word-wrap: break-word;
 }
 
-input {
-    display: flex;
-    width: 20.125rem;
-    padding: 1.5625rem 1.9375rem;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.75938rem;
-    color: #000;
-    font-family: "RockStar-sb";
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    border-radius: 8rem;
-    border: none;
-}
+/*
+// input {
+//     display: flex;
+//     width: 20.125rem;
+//     padding: 1.5625rem 1.9375rem;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     gap: 0.75938rem;
+//     color: #000;
+//     font-family: "RockStar-sb";
+//     font-size: 1rem;
+//     font-style: normal;
+//     font-weight: 400;
+//     line-height: normal;
+//     border-radius: 8rem;
+//     border: none;
+// }
 
-input::placeholder {
-    color: black;
-}
+// .custom-input {
+//     --tui-input-font-size: 1rem;
+//     --tui-input-padding: 0.5rem;
+//     --tui-input-border-radius: 0.5rem;
+//     --tui-input-background: #f0f0f0;
+//     --tui-input-color: #333;
+//     --tui-input-placeholder-color: #999;
+//     --tui-input-border-color: #ccc;
+//     --tui-input-focus-border-color: #007bff;
+// }
 
+// input::placeholder {
+//     color: black;
+// }
+*/
 .button {
     border: none;
     width: 12.125rem;
@@ -96,6 +129,9 @@ input::placeholder {
     font-weight: 600;
     word-wrap: break-word;
 }
+
+
+
 
 @media (max-width: 768px) {
     .container {
