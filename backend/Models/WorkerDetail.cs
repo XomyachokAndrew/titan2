@@ -9,7 +9,11 @@ public partial class WorkerDetail
 
     public string? FullWorkerName { get; set; }
 
+    public int? IdPost { get; set; }
+
     public string? PostName { get; set; }
+
+    public int? IdDepartment { get; set; }
 
     public string? DepartmentName { get; set; }
 }

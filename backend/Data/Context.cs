@@ -434,6 +434,8 @@ public partial class Context : DbContext
                 .HasMaxLength(200)
                 .HasColumnName("department_name");
             entity.Property(e => e.FullWorkerName).HasColumnName("full_worker_name");
+            entity.Property(e => e.IdDepartment).HasColumnName("id_department");
+            entity.Property(e => e.IdPost).HasColumnName("id_post");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.PostName)
                 .HasMaxLength(200)
