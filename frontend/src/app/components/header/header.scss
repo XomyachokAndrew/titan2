@@ -20,7 +20,7 @@ header[tuiNavigationHeader][tuiNavigationHeader] {
 }
 
 [tuiNavigationLogo] {
-    width: 400px;
+    width: 26rem;
     display: inline-block;
     white-space: normal;
     line-height: 1;
@@ -90,4 +90,10 @@ tui-icon[tuiIcons]:after {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+.search-container {
+    flex: 1; /* Занимает оставшееся пространство */
+    display: flex;
+    justify-content: left; /* Центрирует элемент поиска по горизонтали */
 }

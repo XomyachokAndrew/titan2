@@ -15,6 +15,7 @@ import {
 } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
+import SearchComponent from '../searchBar/search.component';
 
 @Component({
     selector: 'app-header',
@@ -29,6 +30,7 @@ import { filter } from 'rxjs/operators';
         TuiNavigation,
         TuiTabs,
         TuiTextfield,
+        SearchComponent
     ],
     templateUrl: './header.html',
     styleUrl: './header.scss',
@@ -38,6 +40,7 @@ export default class HeaderComponent implements OnInit {
     // loginPage: boolean = false;
     title: string = "Интерактивная карта офисов";
     user: string = '';
+    isSearch: boolean = false;
 
     constructor(private router: Router) { }
 
@@ -56,6 +59,12 @@ export default class HeaderComponent implements OnInit {
                     this.title = "Интерактивная карта офисов";
                     this.loginPage = false;
                     break;
+            }
+            if(event.urlAfterRedirects !== "/"){
+                this.isSearch = true;
+            }
+            else{
+                this.isSearch = false;
             }
         });
     }
