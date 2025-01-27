@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iqZvQno8meY=",
+  "dgSpecHash": "8ocy+DKmzm0=",
   "success": true,
-  "projectFilePath": "D:\\Files\\Progects\\Титан2\\titan2\\backend\\backend.csproj",
+  "projectFilePath": "D:\\Files\\Progects\\Титан2\\Проект\\titan2\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\piska\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\piska\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

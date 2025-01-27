@@ -62,39 +62,78 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
         {
-            // Ищем пользователя по логину
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == loginDto.Login);
             if (user == null)
             {
                 return Unauthorized("Неверный логин или пароль.");
             }
 
-            // Проверка пароля
             CredentialHasher credentialHasher = new CredentialHasher();
             if (!credentialHasher.VerifyPassword(loginDto.Password, user.Password, loginDto.Login))
             {
                 return Unauthorized("Неверный логин или пароль.");
             }
 
-            // Получаем секретный ключ из конфигурации
-            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]); // Чтение ключа из конфигурации
-            var tokenHandler = new JwtSecurityTokenHandler(); // Создаем обработчик токенов
+            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Login) // Добавляем имя пользователя в токен
+            new Claim(ClaimTypes.Name, user.Login)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1), // Устанавливаем срок действия токена
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                                                           SecurityAlgorithms.HmacSha256Signature) // Подписываем токен
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor); // Создаем токен
-            return Ok(new { Token = tokenHandler.WriteToken(token) }); // Возвращаем токен клиенту
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            // Создание рефреш-токена
+            var refreshToken = Guid.NewGuid().ToString();
+            user.RefreshToken = refreshToken; // Сохраняем рефреш-токен в базе данных
+            await _context.SaveChangesAsync(); // Сохраняем изменения
+
+            return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = refreshToken });
         }
 
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshTokenDto.RefreshToken);
+            if (user == null)
+            {
+                return Unauthorized("Неверный рефреш-токен.");
+            }
+
+            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim(ClaimTypes.Name, user.Login)
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            // Создание нового рефреш-токена
+            var newRefreshToken = Guid.NewGuid().ToString();
+            user.RefreshToken = newRefreshToken; // Обновляем рефреш-токен
+            await _context.SaveChangesAsync(); // Сохраняем изменения
+
+            return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = newRefreshToken });
+        }
+
+    }
+
+    public class RefreshTokenDto
+    {
+        public string RefreshToken { get; set; } = null!;
     }
 
     // DTO для регистрации пользователя

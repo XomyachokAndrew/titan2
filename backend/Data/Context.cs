@@ -401,6 +401,9 @@ public partial class Context : DbContext
             entity.Property(e => e.Patronymic)
                 .HasMaxLength(50)
                 .HasColumnName("patronymic");
+            entity.Property(e => e.RefreshToken)
+                .HasColumnType("character varying")
+                .HasColumnName("refresh_token");
             entity.Property(e => e.Surname)
                 .HasMaxLength(50)
                 .HasColumnName("surname");

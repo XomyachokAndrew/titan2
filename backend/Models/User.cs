@@ -19,6 +19,8 @@ public partial class User
 
     public bool IsAdmin { get; set; }
 
+    public string? RefreshToken { get; set; }
+
     public virtual ICollection<RentalAgreement> RentalAgreements { get; set; } = new List<RentalAgreement>();
 
     public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
