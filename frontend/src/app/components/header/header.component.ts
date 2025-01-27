@@ -15,7 +15,7 @@ import {
 } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
-import SearchComponent from '../searchBar/search.component';
+import { SearchComponent } from '../searchBar/search.component';
 
 @Component({
     selector: 'app-header',

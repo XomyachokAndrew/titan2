@@ -1,5 +1,4 @@
-<tui-input class="custom-input">
-    <tui-icon icon="@tui.search" />
-    Поиск
-    <input tuiTextfieldLegacy>
-</tui-input>
+<div class="search-bar">
+    <input type="text" [(ngModel)]="searchTerm" (input)="search()" placeholder="Поиск">
+</div>
+  

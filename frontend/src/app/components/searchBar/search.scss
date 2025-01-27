@@ -1,25 +1,12 @@
 @import "../../styles/font.css";
 
-.custom-input {
-  width: 46.5625rem;
-  height: 3.5;
-  --tui-font-text-m: normal 1rem / 0.5rem "RockStar-sb";
-  --tui-radius-m: 1.1635rem;
-  --tui-text-secondary: black;
-  --tui-background-accent-1: white;
-  --tui-text-primary: black;
-  --tui-background-base: white;
-  --tui-padding-l: 2rem;
-  background: white;
-}
-
-[data-size="m"]._focused[_nghost-ng-c522594058]:not(._label-outside)
-  .t-placeholder[_ngcontent-ng-c522594058],
-[data-size="l"]._focused[_nghost-ng-c522594058]:not(._label-outside)
-  .t-placeholder[_ngcontent-ng-c522594058] {
-  color: #000000;
-}
-
-.t-placeholder_raised {
-  transform: translateY(-1rem);
+.search-bar input {
+  width: 46rem;
+  height: 100%;
+  background: var(--tui-background-accent-1);
+  border-radius: var(--tui-radius-m);
+  font: var(--tui-font-text-m);
+  padding: var(--tui-padding-l);
+  color: black;
+  background-color: white;
 }

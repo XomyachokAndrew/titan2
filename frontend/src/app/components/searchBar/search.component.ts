@@ -1,24 +1,29 @@
-import { Component, Renderer2, Inject, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
-import { TuiInputModule } from '@taiga-ui/legacy';
-import {TuiIcon, tuiIconsProvider} from '@taiga-ui/core';
-import { TuiButton } from '@taiga-ui/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-search',
-    standalone: true,
-    exportAs: "Example1",
-    imports: [
-        //TuiButton,
-        ReactiveFormsModule,
-        TuiInputModule,
-        TuiIcon,
-    ],
-    providers: [
-    ],
-    templateUrl: './search.html',
-    styleUrl: './search.scss',
+  selector: 'app-search',
+  templateUrl: './search.html',
+  styleUrls: ['./search.scss'],
+  imports: [FormsModule],
 })
-export default class SearchComponent {
+export class SearchComponent {
+    searchTerm: string = '';
+    results: string[] = [];
+
+    search() {
+        if (this.searchTerm.trim() !== '') {
+          // Здесь вы можете добавить логику для выполнения поиска
+          // Например, вызов API или фильтрация данных
+          this.results = this.performSearch(this.searchTerm);
+        } else {
+          this.results = [];
+        }
+      }
     
+      performSearch(term: string): string[] {
+        // Пример логики поиска
+        const data = ['Angular', 'React', 'Vue', 'Svelte', 'Ember'];
+        return data.filter(item => item.toLowerCase().includes(term.toLowerCase()));
+      }
 }
