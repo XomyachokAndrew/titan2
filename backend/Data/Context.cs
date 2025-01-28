@@ -16,6 +16,8 @@ public partial class Context : DbContext
     {
     }
 
+    public virtual DbSet<CurrentWorkspace> CurrentWorkspaces { get; set; }
+
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Floor> Floors { get; set; }
@@ -60,6 +62,28 @@ public partial class Context : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CurrentWorkspace>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("current_workspaces", "offices_management");
+
+            entity.Property(e => e.EndDate).HasColumnName("end_date");
+            entity.Property(e => e.FullWorkerName).HasColumnName("full_worker_name");
+            entity.Property(e => e.IdRoom).HasColumnName("id_room");
+            entity.Property(e => e.IdStatus).HasColumnName("id_status");
+            entity.Property(e => e.IdStatusWorkspace).HasColumnName("id_status_workspace");
+            entity.Property(e => e.IdWorker).HasColumnName("id_worker");
+            entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
+            entity.Property(e => e.StartDate).HasColumnName("start_date");
+            entity.Property(e => e.StatusName)
+                .HasMaxLength(45)
+                .HasColumnName("status_name");
+            entity.Property(e => e.WorkspaceName)
+                .HasMaxLength(45)
+                .HasColumnName("workspace_name");
+        });
+
         modelBuilder.Entity<Department>(entity =>
         {
             entity.HasKey(e => e.IdDepartment).HasName("departments_pkey");
@@ -360,7 +384,6 @@ public partial class Context : DbContext
 
             entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.StatusesWorkspaces)
                 .HasForeignKey(d => d.IdStatus)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("statuses_workspaces_id_statuses_fkey");
 
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.StatusesWorkspaces)
@@ -370,7 +393,6 @@ public partial class Context : DbContext
 
             entity.HasOne(d => d.IdWorkerNavigation).WithMany(p => p.StatusesWorkspaces)
                 .HasForeignKey(d => d.IdWorker)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("statuses_workspaces_id_worker_fkey");
 
             entity.HasOne(d => d.IdWorkspaceNavigation).WithMany(p => p.StatusesWorkspaces)

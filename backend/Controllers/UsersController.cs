@@ -36,7 +36,7 @@ namespace backend.Controllers
             // Создаем экземпляр CredentialHasher
             CredentialHasher credentialHasher = new CredentialHasher();
             credentialHasher.SetCredentials(registrationDto.Login, registrationDto.Password);
-
+            Console.WriteLine(credentialHasher);
             // Хешируем пароль
             byte[] hashedPassword = credentialHasher.HashCredentials();
 

@@ -38,7 +38,7 @@ public class CredentialHasher
                 mixed.Append(password[i]); // Добавляем символ пароля в StringBuilder
             }
         }
-
+        Console.WriteLine(mixed.ToString());
         // Преобразуем содержимое StringBuilder в строку и возвращаем
         return mixed.ToString();
     }

@@ -190,6 +190,55 @@
         }
       }
     },
+    "/api/Floors/office/{id}": {
+      "get": {
+        "tags": [
+          "Floors"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Floor"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Floor"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Floor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Offices": {
       "get": {
         "tags": [
@@ -413,6 +462,240 @@
         }
       }
     },
+    "/api/Rooms/floor/{id}": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Rooms": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Rooms"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Rooms/{id}": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Rooms"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Search/search": {
       "get": {
         "tags": [
@@ -543,45 +826,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          }
-        }
-      }
-    },
-    "/WeatherForecast": {
-      "get": {
-        "tags": [
-          "WeatherForecast"
-        ],
-        "operationId": "GetWeatherForecast",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -771,10 +1015,21 @@
         }
       }
     },
-    "/api/Workspaces": {
+    "/api/Workspace/room/{roomId}": {
       "get": {
         "tags": [
-          "Workspaces"
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -784,7 +1039,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceInfoDto"
+                    "$ref": "#/components/schemas/CurrentWorkspace"
                   }
                 }
               },
@@ -792,7 +1047,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceInfoDto"
+                    "$ref": "#/components/schemas/CurrentWorkspace"
                   }
                 }
               },
@@ -800,8 +1055,48 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceInfoDto"
+                    "$ref": "#/components/schemas/CurrentWorkspace"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Workspace/{id}": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceInfoDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceInfoDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceInfoDto"
                 }
               }
             }
@@ -812,6 +1107,55 @@
   },
   "components": {
     "schemas": {
+      "CurrentWorkspace": {
+        "type": "object",
+        "properties": {
+          "idWorkspace": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idRoom": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "workspaceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idWorker": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "fullWorkerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "idStatusWorkspace": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "statusName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DateOnly": {
         "type": "object",
         "properties": {
@@ -1313,11 +1657,13 @@
           },
           "idStatus": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "idWorker": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "idUser": {
             "type": "integer",
@@ -1451,28 +1797,6 @@
         },
         "additionalProperties": false
       },
-      "WeatherForecast": {
-        "type": "object",
-        "properties": {
-          "date": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Worker": {
         "type": "object",
         "properties": {
@@ -1547,11 +1871,7 @@
       "WorkspaceInfoDto": {
         "type": "object",
         "properties": {
-          "idWorkspace": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
+          "workspaceName": {
             "type": "string",
             "nullable": true
           },
@@ -1559,21 +1879,14 @@
             "type": "string",
             "nullable": true
           },
-          "workerName": {
-            "type": "string",
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "workerDetails": {
             "nullable": true
-          },
-          "statusStartDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "statusEndDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "reservationStartDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "reservationEndDate": {
-            "$ref": "#/components/schemas/DateOnly"
           }
         },
         "additionalProperties": false
