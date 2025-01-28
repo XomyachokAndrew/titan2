@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using backend.Models;
 using Microsoft.EntityFrameworkCore;
-using backend.Models;
 
 namespace backend.Data;
 
@@ -21,6 +19,8 @@ public partial class Context : DbContext
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Floor> Floors { get; set; }
+
+    public virtual DbSet<HistoryWorkspaceStatus> HistoryWorkspaceStatuses { get; set; }
 
     public virtual DbSet<Office> Offices { get; set; }
 
@@ -118,6 +118,30 @@ public partial class Context : DbContext
                 .HasForeignKey(d => d.IdOffice)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("floors_id_office_fkey");
+        });
+
+        modelBuilder.Entity<HistoryWorkspaceStatus>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("history_workspace_statuses", "offices_management");
+
+            entity.Property(e => e.DepartmentName)
+                .HasMaxLength(200)
+                .HasColumnName("department_name");
+            entity.Property(e => e.EndDate).HasColumnName("end_date");
+            entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
+            entity.Property(e => e.StartDate).HasColumnName("start_date");
+            entity.Property(e => e.StatusType)
+                .HasMaxLength(45)
+                .HasColumnName("status_type");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(50)
+                .HasColumnName("user_name");
+            entity.Property(e => e.WorkerFullName).HasColumnName("worker_full_name");
+            entity.Property(e => e.WorkerPosition)
+                .HasMaxLength(200)
+                .HasColumnName("worker_position");
         });
 
         modelBuilder.Entity<Office>(entity =>

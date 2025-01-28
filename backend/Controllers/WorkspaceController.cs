@@ -1,6 +1,5 @@
 ﻿using backend.Data;
 using backend.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,6 +62,34 @@ namespace backend.Controllers
 
             return Ok(workspaceInfo);
         }
+
+        // GET: api/workspaces/{id}/history
+        [HttpGet("{id}/history")]
+        public async Task<ActionResult<IEnumerable<WorkspaceStatusDto>>> GetWorkspaceHistory(int id)
+        {
+            var history = await _context.HistoryWorkspaceStatuses
+                .FromSqlRaw("SELECT * FROM offices_management.history_workspace_statuses WHERE id_workspace = {0} ORDER BY start_date", id)
+                .ToListAsync();
+
+            if (history == null || history.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(history);
+        }
+    }
+
+    public class WorkspaceStatusDto
+    {
+        public int IdWorkspace { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string StatusType { get; set; }
+        public string WorkerFullName { get; set; }
+        public string WorkerPosition { get; set; }
+        public string DepartmentName { get; set; }
+        public string UserName { get; set; }
     }
 
     public class WorkspaceInfoDto

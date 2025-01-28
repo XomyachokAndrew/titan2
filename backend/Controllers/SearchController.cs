@@ -1,10 +1,6 @@
 ﻿using backend.Data;
-using backend.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Linq.Expressions;
 
 namespace backend.Controllers
 {

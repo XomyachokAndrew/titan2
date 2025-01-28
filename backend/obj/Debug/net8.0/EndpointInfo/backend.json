@@ -1103,6 +1103,55 @@
           }
         }
       }
+    },
+    "/api/Workspace/{id}/history": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkspaceStatusDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkspaceStatusDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkspaceStatusDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1886,6 +1935,44 @@
             "$ref": "#/components/schemas/DateOnly"
           },
           "workerDetails": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkspaceStatusDto": {
+        "type": "object",
+        "properties": {
+          "idWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statusType": {
+            "type": "string",
+            "nullable": true
+          },
+          "workerFullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "workerPosition": {
+            "type": "string",
+            "nullable": true
+          },
+          "departmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
             "nullable": true
           }
         },

@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using backend.Data;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens; // Убедитесь, что вы добавили правильный using для вашего контекста
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
