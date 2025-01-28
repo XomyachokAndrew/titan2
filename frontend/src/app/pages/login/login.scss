@@ -9,7 +9,6 @@ svg {
     justify-content: center;
     align-items: center;
     height: 100vh;
-
 }
 
 .custom-input {
@@ -69,40 +68,6 @@ form {
     word-wrap: break-word;
 }
 
-/*
-// input {
-//     display: flex;
-//     width: 20.125rem;
-//     padding: 1.5625rem 1.9375rem;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-//     gap: 0.75938rem;
-//     color: #000;
-//     font-family: "RockStar-sb";
-//     font-size: 1rem;
-//     font-style: normal;
-//     font-weight: 400;
-//     line-height: normal;
-//     border-radius: 8rem;
-//     border: none;
-// }
-
-// .custom-input {
-//     --tui-input-font-size: 1rem;
-//     --tui-input-padding: 0.5rem;
-//     --tui-input-border-radius: 0.5rem;
-//     --tui-input-background: #f0f0f0;
-//     --tui-input-color: #333;
-//     --tui-input-placeholder-color: #999;
-//     --tui-input-border-color: #ccc;
-//     --tui-input-focus-border-color: #007bff;
-// }
-
-// input::placeholder {
-//     color: black;
-// }
-*/
 .button {
     border: none;
     width: 12.125rem;

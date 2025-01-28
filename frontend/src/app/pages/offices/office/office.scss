@@ -1,0 +1,35 @@
+@import "../../../styles/font.css";
+
+svg {
+  position: absolute;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  margin: 5rem 12.5rem;
+  gap: 75px;
+  /* Расстояние между кнопками */
+  justify-content: center;
+  /* Выравнивание по горизонтали */
+  align-items: flex-start;
+  /* Выравнивание по вертикали */
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.office-info {
+  display: inline-flex;
+  padding: 2.3125rem 2rem 14.1875rem 2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.office-report {
+  display: inline-flex;
+  padding: 2.3125rem 2rem 14.1875rem 2rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.9375rem;
+}
