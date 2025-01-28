@@ -52,6 +52,9 @@ export default class HeaderComponent implements OnInit {
                 case '/login':
                     this.loginPage = true;
                     break;
+                case '/registration':
+                    this.loginPage = true;
+                    break;
                 case '/offices':
                     this.title = "Офисы";
                     break;
