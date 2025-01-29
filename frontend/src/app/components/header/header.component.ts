@@ -48,15 +48,17 @@ export default class HeaderComponent implements OnInit {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)
         ).subscribe((event: NavigationEnd) => {
+            console.log(event.urlAfterRedirects);
+            
             switch (event.urlAfterRedirects) {
                 case '/login':
-                    this.loginPage = true;
+                    this.loginPage = true; 
                     break;
                 case '/registration':
                     this.loginPage = true;
                     break;
                 case '/offices/office':
-                    this.loginPage = true;
+                    this.title = "Офис";
                     break;
                 case '/offices':
                     this.title = "Офисы";
