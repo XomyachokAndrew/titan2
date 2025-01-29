@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -79,32 +83,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-29T11:37:39.108Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "WorkspaceController.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs",
               "RelativeDocumentMoniker": "Controllers\\WorkspaceController.cs",
               "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs",
               "RelativeToolTip": "Controllers\\WorkspaceController.cs",
-              "ViewState": "AgIAAG0AAAAAAAAAAAAAAH8AAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAGsAAAAAAAAAAABBwIYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T07:05:08.762Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "StatusesWorkspace.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
               "RelativeDocumentMoniker": "Models\\StatusesWorkspace.cs",
               "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
               "RelativeToolTip": "Models\\StatusesWorkspace.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAABBwB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T07:01:30.007Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Workspace.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Workspace.cs",
               "RelativeDocumentMoniker": "Models\\Workspace.cs",
@@ -112,11 +129,12 @@
               "RelativeToolTip": "Models\\Workspace.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:01:00.276Z"
+              "WhenOpened": "2025-01-28T07:01:00.276Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "CurrentWorkspace.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\CurrentWorkspace.cs",
               "RelativeDocumentMoniker": "Models\\CurrentWorkspace.cs",
@@ -124,11 +142,12 @@
               "RelativeToolTip": "Models\\CurrentWorkspace.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T12:21:08.678Z"
+              "WhenOpened": "2025-01-28T12:21:08.678Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "Context.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Data\\Context.cs",
               "RelativeDocumentMoniker": "Data\\Context.cs",
@@ -136,11 +155,12 @@
               "RelativeToolTip": "Data\\Context.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T09:33:08.335Z"
+              "WhenOpened": "2025-01-28T09:33:08.335Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "WorkerDetail.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\WorkerDetail.cs",
               "RelativeDocumentMoniker": "Models\\WorkerDetail.cs",
@@ -148,11 +168,12 @@
               "RelativeToolTip": "Models\\WorkerDetail.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T13:06:14.749Z"
+              "WhenOpened": "2025-01-28T13:06:14.749Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "StatusesWorker.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorker.cs",
               "RelativeDocumentMoniker": "Models\\StatusesWorker.cs",
@@ -160,11 +181,12 @@
               "RelativeToolTip": "Models\\StatusesWorker.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T13:26:28.797Z"
+              "WhenOpened": "2025-01-28T13:26:28.797Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "Status.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Status.cs",
               "RelativeDocumentMoniker": "Models\\Status.cs",
@@ -172,35 +194,38 @@
               "RelativeToolTip": "Models\\Status.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T13:28:58.611Z"
+              "WhenOpened": "2025-01-28T13:28:58.611Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "SearchController.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\SearchController.cs",
               "RelativeDocumentMoniker": "Controllers\\SearchController.cs",
               "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\SearchController.cs",
               "RelativeToolTip": "Controllers\\SearchController.cs",
-              "ViewState": "AgIAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:41:01.794Z"
+              "WhenOpened": "2025-01-28T08:41:01.794Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "WorkersController.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkersController.cs",
               "RelativeDocumentMoniker": "Controllers\\WorkersController.cs",
               "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkersController.cs",
               "RelativeToolTip": "Controllers\\WorkersController.cs",
-              "ViewState": "AgIAADcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADUAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:50:30.136Z"
+              "WhenOpened": "2025-01-28T08:50:30.136Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": ".gitignore.txt",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\.gitignore.txt",
               "RelativeDocumentMoniker": ".gitignore.txt",
@@ -208,11 +233,12 @@
               "RelativeToolTip": ".gitignore.txt",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-01-28T07:26:55.761Z"
+              "WhenOpened": "2025-01-28T07:26:55.761Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "UsersController.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
@@ -220,11 +246,12 @@
               "RelativeToolTip": "Controllers\\UsersController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:50:41.108Z"
+              "WhenOpened": "2025-01-28T08:50:41.108Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Reservation.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Reservation.cs",
               "RelativeDocumentMoniker": "Models\\Reservation.cs",
@@ -232,11 +259,12 @@
               "RelativeToolTip": "Models\\Reservation.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T09:41:14.86Z"
+              "WhenOpened": "2025-01-28T09:41:14.86Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "Department.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Department.cs",
               "RelativeDocumentMoniker": "Models\\Department.cs",
@@ -244,11 +272,12 @@
               "RelativeToolTip": "Models\\Department.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:02:08.222Z"
+              "WhenOpened": "2025-01-28T07:02:08.222Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Post.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Post.cs",
               "RelativeDocumentMoniker": "Models\\Post.cs",
@@ -256,11 +285,12 @@
               "RelativeToolTip": "Models\\Post.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:02:03.011Z"
+              "WhenOpened": "2025-01-28T07:02:03.011Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "WorkspaceStatusesType.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\WorkspaceStatusesType.cs",
               "RelativeDocumentMoniker": "Models\\WorkspaceStatusesType.cs",
@@ -268,7 +298,8 @@
               "RelativeToolTip": "Models\\WorkspaceStatusesType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:01:36.556Z"
+              "WhenOpened": "2025-01-28T07:01:36.556Z",
+              "EditorCaption": ""
             }
           ]
         }

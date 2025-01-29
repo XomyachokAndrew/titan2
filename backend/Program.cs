@@ -13,6 +13,18 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Добавьте CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:4200") // URL клиента
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 // Настройка JWT аутентификации
 var key = builder.Configuration["JwtSettings:SecretKey"]; // Чтение ключа из конфигурации
 
