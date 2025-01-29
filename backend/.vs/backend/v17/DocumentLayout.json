@@ -84,7 +84,7 @@
               "RelativeDocumentMoniker": "Controllers\\WorkspaceController.cs",
               "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs",
               "RelativeToolTip": "Controllers\\WorkspaceController.cs",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAwwHIAAABVAAAAAAAAAA==",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAAAH8AAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T07:05:08.762Z",
               "EditorCaption": ""
@@ -97,7 +97,7 @@
               "RelativeDocumentMoniker": "Models\\StatusesWorkspace.cs",
               "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
               "RelativeToolTip": "Models\\StatusesWorkspace.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-28T07:01:30.007Z",
               "EditorCaption": ""
@@ -112,8 +112,7 @@
               "RelativeToolTip": "Models\\Workspace.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:01:00.276Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T07:01:00.276Z"
             },
             {
               "$type": "Document",
@@ -125,8 +124,7 @@
               "RelativeToolTip": "Models\\CurrentWorkspace.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T12:21:08.678Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T12:21:08.678Z"
             },
             {
               "$type": "Document",
@@ -138,8 +136,7 @@
               "RelativeToolTip": "Data\\Context.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T09:33:08.335Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T09:33:08.335Z"
             },
             {
               "$type": "Document",
@@ -151,8 +148,7 @@
               "RelativeToolTip": "Models\\WorkerDetail.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T13:06:14.749Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T13:06:14.749Z"
             },
             {
               "$type": "Document",
@@ -164,8 +160,7 @@
               "RelativeToolTip": "Models\\StatusesWorker.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T13:26:28.797Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T13:26:28.797Z"
             },
             {
               "$type": "Document",
@@ -201,8 +196,7 @@
               "RelativeToolTip": "Controllers\\WorkersController.cs",
               "ViewState": "AgIAADcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:50:30.136Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T08:50:30.136Z"
             },
             {
               "$type": "Document",

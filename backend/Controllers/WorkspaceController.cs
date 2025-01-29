@@ -51,10 +51,9 @@ namespace backend.Controllers
             return Ok(workspaceInfo);
         }
 
-
         // GET: api/workspaces/{id}/history
         [HttpGet("{id}/history")]
-        public async Task<ActionResult<IEnumerable<WorkspaceStatusInfoDto>>> GetWorkspaceHistory(int id)
+        public async Task<ActionResult<IEnumerable<StatusWorkspaceInfoDto>>> GetWorkspaceHistory(int id)
         {
             var history = await _context.HistoryWorkspaceStatuses
                 .FromSqlRaw("SELECT * FROM offices_management.history_workspace_statuses WHERE id_workspace = {0} ORDER BY start_date", id)
@@ -95,7 +94,7 @@ namespace backend.Controllers
             await _context.SaveChangesAsync();
 
             // Вызываем метод UpdateEndDate, передавая id и дату начала
-            await UpdateEndDate(statusWorkspaceDto.IdStatusWorkspace, statusWorkspaceDto.StartDate);
+            await UpdateEndDate(statusWorkspace.IdStatusWorkspace, statusWorkspaceDto.StartDate);
 
             return Ok();
         }
@@ -132,7 +131,7 @@ namespace backend.Controllers
         public int IdUser { get; set; }
     }
 
-    public class WorkspaceStatusInfoDto
+    public class StatusWorkspaceInfoDto
     {
         public int IdWorkspace { get; set; }
         public DateTime StartDate { get; set; }
