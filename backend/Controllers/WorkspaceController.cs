@@ -33,39 +33,28 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<WorkspaceInfoDto>> GetWorkspaceInfo(int id)
+        public async Task<ActionResult<CurrentWorkspace>> GetWorkspaceInfo(int id)
         {
             var workspaceInfo = await _context.CurrentWorkspaces
-                .Where(cw => cw.IdWorkspace == id)
-                .Select(cw => new WorkspaceInfoDto
-                {
-                    WorkspaceName = cw.WorkspaceName,
-                    StatusName = cw.StatusName,
-                    StartDate = cw.StartDate,
-                    EndDate = cw.EndDate,
-                    WorkerDetails = _context.WorkerDetails
-                        .Where(wd => wd.IdWorker == cw.IdWorker)
-                        .Select(wd => new
-                        {
-                            wd.FullWorkerName,
-                            wd.PostName,
-                            wd.DepartmentName
-                        })
-                        .FirstOrDefault()
-                })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cw => cw.IdWorkspace == id);
 
             if (workspaceInfo == null)
             {
                 return NotFound();
             }
 
+            // Получаем детали работников, связанные с рабочим пространством
+            var workerDetails = await _context.WorkerDetails
+                .Where(wd => wd.IdWorker == workspaceInfo.IdWorker)
+                .ToListAsync();
+
             return Ok(workspaceInfo);
         }
 
+
         // GET: api/workspaces/{id}/history
         [HttpGet("{id}/history")]
-        public async Task<ActionResult<IEnumerable<WorkspaceStatusDto>>> GetWorkspaceHistory(int id)
+        public async Task<ActionResult<IEnumerable<WorkspaceStatusInfoDto>>> GetWorkspaceHistory(int id)
         {
             var history = await _context.HistoryWorkspaceStatuses
                 .FromSqlRaw("SELECT * FROM offices_management.history_workspace_statuses WHERE id_workspace = {0} ORDER BY start_date", id)
@@ -78,17 +67,80 @@ namespace backend.Controllers
 
             return Ok(history);
         }
+
+        // Метод для добавления статуса рабочего места
+        [HttpPost]
+        public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
+        {
+            if (statusWorkspaceDto == null)
+            {
+                return BadRequest("Invalid data.");
+            }
+
+            // Устанавливаем текущую дату, если не указана
+            statusWorkspaceDto.StartDate = statusWorkspaceDto.StartDate == default ? DateOnly.FromDateTime(DateTime.Now) : statusWorkspaceDto.StartDate;
+
+            // Преобразуем DTO в модель
+            var statusWorkspace = new StatusesWorkspace
+            {
+                StartDate = statusWorkspaceDto.StartDate,
+                EndDate = statusWorkspaceDto.EndDate,
+                IdWorkspace = statusWorkspaceDto.IdWorkspace,
+                IdStatus = statusWorkspaceDto.IdStatus,
+                IdWorker = statusWorkspaceDto.IdWorker,
+                IdUser = statusWorkspaceDto.IdUser
+            };
+
+            _context.StatusesWorkspaces.Add(statusWorkspace);
+            await _context.SaveChangesAsync();
+
+            // Вызываем метод UpdateEndDate, передавая id и дату начала
+            await UpdateEndDate(statusWorkspaceDto.IdStatusWorkspace, statusWorkspaceDto.StartDate);
+
+            return Ok();
+        }
+
+        [HttpPut("{id}/end-date")]
+        public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
+        {
+            // Находим статус рабочего места по id
+            var statusWorkspace = await _context.StatusesWorkspaces.FindAsync(id);
+
+            if (statusWorkspace == null)
+            {
+                return NotFound(); // Если статус рабочего места не найден, возвращаем 404
+            }
+
+            // Устанавливаем дату окончания на переданную дату или текущую дату, если дата равна null
+            statusWorkspace.EndDate = endDate ?? DateOnly.FromDateTime(DateTime.Now);
+
+            // Сохраняем изменения в базе данных
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Возвращаем 204 No Content, если все прошло успешно
+        }
     }
 
-    public class WorkspaceStatusDto
+    public class StatusWorkspaceDto
+    {
+        public int IdStatusWorkspace { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        public int IdWorkspace { get; set; }
+        public int? IdStatus { get; set; }
+        public int? IdWorker { get; set; }
+        public int IdUser { get; set; }
+    }
+
+    public class WorkspaceStatusInfoDto
     {
         public int IdWorkspace { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public string StatusType { get; set; }
-        public string WorkerFullName { get; set; }
-        public string WorkerPosition { get; set; }
-        public string DepartmentName { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string? StatusType { get; set; }
+        public string? WorkerFullName { get; set; }
+        public string? WorkerPosition { get; set; }
+        public string? DepartmentName { get; set; }
         public string UserName { get; set; }
     }
 

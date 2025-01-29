@@ -1086,17 +1086,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceInfoDto"
+                  "$ref": "#/components/schemas/CurrentWorkspace"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceInfoDto"
+                  "$ref": "#/components/schemas/CurrentWorkspace"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceInfoDto"
+                  "$ref": "#/components/schemas/CurrentWorkspace"
                 }
               }
             }
@@ -1128,7 +1128,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceStatusDto"
+                    "$ref": "#/components/schemas/WorkspaceStatusInfoDto"
                   }
                 }
               },
@@ -1136,7 +1136,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceStatusDto"
+                    "$ref": "#/components/schemas/WorkspaceStatusInfoDto"
                   }
                 }
               },
@@ -1144,11 +1144,72 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceStatusDto"
+                    "$ref": "#/components/schemas/WorkspaceStatusInfoDto"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Workspace": {
+      "post": {
+        "tags": [
+          "Workspace"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusWorkspaceDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusWorkspaceDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusWorkspaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Workspace/{id}/end-date": {
+      "put": {
+        "tags": [
+          "Workspace"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/DateOnly"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -1643,6 +1704,40 @@
         },
         "additionalProperties": false
       },
+      "StatusWorkspaceDto": {
+        "type": "object",
+        "properties": {
+          "idStatusWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "idWorkspace": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idStatus": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idWorker": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idUser": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "StatusesWorker": {
         "type": "object",
         "properties": {
@@ -1917,30 +2012,7 @@
         },
         "additionalProperties": false
       },
-      "WorkspaceInfoDto": {
-        "type": "object",
-        "properties": {
-          "workspaceName": {
-            "type": "string",
-            "nullable": true
-          },
-          "statusName": {
-            "type": "string",
-            "nullable": true
-          },
-          "startDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "endDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "workerDetails": {
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "WorkspaceStatusDto": {
+      "WorkspaceStatusInfoDto": {
         "type": "object",
         "properties": {
           "idWorkspace": {
@@ -1953,7 +2025,8 @@
           },
           "endDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "statusType": {
             "type": "string",

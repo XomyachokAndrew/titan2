@@ -7,16 +7,40 @@
       "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:controllers\\workspacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\statusesworkspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\statusesworkspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\workspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\workspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\controllers\\workerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:controllers\\workerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\statusesworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\statusesworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\workerdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\workerdetail.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\data\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:data\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\currentworkspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\currentworkspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -41,14 +65,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\statusesworkspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\statusesworkspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|d:\\files\\progects\\\u0442\u0438\u0442\u0430\u043D2\\\u043F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\models\\workspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98E99FFE-6FB8-4211-A924-64BC27AF17B8}|backend.csproj|solutionrelative:models\\workspace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,24 +74,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Reservation.cs",
-              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Reservation.cs",
-              "RelativeDocumentMoniker": "Models\\Reservation.cs",
-              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Reservation.cs",
-              "RelativeToolTip": "Models\\Reservation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "WorkspaceController.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs",
+              "RelativeDocumentMoniker": "Controllers\\WorkspaceController.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs*",
+              "RelativeToolTip": "Controllers\\WorkspaceController.cs*",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAwwGUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T09:41:14.86Z",
+              "WhenOpened": "2025-01-28T07:05:08.762Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
+              "Title": "StatusesWorkspace.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
+              "RelativeDocumentMoniker": "Models\\StatusesWorkspace.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
+              "RelativeToolTip": "Models\\StatusesWorkspace.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T07:01:30.007Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Workspace.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Workspace.cs",
+              "RelativeDocumentMoniker": "Models\\Workspace.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Workspace.cs",
+              "RelativeToolTip": "Models\\Workspace.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T07:01:00.276Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CurrentWorkspace.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\CurrentWorkspace.cs",
+              "RelativeDocumentMoniker": "Models\\CurrentWorkspace.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\CurrentWorkspace.cs",
+              "RelativeToolTip": "Models\\CurrentWorkspace.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T12:21:08.678Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "Context.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Data\\Context.cs",
               "RelativeDocumentMoniker": "Data\\Context.cs",
@@ -89,32 +144,44 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
-              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "WorkerDetail.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\WorkerDetail.cs",
+              "RelativeDocumentMoniker": "Models\\WorkerDetail.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\WorkerDetail.cs",
+              "RelativeToolTip": "Models\\WorkerDetail.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:50:41.108Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "WorkersController.cs",
-              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkersController.cs",
-              "RelativeDocumentMoniker": "Controllers\\WorkersController.cs",
-              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkersController.cs",
-              "RelativeToolTip": "Controllers\\WorkersController.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:50:30.136Z",
+              "WhenOpened": "2025-01-28T13:06:14.749Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "StatusesWorker.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorker.cs",
+              "RelativeDocumentMoniker": "Models\\StatusesWorker.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorker.cs",
+              "RelativeToolTip": "Models\\StatusesWorker.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T13:26:28.797Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Status.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Status.cs",
+              "RelativeDocumentMoniker": "Models\\Status.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Status.cs",
+              "RelativeToolTip": "Models\\Status.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T13:28:58.611Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "SearchController.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\SearchController.cs",
               "RelativeDocumentMoniker": "Controllers\\SearchController.cs",
@@ -122,12 +189,24 @@
               "RelativeToolTip": "Controllers\\SearchController.cs",
               "ViewState": "AgIAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T08:41:01.794Z",
+              "WhenOpened": "2025-01-28T08:41:01.794Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WorkersController.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\WorkersController.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkersController.cs",
+              "RelativeToolTip": "Controllers\\WorkersController.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T08:50:30.136Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": ".gitignore.txt",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\.gitignore.txt",
               "RelativeDocumentMoniker": ".gitignore.txt",
@@ -135,25 +214,35 @@
               "RelativeToolTip": ".gitignore.txt",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2025-01-28T07:26:55.761Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T07:26:55.761Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "WorkspaceController.cs",
-              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs",
-              "RelativeDocumentMoniker": "Controllers\\WorkspaceController.cs",
-              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\WorkspaceController.cs",
-              "RelativeToolTip": "Controllers\\WorkspaceController.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAAAFcAAAAuAAAAAAAAAA==",
+              "DocumentIndex": 11,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Controllers\\UsersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:05:08.762Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T08:50:41.108Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
+              "Title": "Reservation.cs",
+              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Reservation.cs",
+              "RelativeDocumentMoniker": "Models\\Reservation.cs",
+              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Reservation.cs",
+              "RelativeToolTip": "Models\\Reservation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-28T09:41:14.86Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "Department.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Department.cs",
               "RelativeDocumentMoniker": "Models\\Department.cs",
@@ -161,12 +250,11 @@
               "RelativeToolTip": "Models\\Department.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:02:08.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T07:02:08.222Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 15,
               "Title": "Post.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Post.cs",
               "RelativeDocumentMoniker": "Models\\Post.cs",
@@ -174,12 +262,11 @@
               "RelativeToolTip": "Models\\Post.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:02:03.011Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T07:02:03.011Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "WorkspaceStatusesType.cs",
               "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\WorkspaceStatusesType.cs",
               "RelativeDocumentMoniker": "Models\\WorkspaceStatusesType.cs",
@@ -187,34 +274,7 @@
               "RelativeToolTip": "Models\\WorkspaceStatusesType.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:01:36.556Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "StatusesWorkspace.cs",
-              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
-              "RelativeDocumentMoniker": "Models\\StatusesWorkspace.cs",
-              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\StatusesWorkspace.cs",
-              "RelativeToolTip": "Models\\StatusesWorkspace.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:01:30.007Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Workspace.cs",
-              "DocumentMoniker": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Workspace.cs",
-              "RelativeDocumentMoniker": "Models\\Workspace.cs",
-              "ToolTip": "D:\\Files\\Progects\\\u0422\u0438\u0442\u0430\u043D2\\\u041F\u0440\u043E\u0435\u043A\u0442\\titan2\\backend\\Models\\Workspace.cs",
-              "RelativeToolTip": "Models\\Workspace.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T07:01:00.276Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T07:01:36.556Z"
             }
           ]
         }
