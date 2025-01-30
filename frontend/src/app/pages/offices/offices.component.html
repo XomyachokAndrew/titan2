@@ -1,0 +1,9 @@
+<div class="container">
+    @for (office of data; track $index) {
+        <card-office
+        [title]="office.OfficeName"
+        [address]="office.Address"
+        [image]="office.Image"
+        ></card-office>
+    }
+</div>

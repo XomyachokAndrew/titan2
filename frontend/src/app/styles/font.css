@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'RockStar-eb';
+    src: url('../assets/fonts/RS-extrabold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RockStar-sb';
+    src: url('../assets/fonts/RS-semibold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}

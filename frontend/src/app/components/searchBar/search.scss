@@ -1,0 +1,31 @@
+@import "../../styles/font.css";
+
+.search-bar {
+  position: relative; /* Для позиционирования дочерних элементов */
+}
+
+.search-bar input {
+  width: 46rem;
+  height: 4rem;
+  border-radius: var(--tui-radius-m);
+  font-family: 'RockStar-sb';
+  font-size: 14pt;
+  padding: var(--tui-padding-l) 2rem; /* Добавляем отступ справа для иконки */
+  padding-left: 4rem; /* Дополнительный отступ слева для текста */
+  color: black;
+  background-color: white;
+  box-sizing: border-box; /* Учитываем отступы в ширине */
+  outline: none;
+  border-color: transparent;
+}
+
+.search-bar .search-icon {
+  position: absolute; /* Позиционируем иконку */
+  left: 1rem; /* Отступ от левого края */
+  top: 50%; /* Центрируем по вертикали */
+  transform: translateY(-50%); /* Центрируем по вертикали */
+  width: 2rem; /* Ширина иконки */
+  height: 2rem; /* Высота иконки */
+  fill: black; /* Цвет иконки */
+  pointer-events: none; /* Игнорируем события мыши для иконки */
+}

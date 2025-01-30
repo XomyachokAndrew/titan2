@@ -1,0 +1,24 @@
+@if (!loginPage) {
+<header class="header" tuiNavigationHeader>
+    <span tuiNavigationLogo [ngClass]="{'center-text': loginPage}">
+        <span>{{title}}</span>
+    </span>
+    @if (isSearch){
+        <div class="search-container">
+            <app-search class="search"/>
+        </div>
+    }
+    @else {
+        <hr />
+    }
+    <a href="/login" class="admin-button">
+        @if (user !== '') {
+        <tui-icon icon="./media/account.svg" />
+        <p>{{user}}</p>
+        }
+        @else {
+        <p>Войти</p>
+        }
+    </a>
+</header>
+}
