@@ -1,4 +1,4 @@
-backend/obj/
+obj/
 
 # Игнорировать папку bin
 bin/
