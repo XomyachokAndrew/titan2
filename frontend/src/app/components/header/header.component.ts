@@ -16,6 +16,7 @@ import {
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
 import { SearchComponent } from '../searchBar/search.component';
+import { Location } from '@angular/common'; // Импортируйте Location
 
 @Component({
     selector: 'app-header',
@@ -37,19 +38,16 @@ import { SearchComponent } from '../searchBar/search.component';
 })
 export default class HeaderComponent implements OnInit {
     loginPage: boolean = false;
-    // loginPage: boolean = false;
     title: string = "Интерактивная карта офисов";
     user: string = '';
     isSearch: boolean = false;
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private location: Location) { }
 
     ngOnInit() {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)
         ).subscribe((event: NavigationEnd) => {
-            console.log(event.urlAfterRedirects);
-            
             switch (event.urlAfterRedirects) {
                 case '/login':
                     this.loginPage = true; 
@@ -75,5 +73,9 @@ export default class HeaderComponent implements OnInit {
                 this.isSearch = false;
             }
         });
+    }
+
+    goBack() {
+        this.location.back(); // Метод для возврата на предыдущую страницу
     }
 }
