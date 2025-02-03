@@ -11,3 +11,10 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'RockStar-r';
+    src: url('../assets/fonts/RS-regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}

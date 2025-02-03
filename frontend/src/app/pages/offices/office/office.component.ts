@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { OfficeService } from '../../../services/office.service';
 
 @Component({
   selector: 'office',
@@ -9,17 +8,8 @@ import { OfficeService } from '../../../services/office.service';
 export class OfficeComponent implements OnInit {
   data: any;
 
-  constructor (private officeService: OfficeService) {}
+  constructor () {}
 
   ngOnInit(): void {
-    this.officeService.getData().subscribe(
-      response => {
-        this.data = response;
-        console.log(response);
-      },
-      error => {
-        console.error(error);
-      }
-    );
   }
 }
