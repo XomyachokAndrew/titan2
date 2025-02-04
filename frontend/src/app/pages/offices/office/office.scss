@@ -66,3 +66,11 @@ svg {
   font-family: 'RockStar-sb';
   justify-content: center;
 }
+
+.clickable {
+  transition: fill 0.3s ease;
+}
+
+.clickable:hover {
+  fill: lightcoral;
+}
