@@ -498,3 +498,16 @@ D:\Files\Progects\Титан2\Проект\titan2\backend\obj\Debug\net8.0\refin
 D:\Files\Progects\Титан2\Проект\titan2\backend\obj\Debug\net8.0\backend.pdb
 D:\Files\Progects\Титан2\Проект\titan2\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 D:\Files\Progects\Титан2\Проект\titan2\backend\obj\Debug\net8.0\ref\backend.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\System.Web.Cors.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\System.Net.Http.Formatting.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\System.Web.Http.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\System.Web.Http.Cors.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\Aspose.Cells.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\SkiaSharp.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\runtimes\osx\native\libSkiaSharp.dylib
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\runtimes\win-arm64\native\libSkiaSharp.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\runtimes\win-x64\native\libSkiaSharp.dll
+D:\Files\Progects\Титан2\Проект\titan2\backend\bin\Debug\net8.0\runtimes\win-x86\native\libSkiaSharp.dll

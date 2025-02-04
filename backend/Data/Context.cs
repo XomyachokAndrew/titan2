@@ -54,6 +54,8 @@ public partial class Context : DbContext
 
     public virtual DbSet<WorkerDetail> WorkerDetails { get; set; }
 
+    public virtual DbSet<WorkersStatusesType> WorkersStatusesTypes { get; set; }
+
     public virtual DbSet<Workspace> Workspaces { get; set; }
 
     public virtual DbSet<WorkspaceStatusesType> WorkspaceStatusesTypes { get; set; }
@@ -128,10 +130,8 @@ public partial class Context : DbContext
                 .HasNoKey()
                 .ToView("history_workspace_statuses", "offices_management");
 
-            entity.Property(e => e.DepartmentName)
-                .HasMaxLength(200)
-                .HasColumnName("department_name");
             entity.Property(e => e.EndDate).HasColumnName("end_date");
+            entity.Property(e => e.IdStatusWorkspace).HasColumnName("id_status_workspace");
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
             entity.Property(e => e.StatusType)
@@ -141,9 +141,6 @@ public partial class Context : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("user_name");
             entity.Property(e => e.WorkerFullName).HasColumnName("worker_full_name");
-            entity.Property(e => e.WorkerPosition)
-                .HasMaxLength(200)
-                .HasColumnName("worker_position");
         });
 
         modelBuilder.Entity<Office>(entity =>
@@ -369,6 +366,7 @@ public partial class Context : DbContext
             entity.Property(e => e.EndDate).HasColumnName("end_date");
             entity.Property(e => e.IdDepartment).HasColumnName("id_department");
             entity.Property(e => e.IdPost).HasColumnName("id_post");
+            entity.Property(e => e.IdStatus).HasColumnName("id_status");
             entity.Property(e => e.IdUser).HasColumnName("id_user");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
@@ -382,6 +380,10 @@ public partial class Context : DbContext
                 .HasForeignKey(d => d.IdPost)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("statuses_workers_posts_id_post_fkey");
+
+            entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.StatusesWorkers)
+                .HasForeignKey(d => d.IdStatus)
+                .HasConstraintName("statuses_workers_workers_statuses_types_fk");
 
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.StatusesWorkers)
                 .HasForeignKey(d => d.IdUser)
@@ -487,10 +489,33 @@ public partial class Context : DbContext
             entity.Property(e => e.FullWorkerName).HasColumnName("full_worker_name");
             entity.Property(e => e.IdDepartment).HasColumnName("id_department");
             entity.Property(e => e.IdPost).HasColumnName("id_post");
+            entity.Property(e => e.IdStatus).HasColumnName("id_status");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.PostName)
                 .HasMaxLength(200)
                 .HasColumnName("post_name");
+            entity.Property(e => e.StatusName)
+                .HasMaxLength(30)
+                .HasColumnName("status_name");
+        });
+
+        modelBuilder.Entity<WorkersStatusesType>(entity =>
+        {
+            entity.HasKey(e => e.IdStatus).HasName("workers_statuses_types_pk");
+
+            entity.ToTable("workers_statuses_types", "offices_management");
+
+            entity.HasIndex(e => e.Name, "workers_statuses_types_unique").IsUnique();
+
+            entity.Property(e => e.IdStatus)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id_status");
+            entity.Property(e => e.Description)
+                .HasMaxLength(500)
+                .HasColumnName("description");
+            entity.Property(e => e.Name)
+                .HasMaxLength(30)
+                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Workspace>(entity =>

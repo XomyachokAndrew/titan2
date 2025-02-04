@@ -31,7 +31,7 @@ namespace backend.Controllers
 
             return Ok(rooms);
         }
-
+        
         // GET: api/Rooms
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()

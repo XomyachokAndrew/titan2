@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("https://localhost:4200") // URL клиента
+            builder.WithOrigins("http://localhost:4200") // URL клиента
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
@@ -64,10 +64,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowSpecificOrigin"); // Включение CORS
+
 app.UseAuthentication(); // Включаем аутентификацию
 app.UseAuthorization(); // Включаем авторизацию
-
-app.UseAuthorization();
 
 app.MapControllers();
 
