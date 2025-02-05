@@ -36,15 +36,17 @@ namespace backend.Controllers
                 .ToListAsync();
 
             // Поиск рабочих мест
-            var workspaces = await _context.Workspaces
-                .Where(w => w.Name.ToLower().Contains(lowerQuery))
+            var workspaces = await _context.CurrentWorkspaces
+                .Where(w => w.WorkspaceName.ToLower().Contains(lowerQuery) || 
+                            w.StatusName.ToLower().Contains(lowerQuery))
                 .ToListAsync();
 
             // Поиск работников
             var workers = await _context.WorkerDetails
                 .Where(w => w.FullWorkerName.ToLower().Contains(lowerQuery) ||
-                             w.PostName.ToLower().Contains(lowerQuery) ||
-                             w.DepartmentName.ToLower().Contains(lowerQuery))
+                            w.PostName.ToLower().Contains(lowerQuery) ||
+                            w.DepartmentName.ToLower().Contains(lowerQuery) ||
+                            w.StatusName.ToLower().Contains(lowerQuery))
                 .ToListAsync();
 
             // Объединение результатов

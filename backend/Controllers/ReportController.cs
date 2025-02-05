@@ -1,4 +1,5 @@
 ﻿using backend.Data;
+using backend.ModelsDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +64,7 @@ namespace backend.Controllers
                     .GroupBy(worker => worker.IdDepartment.Value)
                     .ToDictionary(
                         group => group.Key,
-                        group => new DepartmentCostInfo
+                        group => new DepartmentCostInfoDto
                         {
                             DepartmentName = group.First().DepartmentName, // Предполагается, что это поле есть в WorkerDetail
                             TotalCost = group.Count() * priceWorkspace,
@@ -71,7 +72,7 @@ namespace backend.Controllers
                         });
 
                 // Формируем ответ
-                var response = new OfficeCostInfo
+                var response = new OfficeCostInfoDto
                 {
                     OfficeCost = rentalPrice,
                     OfficeSquare = office.Square,
@@ -87,22 +88,6 @@ namespace backend.Controllers
                 // Обработка ошибок
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-        }
-
-        public class DepartmentCostInfo
-        {
-            public string DepartmentName { get; set; }
-            public decimal TotalCost { get; set; }
-            public int WorkspaceCount { get; set; }
-        }
-
-        public class OfficeCostInfo
-        {
-            public decimal OfficeCost { get; set; }
-            public int? OfficeSquare { get; set; }
-            public decimal? OfficeFreeWorkspace { get; set; }
-            public decimal? PriceWorkspace { get; set; }
-            public List<DepartmentCostInfo> DepartmentCosts { get; set; }
-        }
+        }    
     }
 }

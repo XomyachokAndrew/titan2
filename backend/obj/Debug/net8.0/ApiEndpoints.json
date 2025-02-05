@@ -450,7 +450,7 @@
     "Parameters": [
       {
         "Name": "loginDto",
-        "Type": "backend.Controllers.UserLoginDto",
+        "Type": "backend.ModelsDto.UserLoginDto",
         "IsRequired": true
       }
     ],
@@ -466,7 +466,7 @@
     "Parameters": [
       {
         "Name": "refreshTokenDto",
-        "Type": "backend.Controllers.RefreshTokenDto",
+        "Type": "backend.ModelsDto.RefreshTokenDto",
         "IsRequired": true
       }
     ],
@@ -482,7 +482,7 @@
     "Parameters": [
       {
         "Name": "registrationDto",
-        "Type": "backend.Controllers.UserRegistrationDto",
+        "Type": "backend.ModelsDto.UserRegistrationDto",
         "IsRequired": true
       }
     ],
@@ -598,6 +598,115 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "backend.Controllers.WorkersStatusesTypesController",
+    "Method": "GetWorkersStatusesTypes",
+    "RelativePath": "api/WorkersStatusesTypes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[backend.Models.WorkersStatusesType, backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "backend.Controllers.WorkersStatusesTypesController",
+    "Method": "PostWorkersStatusesType",
+    "RelativePath": "api/WorkersStatusesTypes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "workersStatusesType",
+        "Type": "backend.Models.WorkersStatusesType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "backend.Models.WorkersStatusesType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "backend.Controllers.WorkersStatusesTypesController",
+    "Method": "GetWorkersStatusesType",
+    "RelativePath": "api/WorkersStatusesTypes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "backend.Models.WorkersStatusesType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "backend.Controllers.WorkersStatusesTypesController",
+    "Method": "PutWorkersStatusesType",
+    "RelativePath": "api/WorkersStatusesTypes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "workersStatusesType",
+        "Type": "backend.Models.WorkersStatusesType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "backend.Controllers.WorkersStatusesTypesController",
+    "Method": "DeleteWorkersStatusesType",
+    "RelativePath": "api/WorkersStatusesTypes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "backend.Controllers.WorkspaceController",
     "Method": "AddStatusWorkspace",
     "RelativePath": "api/Workspace",
@@ -629,7 +738,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "backend.Models.CurrentWorkspace",
+        "Type": "backend.Controllers.WorkspaceController\u002BWorkspaceInfoDto",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -654,7 +763,7 @@
       },
       {
         "Name": "updatedStatusDto",
-        "Type": "backend.Controllers.StatusWorkspaceUpdateDto",
+        "Type": "backend.Controllers.StatusWorkspaceDto",
         "IsRequired": true
       }
     ],
@@ -697,7 +806,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[backend.Controllers.StatusWorkspaceInfoDto, backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[backend.Controllers.StatusWorkspaceDto, backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

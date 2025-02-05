@@ -1038,6 +1038,191 @@
         }
       }
     },
+    "/api/WorkersStatusesTypes": {
+      "get": {
+        "tags": [
+          "WorkersStatusesTypes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkersStatusesType"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkersStatusesType"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkersStatusesType"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "WorkersStatusesTypes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkersStatusesType"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkersStatusesType"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkersStatusesType"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkersStatusesType"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkersStatusesType"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkersStatusesType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WorkersStatusesTypes/{id}": {
+      "get": {
+        "tags": [
+          "WorkersStatusesTypes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkersStatusesType"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkersStatusesType"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkersStatusesType"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "WorkersStatusesTypes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkersStatusesType"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkersStatusesType"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkersStatusesType"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "WorkersStatusesTypes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Workspace/room/{roomId}": {
       "get": {
         "tags": [
@@ -1109,17 +1294,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentWorkspace"
+                  "$ref": "#/components/schemas/WorkspaceInfoDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentWorkspace"
+                  "$ref": "#/components/schemas/WorkspaceInfoDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentWorkspace"
+                  "$ref": "#/components/schemas/WorkspaceInfoDto"
                 }
               }
             }
@@ -1145,17 +1330,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StatusWorkspaceUpdateDto"
+                "$ref": "#/components/schemas/StatusWorkspaceDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/StatusWorkspaceUpdateDto"
+                "$ref": "#/components/schemas/StatusWorkspaceDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/StatusWorkspaceUpdateDto"
+                "$ref": "#/components/schemas/StatusWorkspaceDto"
               }
             }
           }
@@ -1191,7 +1376,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StatusWorkspaceInfoDto"
+                    "$ref": "#/components/schemas/StatusWorkspaceDto"
                   }
                 }
               },
@@ -1199,7 +1384,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StatusWorkspaceInfoDto"
+                    "$ref": "#/components/schemas/StatusWorkspaceDto"
                   }
                 }
               },
@@ -1207,7 +1392,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StatusWorkspaceInfoDto"
+                    "$ref": "#/components/schemas/StatusWorkspaceDto"
                   }
                 }
               }
@@ -1965,10 +2150,6 @@
           "endDate": {
             "$ref": "#/components/schemas/DateOnly"
           },
-          "idWorkspace": {
-            "type": "integer",
-            "format": "int32"
-          },
           "idStatus": {
             "type": "integer",
             "format": "int32",
@@ -1982,72 +2163,6 @@
           "idUser": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "StatusWorkspaceInfoDto": {
-        "type": "object",
-        "properties": {
-          "idWorkspace": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "statusType": {
-            "type": "string",
-            "nullable": true
-          },
-          "workerFullName": {
-            "type": "string",
-            "nullable": true
-          },
-          "workerPosition": {
-            "type": "string",
-            "nullable": true
-          },
-          "departmentName": {
-            "type": "string",
-            "nullable": true
-          },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "StatusWorkspaceUpdateDto": {
-        "type": "object",
-        "properties": {
-          "startDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "endDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "idStatus": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "idWorker": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "idUser": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2354,6 +2469,29 @@
             "items": {
               "$ref": "#/components/schemas/StatusesWorkspace"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkspaceInfoDto": {
+        "type": "object",
+        "properties": {
+          "workspaceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusName": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "endDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "workerDetails": {
             "nullable": true
           }
         },

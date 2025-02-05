@@ -25,3 +25,32 @@ packages/
 
 # Temporary files
 *.tmp
+
+obj/
+
+# Игнорировать папку bin
+bin/
+
+# Игнорировать все .exe файлы
+*.exe
+
+# Игнорировать все .dll файлы
+*.dll
+
+# Игнорировать все .pdb файлы
+*.pdb
+
+# Игнорировать все .suo файлы
+*.suo
+
+# Игнорировать все .user файлы
+*.user
+
+# Игнорировать все .userosscache файлы
+*.userosscache
+
+# Игнорировать все .sln.docstates файлы
+*.sln.docstates
+
+# Игнорировать папку .vs
+.vs/
