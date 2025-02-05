@@ -118,6 +118,61 @@ namespace backend.Controllers
 
             return NoContent(); // Возвращаем 204 No Content, если все прошло успешно
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateStatus(int id, [FromBody] StatusWorkspaceUpdateDto updatedStatusDto)
+        {
+            if (updatedStatusDto == null)
+            {
+                return BadRequest("Updated status data is required.");
+            }
+
+            var currentStatus = _context.StatusesWorkspaces
+                .FirstOrDefault(s => s.IdStatusWorkspace == id);
+
+            if (currentStatus == null)
+            {
+                return NotFound();
+            }
+
+            // Проверка на изменение дат
+            if (currentStatus.StartDate != updatedStatusDto.StartDate)
+            {
+                // Обновление предыдущей записи, если она существует
+                var previousStatus = _context.StatusesWorkspaces
+                    .Where(s => s.IdWorkspace == currentStatus.IdWorkspace && (s.EndDate == null || s.EndDate == currentStatus.StartDate))
+                    .FirstOrDefault(s => s.StartDate < updatedStatusDto.StartDate);
+
+                if (previousStatus != null)
+                {
+                    previousStatus.EndDate = updatedStatusDto.StartDate; // Устанавливаем конец предыдущей записи
+                }
+            }
+            if (currentStatus.EndDate != updatedStatusDto.EndDate)
+            {                
+                // Обновление следующей записи, если она существует
+                var nextStatus = _context.StatusesWorkspaces
+                    .Where(s => s.IdWorkspace == currentStatus.IdWorkspace && s.StartDate == currentStatus.EndDate)
+                    .FirstOrDefault(s => s.StartDate > updatedStatusDto.StartDate);
+
+                if (nextStatus != null)
+                {
+                    nextStatus.StartDate = updatedStatusDto.EndDate.HasValue ? updatedStatusDto.EndDate.Value : nextStatus.StartDate;
+                }
+            }
+
+            // Обновление текущего статуса, если значения не null
+            currentStatus.StartDate = updatedStatusDto.StartDate;
+
+            // Сохраняем предыдущие значения, если новые значения не указаны
+            currentStatus.EndDate = updatedStatusDto.EndDate ?? currentStatus.EndDate;
+            currentStatus.IdStatus = updatedStatusDto.IdStatus ?? currentStatus.IdStatus;
+            currentStatus.IdWorker = updatedStatusDto.IdWorker ?? currentStatus.IdWorker;
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
 
     public class StatusWorkspaceDto
@@ -131,6 +186,15 @@ namespace backend.Controllers
         public int IdUser { get; set; }
     }
 
+    public class StatusWorkspaceUpdateDto
+    {
+        public DateOnly StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
+        public int? IdStatus { get; set; }
+        public int? IdWorker { get; set; }
+        public int? IdUser { get; set; }
+    }
+
     public class StatusWorkspaceInfoDto
     {
         public int IdWorkspace { get; set; }
@@ -138,8 +202,6 @@ namespace backend.Controllers
         public DateTime? EndDate { get; set; }
         public string? StatusType { get; set; }
         public string? WorkerFullName { get; set; }
-        public string? WorkerPosition { get; set; }
-        public string? DepartmentName { get; set; }
         public string UserName { get; set; }
     }
 

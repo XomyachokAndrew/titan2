@@ -19,9 +19,13 @@ public partial class StatusesWorker
 
     public int IdUser { get; set; }
 
+    public int? IdStatus { get; set; }
+
     public virtual Department IdDepartmentNavigation { get; set; } = null!;
 
     public virtual Post IdPostNavigation { get; set; } = null!;
+
+    public virtual WorkersStatusesType? IdStatusNavigation { get; set; }
 
     public virtual User IdUserNavigation { get; set; } = null!;
 
