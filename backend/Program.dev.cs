@@ -64,9 +64,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowSpecificOrigin"); // ��������� CORS
 
 app.UseAuthentication(); // �������� ��������������
+
+app.UseCors("AllowSpecificOrigin"); // ��������� CORS
+
 app.UseAuthorization(); // �������� �����������
 
 app.MapControllers();
