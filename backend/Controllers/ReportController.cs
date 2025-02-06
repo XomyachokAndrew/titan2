@@ -130,7 +130,16 @@ namespace backend.Controllers
             // Санитизация имени офиса для использования в имени файла
             var sanitizedOfficeName = Regex.Replace(office.OfficeName, @"[<>:""/\\|?*]", "");
             sanitizedOfficeName = sanitizedOfficeName.Replace(" ", "_");
-            var fileName = $"Отчет_Офиса_{sanitizedOfficeName}_{DateTime.Now:yyyyMMdd}.xlsx";
+
+            // Получение текущей даты и времени
+            var currentDateTime = DateTime.Now;
+
+            // Форматирование времени в строку (чч_мм_сс)
+            var timeString = currentDateTime.ToString("HHmm");
+
+            // Создание имени файла с добавлением времени
+            var fileName = $"Отчет_{sanitizedOfficeName}_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
+
             var filePath = Path.Combine("resources", "reports", fileName);
 
             using (var workbook = new XSSFWorkbook())
@@ -167,6 +176,7 @@ namespace backend.Controllers
                 // Сохранение файла
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
+                    Console.WriteLine("\n\n\n\n");
                     workbook.Write(fileStream);
                 }
             }
