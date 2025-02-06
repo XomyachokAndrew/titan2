@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Folder Include="resources\floors\" />
-    <Folder Include="resources\Новая папка\" />
+    <Folder Include="resources\reports\" />
   </ItemGroup>
 
 </Project>
