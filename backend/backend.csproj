@@ -16,13 +16,14 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageReference Include="NPOI" Version="2.7.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="resources\floors\" />
-    <Folder Include="resources\Новая папка\" />
+    <Folder Include="resources\reports\" />
   </ItemGroup>
 
 </Project>
