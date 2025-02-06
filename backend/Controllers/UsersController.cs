@@ -1,5 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.ModelsDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -127,28 +128,6 @@ namespace backend.Controllers
             return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = newRefreshToken });
         }
 
-    }
-
-    public class RefreshTokenDto
-    {
-        public string RefreshToken { get; set; } = null!;
-    }
-
-    // DTO для регистрации пользователя
-    public class UserRegistrationDto
-    {
-        public string Name { get; set; } = null!;
-        public string Surname { get; set; } = null!;
-        public string? Patronymic { get; set; }
-        public string Login { get; set; } = null!;
-        public string Password { get; set; } = null!;
-    }
-
-    // DTO для входа пользователя
-    public class UserLoginDto
-    {
-        public string Login { get; set; } = null!;
-        public string Password { get; set; } = null!;
     }
 }
 
