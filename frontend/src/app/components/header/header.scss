@@ -12,7 +12,7 @@ header[tuiNavigationHeader][tuiNavigationHeader] {
     background: linear-gradient(90deg, #0057A6 60.5%, #002240 100%);
     font-family: 'RockStar-eb';
     font-size: 30pt;
-    height: 8.5rem;
+    height: 6rem;
     padding: 0 10rem;
     display: flex;
     justify-content: space-between;
@@ -96,4 +96,38 @@ tui-icon[tuiIcons]:after {
     flex: 1; /* Занимает оставшееся пространство */
     display: flex;
     justify-content: left; /* Центрирует элемент поиска по горизонтали */
+}
+
+.office-navigation {
+    justify-content: center;
+    width: 50%;
+    display: flex;
+    background: linear-gradient(90deg, #034A8B 56.9%, #003668 100%);
+    height: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 0rem 0rem 1.875rem 1.875rem;
+    align-items: center;
+    padding: 1.25rem 8rem;
+}
+
+.navigation-text {
+    color: #FFF;
+    font-family: RockStar-sb;
+    font-size: 1.625rem;
+    margin: 1rem;
+    transition: 0.3s;
+    &:hover {
+        color: rgb(204, 213, 218);
+    }
+}
+
+.text-separator {
+    color: #FFF;
+    font-family: RockStar-sb;
+    height: 1rem;
+    width: 0.2rem;
+    background: #FFF;
+    border-radius: 2.5rem;
 }
