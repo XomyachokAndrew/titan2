@@ -1,29 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.html',
   styleUrls: ['./search.scss'],
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    CommonModule
+  ],
 })
 export class SearchComponent {
-    searchTerm: string = '';
-    results: string[] = [];
+  searchTerm: string = '';
+  isSearchVisible: boolean = false;
 
-    search() {
-        if (this.searchTerm.trim() !== '') {
-          // Здесь вы можете добавить логику для выполнения поиска
-          // Например, вызов API или фильтрация данных
-          this.results = this.performSearch(this.searchTerm);
-        } else {
-          this.results = [];
-        }
-      }
-    
-      performSearch(term: string): string[] {
-        // Пример логики поиска
-        const data = ['Angular', 'React', 'Vue', 'Svelte', 'Ember'];
-        return data.filter(item => item.toLowerCase().includes(term.toLowerCase()));
-      }
+  toggleSearch(event: MouseEvent) {
+    event.stopPropagation(); // Остановить всплытие события клика
+    this.isSearchVisible = !this.isSearchVisible; // Переключаем видимость строки поиска
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Если клик был вне области поиска, скрываем поле ввода
+    if (this.isSearchVisible) {
+      this.isSearchVisible = false;
+    }
+  }
+
+  search() {
+    console.log('Поиск:', this.searchTerm); // Логика поиска (можно заменить на вашу)
+  }
 }
