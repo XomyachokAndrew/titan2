@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { TuiAppearance, TuiTitle } from '@taiga-ui/core';
+import { TuiAppearance, TuiButton, TuiTitle, TuiIcon, TuiOption } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
+import {TuiAvatar} from '@taiga-ui/kit';
 
 @Component({
     selector: 'card-office',
@@ -11,14 +12,18 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
         TuiCardLarge,
         TuiHeader,
         TuiTitle,
+        TuiButton,
+        TuiIcon, 
+        TuiOption,
+        TuiAvatar,
     ],
     templateUrl: './card.component.html',
     styleUrl: './card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CardComponent {
-    @Input() address: string = "";
     @Input() title: string = "";
+    @Input() address: string = "";
     @Input() image: string = "";
 
 }
