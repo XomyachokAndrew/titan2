@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Office } from './models/Office';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ export class OfficeService {
 
   constructor(private http: HttpClient) { }
 
-  getData(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  // Получение списка офисов
+  getOffices(): Observable<Office[]> {
+    return this.http.get<Office[]>(this.apiUrl);
   }
 }
