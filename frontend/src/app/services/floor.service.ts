@@ -7,7 +7,7 @@ import { Floor } from './models/Floor';
 @Injectable({
   providedIn: 'root'
 })
-export class DepartmentService {
+export class FloorService {
   private apiUrl = "http://localhost:8080/api/floors";
 
   constructor(private http: HttpClient) { }
