@@ -1,65 +1,54 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { WorkersStatusesType } from './models/WorkersStatusesType';
+import { WorkspaceStatusesType } from './models/WorkspaceStatusesType';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WorkersStatusesTypeService {
-  private apiUrl = "http://localhost:8080/api/WorkspaceStatusesType";
+export class WorkspaceStatusesTypeService {
+  private baseUrl = 'api/WorkspaceStatusesTypes'; // Adjust the base URL as needed
 
   constructor(private http: HttpClient) { }
 
-  // Получение списка типов статусов работников
-  getWorkersStatusesTypes(): Observable<WorkersStatusesType[]> {
-    return this.http.get<WorkersStatusesType[]>(this.apiUrl)
+  // GET: api/WorkspaceStatusesTypes
+  getWorkspaceStatusesTypes(): Observable<WorkspaceStatusesType[]> {
+    return this.http.get<WorkspaceStatusesType[]>(this.baseUrl)
       .pipe(
-        catchError(this.handleError<WorkersStatusesType[]>('getWorkersStatusesTypes', []))
+        catchError(this.handleError<WorkspaceStatusesType[]>('getWorkspaceStatusesTypes', []))
       );
   }
 
-  // Получение типа статуса работника по ID
-  getWorkersStatusesType(id: number): Observable<WorkersStatusesType> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<WorkersStatusesType>(url)
+  // GET: api/WorkspaceStatusesTypes/5
+  getWorkspaceStatusesType(id: number): Observable<WorkspaceStatusesType> {
+    return this.http.get<WorkspaceStatusesType>(`${this.baseUrl}/${id}`)
       .pipe(
-        catchError(this.handleError<WorkersStatusesType>(`getWorkersStatusesType id=${id}`))
+        catchError(this.handleError<WorkspaceStatusesType>('getWorkspaceStatusesType'))
       );
   }
 
-  // Обновление типа статуса работника
-  updateWorkersStatusesType(workersStatusesType: WorkersStatusesType): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.put(this.apiUrl, workersStatusesType, httpOptions)
+  // PUT: api/WorkspaceStatusesTypes/5
+  updateWorkspaceStatusesType(id: number, workspaceStatusesType: WorkspaceStatusesType): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, workspaceStatusesType)
       .pipe(
-        catchError(this.handleError<any>('updateWorkersStatusesType'))
+        catchError(this.handleError<void>('updateWorkspaceStatusesType'))
       );
   }
 
-  // Добавление нового типа статуса работника
-  addWorkersStatusesType(workersStatusesType: WorkersStatusesType): Observable<WorkersStatusesType> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.post<WorkersStatusesType>(this.apiUrl, workersStatusesType, httpOptions)
+  // POST: api/WorkspaceStatusesTypes
+  addWorkspaceStatusesType(workspaceStatusesType: WorkspaceStatusesType): Observable<WorkspaceStatusesType> {
+    return this.http.post<WorkspaceStatusesType>(this.baseUrl, workspaceStatusesType)
       .pipe(
-        catchError(this.handleError<WorkersStatusesType>('addWorkersStatusesType'))
+        catchError(this.handleError<WorkspaceStatusesType>('addWorkspaceStatusesType'))
       );
   }
 
-  // Удаление типа статуса работника
-  deleteWorkersStatusesType(id: number): Observable<WorkersStatusesType> {
-    const url = `${this.apiUrl}/${id}`;
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.delete<WorkersStatusesType>(url, httpOptions)
+  // DELETE: api/WorkspaceStatusesTypes/5
+  deleteWorkspaceStatusesType(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`)
       .pipe(
-        catchError(this.handleError<WorkersStatusesType>('deleteWorkersStatusesType'))
+        catchError(this.handleError<void>('deleteWorkspaceStatusesType'))
       );
   }
 

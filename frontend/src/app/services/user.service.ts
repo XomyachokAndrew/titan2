@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { UserLoginDto } from './models/DTO/userLoginDTO';
-import { UserRegistrationDto } from './models/DTO/UserRegistrationDTO';
-import { RefreshTokenDto } from './models/DTO/RefreshTokenDTO';
+import { UserLoginDto, UserRegistrationDto, RefreshTokenDto } from './models/DTO';
 
 @Injectable({
   providedIn: 'root'
