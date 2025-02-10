@@ -25,11 +25,22 @@ export default class CardComponent implements OnInit {
 
     adr = "";
     city = "";
+
     ngOnInit(): void {
-        const parts = this.address.split(", ");
-        if (parts.length >= 2) {
-            this.adr = parts.slice(0, -1).join(", ");
-            this.city = parts[parts.length - 1];
+        if (this.address) {
+            const parts = this.address.split(", ");
+            if (parts.length >= 2) {
+                this.adr = parts.slice(0, -1).join(", ");
+                this.city = parts[parts.length - 1];
+            } else {
+                // Handle cases where the address does not contain a comma
+                this.adr = this.address;
+                this.city = "";
+            }
+        } else {
+            // Handle cases where the address is empty or undefined
+            this.adr = "";
+            this.city = "";
         }
     }
 }

@@ -14,7 +14,7 @@ export class OfficesComponent implements OnInit {
   constructor (private officeService: OfficeService) {}
 
   ngOnInit(): void {
-    this.officeService.getData().subscribe(
+    this.officeService.getOffices().subscribe(
       response => {
         this.data = response;
         console.log(response);
