@@ -1,42 +1,131 @@
 @import '../../styles/font.css';
 
-.card{
-    height: 28rem;
-    --tui-font-heading-5: bold 1.5rem / 1.75rem "RockStar-eb";
+[tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm]) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
 }
 
-[tuiCardLarge][data-space]:not([tuiCell],[tuiHeader],[tuiForm])>:last-child:not([tuiCell]) {
-    margin-top: 0;
-}
+.card {
+    display: flex;
+    width: 21.875rem;
+    height: 30.75rem;
+    padding: 2rem 1.625rem;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 1.875rem;
+    background: #3379B8;
+    box-shadow: 4px 4px 8px 0px rgba(11, 45, 65, 0.21);
+    flex: 1;
+    --t-space: 1rem;
+    --tui-font-heading-5: bold 1.5rem / 1.75rem "MyriadPro-eb";
+    --tui-text-primary: white;
+    --tui-text-action: white;
+    --tui-border-normal: white;
 
-.card,
-.card-header {
-    width: 17.25rem;
-    background-color: #217FB5;
-    color: white;
-    font-family: 'RockStar-sb';
+    div {
+        overflow-y: auto;
+    }
 
     .card-header {
-        font-size: 2.5rem;
-        font-family: 'RockStar-eb';
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+
+        h2 {
+            font-family: "MyriadPro-eb";
+            color: white;
+            font-size: 2.5rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height:  2.6rem;
+        }
+    }
+
+    .card-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8125rem;
+
+        hr {
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+            width: 11.5rem;
+            height: 0.0625rem;
+            background: rgba(255, 255, 255, 0.30);
+            margin-left: 0;
+        }
+
+        .card-info {
+            font-family: "MyriadPro-r";
+            font-size: 1.125rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            align-self: stretch;
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        flex-direction: column;
         width: 100%;
+
+
+        img {
+            margin-bottom: 1rem;
+            height: 9.625rem;
+            align-self: stretch;
+            border-radius: 1.875rem;
+            background: lightgray 50% / cover no-repeat;
+
+            filter: blur(0px);
+        }
+
+        button {
+            width: 100%;
+        }
     }
 }
 
-
-section {
-    display: flex;
-    block-size: 3.125rem;
-    border-radius: 0.75rem;
-    justify-content: center;
-    align-items: flex-start;
-    color: var(--tui-text-secondary);
-    border: none;
-    height: 14.25rem;
+[tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm])>:last-child:not([tuiCell]) {
+    margin-top: 0;
 }
 
-img {
-    height: 14.25rem;
-    width: 100%;
-    border-radius: 1.875rem;
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 12px;
+    /* Width of the scrollbar */
 }
+
+::-webkit-scrollbar-track {
+    background: #ffffff;
+    /* Color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff0000;
+    /* Color of the scrollbar thumb */
+    border-radius: 6px;
+    /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff00bf;
+    /* Color when hovering over the scrollbar thumb */
+}
+
+// /* For Firefox */
+// * {
+//     scrollbar-width: thin;
+//     /* Width of the scrollbar */
+//     scrollbar-color: #888 #f1f1f1;
+//     /* Thumb and track color */
+// }
