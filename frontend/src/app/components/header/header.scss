@@ -13,7 +13,7 @@ header[tuiNavigationHeader][tuiNavigationHeader] {
     font-family: 'RockStar-eb';
     font-size: 30pt;
     height: 6rem;
-    padding: 0 10rem;
+    padding: 0 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -103,13 +103,20 @@ tui-icon[tuiIcons]:after {
 .logo {
     justify-content: left;
     width: 20rem;
-    padding-right: 13rem;
+    padding-right: 20rem;
+    // transform: scale(0.6);
+
+    svg {
+        width: 18rem;
+        height: 43px;
+    }
 }
 
-.header-button {
+.header-buttons {
     display: inline-block;
-    justify-content: right;
+    justify-content: center;
     padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .header-button {
@@ -120,4 +127,11 @@ tui-icon[tuiIcons]:after {
     font-weight: 400;
     line-height: normal;
     background: none;
+    transition: 0.3s;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.header-button:hover {
+    color: rgb(195, 194, 199);
 }
