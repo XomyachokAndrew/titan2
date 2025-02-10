@@ -9,6 +9,7 @@
 .card {
     display: flex;
     width: 21.875rem;
+    height: 30.75rem;
     padding: 2rem 1.625rem;
     flex-direction: column;
     align-items: flex-start;
@@ -20,7 +21,11 @@
     --tui-font-heading-5: bold 1.5rem / 1.75rem "MyriadPro-eb";
     --tui-text-primary: white;
     --tui-text-action: white;
-    --tui-border-normal:white;
+    --tui-border-normal: white;
+
+    div {
+        overflow-y: auto;
+    }
 
     .card-header {
         display: flex;
@@ -72,7 +77,7 @@
         flex-direction: column;
         width: 100%;
 
-        
+
         img {
             margin-bottom: 1rem;
             height: 9.625rem;
@@ -82,9 +87,9 @@
 
             filter: blur(0px);
         }
-        
+
         button {
-            width:100%;
+            width: 100%;
         }
     }
 }
@@ -92,3 +97,35 @@
 [tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm])>:last-child:not([tuiCell]) {
     margin-top: 0;
 }
+
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 12px;
+    /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #ffffff;
+    /* Color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ff0000;
+    /* Color of the scrollbar thumb */
+    border-radius: 6px;
+    /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff00bf;
+    /* Color when hovering over the scrollbar thumb */
+}
+
+// /* For Firefox */
+// * {
+//     scrollbar-width: thin;
+//     /* Width of the scrollbar */
+//     scrollbar-color: #888 #f1f1f1;
+//     /* Thumb and track color */
+// }
