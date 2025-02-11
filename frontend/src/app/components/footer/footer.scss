@@ -4,26 +4,24 @@
     text-align: center;
     justify-content: center;
     height: 5rem;
-    display: flex; /* Добавляем Flexbox */
-    align-items: center; /* Выравниваем по вертикали */
+    display: flex;
+    align-items: center;
   }
   
-  .footer a {
+  .footer .link {
     color: white;
     margin: 0 15px;
     text-decoration: none;
     color: #fff;
-    /* MAIN MAIN MAIN */
     font-family: "MyriadPro-r";
-    font-size: 1.125rem;
+    font-size: 18px;
     font-style: normal;
   }
   
-  .footer a:hover {
+  .footer .link:hover {
     color: #fff;
-    /* MAIN MAIN MAIN */
     font-family: "MyriadPro-r";
-    font-size: 1.125rem;
+    font-size: 18px;
     font-style: normal;
   }
   

@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import {
     TuiDataList,
     TuiDropdown,
-    TuiIcon,
     TuiTextfield,
 } from '@taiga-ui/core';
 import {
@@ -16,11 +15,9 @@ import { TuiNavigation } from '@taiga-ui/layout';
     standalone: true,
     exportAs: "Example1",
     imports: [
-        // NgClass,
         FormsModule,
         TuiDataList,
         TuiDropdown,
-        TuiIcon,
         TuiNavigation,
         TuiTabs,
         TuiTextfield,

@@ -1,4 +1,4 @@
-@import "../../../styles/font.css";
+@import '../../../styles/font.css';
 
 svg {
   position: absolute;
@@ -18,7 +18,7 @@ svg {
   display: inline-flex;
   padding: 2.3125rem 2rem 40% 2rem;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
   background: white;
   width: 18rem;
 }
@@ -36,7 +36,7 @@ svg {
 .info {
   font-family: 'RockStar-r';
   text-align: left;
-  font-size: 12pt;
+  font-size: 16px;
   color: rgba(81, 81, 81, 1);
   .info-text {
     display: flex;
@@ -47,9 +47,8 @@ svg {
   }
   .span-rockstar-eb {
     font-family: 'RockStar-eb';
-    font-size: 16pt;
+    font-size: 21px;
   }
-  
 }
 
 .office-info-line {
@@ -62,7 +61,7 @@ svg {
   color: rgba(81, 81, 81, 1);
   display: inline-flex;
   gap: 2rem;
-  font-size: 22pt;
+  font-size: 29px;
   font-family: 'RockStar-sb';
   justify-content: center;
 }

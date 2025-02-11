@@ -26,3 +26,5 @@ bin/
 
 # Игнорировать папку .vs
 .vs/
+
+.prettierignore
