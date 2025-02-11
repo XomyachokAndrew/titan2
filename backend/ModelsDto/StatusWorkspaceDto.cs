@@ -8,5 +8,6 @@
         public int? IdStatus { get; set; }
         public int? IdWorker { get; set; }
         public int IdUser { get; set; }
+        public int? IdWorkspacesReservationsStatuses { get; set; }
     }
 }

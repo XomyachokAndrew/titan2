@@ -64,6 +64,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles(); // Это позволяет использовать файлы из wwwroot
+
 app.UseCors("AllowSpecificOrigin"); // ��������� CORS
 
 app.UseAuthentication(); // �������� ��������������

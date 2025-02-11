@@ -25,8 +25,6 @@ public partial class User
 
     public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 
-    public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
-
     public virtual ICollection<StatusesWorker> StatusesWorkers { get; set; } = new List<StatusesWorker>();
 
     public virtual ICollection<StatusesWorkspace> StatusesWorkspaces { get; set; } = new List<StatusesWorkspace>();

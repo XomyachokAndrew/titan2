@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
-public partial class WorkspacesReservationsStatus
+public partial class WorkspaceStatusesType
 {
-    public int IdWorkspacesReservationsStatuses { get; set; }
+    public int IdWorkspaceStatusType { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = null!;
 
     public string? Descriptions { get; set; }
 
