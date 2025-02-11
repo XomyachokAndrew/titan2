@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-02-11 09:08:58
+-- Started on 2025-02-11 10:49:14
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -30,7 +30,7 @@ CREATE SCHEMA offices_management;
 ALTER SCHEMA offices_management OWNER TO postgres;
 
 --
--- TOC entry 271 (class 1255 OID 17128)
+-- TOC entry 273 (class 1255 OID 17128)
 -- Name: search_offices(text); Type: FUNCTION; Schema: offices_management; Owner: postgres
 --
 
@@ -50,7 +50,7 @@ $$;
 ALTER FUNCTION offices_management.search_offices(p_search_string text) OWNER TO postgres;
 
 --
--- TOC entry 272 (class 1255 OID 17129)
+-- TOC entry 274 (class 1255 OID 17129)
 -- Name: search_rooms(text); Type: FUNCTION; Schema: offices_management; Owner: postgres
 --
 
@@ -69,7 +69,7 @@ $$;
 ALTER FUNCTION offices_management.search_rooms(p_search_string text) OWNER TO postgres;
 
 --
--- TOC entry 273 (class 1255 OID 17130)
+-- TOC entry 275 (class 1255 OID 17130)
 -- Name: search_workers(text); Type: FUNCTION; Schema: offices_management; Owner: postgres
 --
 
@@ -90,7 +90,7 @@ $$;
 ALTER FUNCTION offices_management.search_workers(p_search_string text) OWNER TO postgres;
 
 --
--- TOC entry 275 (class 1255 OID 17132)
+-- TOC entry 277 (class 1255 OID 17132)
 -- Name: search_workers_by_department(text); Type: FUNCTION; Schema: offices_management; Owner: postgres
 --
 
@@ -111,7 +111,7 @@ $$;
 ALTER FUNCTION offices_management.search_workers_by_department(p_department_name text) OWNER TO postgres;
 
 --
--- TOC entry 274 (class 1255 OID 17131)
+-- TOC entry 276 (class 1255 OID 17131)
 -- Name: search_workers_by_post(text); Type: FUNCTION; Schema: offices_management; Owner: postgres
 --
 
@@ -132,7 +132,7 @@ $$;
 ALTER FUNCTION offices_management.search_workers_by_post(p_post_name text) OWNER TO postgres;
 
 --
--- TOC entry 276 (class 1255 OID 17133)
+-- TOC entry 278 (class 1255 OID 17133)
 -- Name: search_workspaces_by_name(text); Type: FUNCTION; Schema: offices_management; Owner: postgres
 --
 
@@ -166,7 +166,8 @@ CREATE TABLE offices_management.statuses_workspaces (
     id_workspace integer NOT NULL,
     id_status integer,
     id_worker integer,
-    id_user integer NOT NULL
+    id_user integer NOT NULL,
+    "id_workspaces_reservations _statuses" integer
 );
 
 
@@ -188,20 +189,6 @@ CREATE TABLE offices_management.workers (
 ALTER TABLE offices_management.workers OWNER TO postgres;
 
 --
--- TOC entry 239 (class 1259 OID 16918)
--- Name: workspace_statuses_types; Type: TABLE; Schema: offices_management; Owner: postgres
---
-
-CREATE TABLE offices_management.workspace_statuses_types (
-    id_status integer NOT NULL,
-    name character varying(45) NOT NULL,
-    descriptions character varying(500)
-);
-
-
-ALTER TABLE offices_management.workspace_statuses_types OWNER TO postgres;
-
---
 -- TOC entry 235 (class 1259 OID 16889)
 -- Name: workspaces; Type: TABLE; Schema: offices_management; Owner: postgres
 --
@@ -214,6 +201,20 @@ CREATE TABLE offices_management.workspaces (
 
 
 ALTER TABLE offices_management.workspaces OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 16918)
+-- Name: workspaces_statuses_types; Type: TABLE; Schema: offices_management; Owner: postgres
+--
+
+CREATE TABLE offices_management.workspaces_statuses_types (
+    id_status integer NOT NULL,
+    name character varying(45) NOT NULL,
+    descriptions character varying(300)
+);
+
+
+ALTER TABLE offices_management.workspaces_statuses_types OWNER TO postgres;
 
 --
 -- TOC entry 255 (class 1259 OID 17305)
@@ -234,7 +235,7 @@ CREATE VIEW offices_management.current_workspaces AS
    FROM (((offices_management.workspaces w
      JOIN offices_management.statuses_workspaces s ON ((w.id_workspace = s.id_workspace)))
      LEFT JOIN offices_management.workers wo ON ((s.id_worker = wo.id_worker)))
-     LEFT JOIN offices_management.workspace_statuses_types st ON ((s.id_status = st.id_status)))
+     LEFT JOIN offices_management.workspaces_statuses_types st ON ((s.id_status = st.id_status)))
   WHERE (((s.end_date IS NULL) OR (s.end_date > CURRENT_DATE)) AND (s.start_date < CURRENT_DATE));
 
 
@@ -271,7 +272,7 @@ CREATE SEQUENCE offices_management.departments_id_department_seq
 ALTER SEQUENCE offices_management.departments_id_department_seq OWNER TO postgres;
 
 --
--- TOC entry 5131 (class 0 OID 0)
+-- TOC entry 5141 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: departments_id_department_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -313,7 +314,7 @@ CREATE SEQUENCE offices_management.floors_id_floor_seq
 ALTER SEQUENCE offices_management.floors_id_floor_seq OWNER TO postgres;
 
 --
--- TOC entry 5132 (class 0 OID 0)
+-- TOC entry 5142 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: floors_id_floor_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -354,7 +355,7 @@ CREATE VIEW offices_management.history_workspace_statuses AS
     concat(wo.name, ' ', wo.surname, ' ', COALESCE(wo.patronymic, ''::character varying)) AS worker_full_name,
     u.name AS user_name
    FROM (((offices_management.statuses_workspaces sw
-     LEFT JOIN offices_management.workspace_statuses_types wst ON ((sw.id_status = wst.id_status)))
+     LEFT JOIN offices_management.workspaces_statuses_types wst ON ((sw.id_status = wst.id_status)))
      LEFT JOIN offices_management.workers wo ON ((sw.id_worker = wo.id_worker)))
      LEFT JOIN offices_management.users u ON ((sw.id_user = u.id_user)));
 
@@ -396,7 +397,7 @@ CREATE SEQUENCE offices_management.offices_id_office_seq
 ALTER SEQUENCE offices_management.offices_id_office_seq OWNER TO postgres;
 
 --
--- TOC entry 5133 (class 0 OID 0)
+-- TOC entry 5143 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: offices_id_office_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -463,7 +464,7 @@ CREATE SEQUENCE offices_management.posts_id_post_seq
 ALTER SEQUENCE offices_management.posts_id_post_seq OWNER TO postgres;
 
 --
--- TOC entry 5134 (class 0 OID 0)
+-- TOC entry 5144 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: posts_id_post_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -506,7 +507,7 @@ CREATE SEQUENCE offices_management.rental_agreements_id_rental_agreement_seq
 ALTER SEQUENCE offices_management.rental_agreements_id_rental_agreement_seq OWNER TO postgres;
 
 --
--- TOC entry 5135 (class 0 OID 0)
+-- TOC entry 5145 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: rental_agreements_id_rental_agreement_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -547,7 +548,7 @@ CREATE SEQUENCE offices_management.reports_id_report_seq
 ALTER SEQUENCE offices_management.reports_id_report_seq OWNER TO postgres;
 
 --
--- TOC entry 5136 (class 0 OID 0)
+-- TOC entry 5146 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: reports_id_report_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -603,8 +604,6 @@ ALTER TABLE offices_management.reservation_statuse OWNER TO postgres;
 
 CREATE TABLE offices_management.reservations (
     id_reservations integer NOT NULL,
-    start_date date NOT NULL,
-    end_date date,
     id_reservation_status integer,
     id_workspace integer NOT NULL,
     id_user integer NOT NULL
@@ -630,7 +629,7 @@ CREATE SEQUENCE offices_management.reservations_id_reservations_seq
 ALTER SEQUENCE offices_management.reservations_id_reservations_seq OWNER TO postgres;
 
 --
--- TOC entry 5137 (class 0 OID 0)
+-- TOC entry 5147 (class 0 OID 0)
 -- Dependencies: 236
 -- Name: reservations_id_reservations_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -716,7 +715,7 @@ CREATE SEQUENCE offices_management.rooms_id_room_seq
 ALTER SEQUENCE offices_management.rooms_id_room_seq OWNER TO postgres;
 
 --
--- TOC entry 5138 (class 0 OID 0)
+-- TOC entry 5148 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: rooms_id_room_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -741,12 +740,12 @@ CREATE SEQUENCE offices_management.statuses_id_statuses_seq
 ALTER SEQUENCE offices_management.statuses_id_statuses_seq OWNER TO postgres;
 
 --
--- TOC entry 5139 (class 0 OID 0)
+-- TOC entry 5149 (class 0 OID 0)
 -- Dependencies: 238
 -- Name: statuses_id_statuses_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
 
-ALTER SEQUENCE offices_management.statuses_id_statuses_seq OWNED BY offices_management.workspace_statuses_types.id_status;
+ALTER SEQUENCE offices_management.statuses_id_statuses_seq OWNED BY offices_management.workspaces_statuses_types.id_status;
 
 
 --
@@ -785,7 +784,7 @@ CREATE SEQUENCE offices_management.statuses_workers_id_status_worker_seq
 ALTER SEQUENCE offices_management.statuses_workers_id_status_worker_seq OWNER TO postgres;
 
 --
--- TOC entry 5140 (class 0 OID 0)
+-- TOC entry 5150 (class 0 OID 0)
 -- Dependencies: 242
 -- Name: statuses_workers_id_status_worker_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -810,7 +809,7 @@ CREATE SEQUENCE offices_management.statuses_workspaces_id_status_workspace_seq
 ALTER SEQUENCE offices_management.statuses_workspaces_id_status_workspace_seq OWNER TO postgres;
 
 --
--- TOC entry 5141 (class 0 OID 0)
+-- TOC entry 5151 (class 0 OID 0)
 -- Dependencies: 244
 -- Name: statuses_workspaces_id_status_workspace_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -835,7 +834,7 @@ CREATE SEQUENCE offices_management.users_id_user_seq
 ALTER SEQUENCE offices_management.users_id_user_seq OWNER TO postgres;
 
 --
--- TOC entry 5142 (class 0 OID 0)
+-- TOC entry 5152 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: users_id_user_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -907,7 +906,7 @@ CREATE SEQUENCE offices_management.workers_id_worker_seq
 ALTER SEQUENCE offices_management.workers_id_worker_seq OWNER TO postgres;
 
 --
--- TOC entry 5143 (class 0 OID 0)
+-- TOC entry 5153 (class 0 OID 0)
 -- Dependencies: 240
 -- Name: workers_id_worker_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -947,7 +946,7 @@ CREATE SEQUENCE offices_management.workspaces_id_workspace_seq
 ALTER SEQUENCE offices_management.workspaces_id_workspace_seq OWNER TO postgres;
 
 --
--- TOC entry 5144 (class 0 OID 0)
+-- TOC entry 5154 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: workspaces_id_workspace_seq; Type: SEQUENCE OWNED BY; Schema: offices_management; Owner: postgres
 --
@@ -956,7 +955,36 @@ ALTER SEQUENCE offices_management.workspaces_id_workspace_seq OWNED BY offices_m
 
 
 --
--- TOC entry 4854 (class 2604 OID 16802)
+-- TOC entry 261 (class 1259 OID 17347)
+-- Name: workspaces_reservations _statuses; Type: TABLE; Schema: offices_management; Owner: postgres
+--
+
+CREATE TABLE offices_management."workspaces_reservations _statuses" (
+    "id_workspaces_reservations _statuses" integer NOT NULL,
+    name character varying(45),
+    descriptions character varying(300)
+);
+
+
+ALTER TABLE offices_management."workspaces_reservations _statuses" OWNER TO postgres;
+
+--
+-- TOC entry 260 (class 1259 OID 17346)
+-- Name: workspaces_reservations _stat_id_workspaces_reservations _s_seq; Type: SEQUENCE; Schema: offices_management; Owner: postgres
+--
+
+ALTER TABLE offices_management."workspaces_reservations _statuses" ALTER COLUMN "id_workspaces_reservations _statuses" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME offices_management."workspaces_reservations _stat_id_workspaces_reservations _s_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 4859 (class 2604 OID 16802)
 -- Name: departments id_department; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -964,7 +992,7 @@ ALTER TABLE ONLY offices_management.departments ALTER COLUMN id_department SET D
 
 
 --
--- TOC entry 4858 (class 2604 OID 16829)
+-- TOC entry 4863 (class 2604 OID 16829)
 -- Name: floors id_floor; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -972,7 +1000,7 @@ ALTER TABLE ONLY offices_management.floors ALTER COLUMN id_floor SET DEFAULT nex
 
 
 --
--- TOC entry 4855 (class 2604 OID 17065)
+-- TOC entry 4860 (class 2604 OID 17065)
 -- Name: offices id_office; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -980,7 +1008,7 @@ ALTER TABLE ONLY offices_management.offices ALTER COLUMN id_office SET DEFAULT n
 
 
 --
--- TOC entry 4859 (class 2604 OID 16841)
+-- TOC entry 4864 (class 2604 OID 16841)
 -- Name: posts id_post; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -988,7 +1016,7 @@ ALTER TABLE ONLY offices_management.posts ALTER COLUMN id_post SET DEFAULT nextv
 
 
 --
--- TOC entry 4860 (class 2604 OID 16850)
+-- TOC entry 4865 (class 2604 OID 16850)
 -- Name: rental_agreements id_rental_agreement; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -996,7 +1024,7 @@ ALTER TABLE ONLY offices_management.rental_agreements ALTER COLUMN id_rental_agr
 
 
 --
--- TOC entry 4861 (class 2604 OID 16867)
+-- TOC entry 4866 (class 2604 OID 16867)
 -- Name: reports id_report; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1004,7 +1032,7 @@ ALTER TABLE ONLY offices_management.reports ALTER COLUMN id_report SET DEFAULT n
 
 
 --
--- TOC entry 4864 (class 2604 OID 16904)
+-- TOC entry 4869 (class 2604 OID 16904)
 -- Name: reservations id_reservations; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1012,7 +1040,7 @@ ALTER TABLE ONLY offices_management.reservations ALTER COLUMN id_reservations SE
 
 
 --
--- TOC entry 4862 (class 2604 OID 16879)
+-- TOC entry 4867 (class 2604 OID 16879)
 -- Name: rooms id_room; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1020,7 +1048,7 @@ ALTER TABLE ONLY offices_management.rooms ALTER COLUMN id_room SET DEFAULT nextv
 
 
 --
--- TOC entry 4867 (class 2604 OID 16937)
+-- TOC entry 4872 (class 2604 OID 16937)
 -- Name: statuses_workers id_status_worker; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1028,7 +1056,7 @@ ALTER TABLE ONLY offices_management.statuses_workers ALTER COLUMN id_status_work
 
 
 --
--- TOC entry 4868 (class 2604 OID 16964)
+-- TOC entry 4873 (class 2604 OID 16964)
 -- Name: statuses_workspaces id_status_workspace; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1036,7 +1064,7 @@ ALTER TABLE ONLY offices_management.statuses_workspaces ALTER COLUMN id_status_w
 
 
 --
--- TOC entry 4856 (class 2604 OID 16819)
+-- TOC entry 4861 (class 2604 OID 16819)
 -- Name: users id_user; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1044,7 +1072,7 @@ ALTER TABLE ONLY offices_management.users ALTER COLUMN id_user SET DEFAULT nextv
 
 
 --
--- TOC entry 4866 (class 2604 OID 16930)
+-- TOC entry 4871 (class 2604 OID 16930)
 -- Name: workers id_worker; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1052,15 +1080,7 @@ ALTER TABLE ONLY offices_management.workers ALTER COLUMN id_worker SET DEFAULT n
 
 
 --
--- TOC entry 4865 (class 2604 OID 16921)
--- Name: workspace_statuses_types id_status; Type: DEFAULT; Schema: offices_management; Owner: postgres
---
-
-ALTER TABLE ONLY offices_management.workspace_statuses_types ALTER COLUMN id_status SET DEFAULT nextval('offices_management.statuses_id_statuses_seq'::regclass);
-
-
---
--- TOC entry 4863 (class 2604 OID 16892)
+-- TOC entry 4868 (class 2604 OID 16892)
 -- Name: workspaces id_workspace; Type: DEFAULT; Schema: offices_management; Owner: postgres
 --
 
@@ -1068,7 +1088,15 @@ ALTER TABLE ONLY offices_management.workspaces ALTER COLUMN id_workspace SET DEF
 
 
 --
--- TOC entry 5089 (class 0 OID 16799)
+-- TOC entry 4870 (class 2604 OID 16921)
+-- Name: workspaces_statuses_types id_status; Type: DEFAULT; Schema: offices_management; Owner: postgres
+--
+
+ALTER TABLE ONLY offices_management.workspaces_statuses_types ALTER COLUMN id_status SET DEFAULT nextval('offices_management.statuses_id_statuses_seq'::regclass);
+
+
+--
+-- TOC entry 5097 (class 0 OID 16799)
 -- Dependencies: 219
 -- Data for Name: departments; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1082,7 +1110,7 @@ INSERT INTO offices_management.departments VALUES (6, 'Отдел поддерж
 
 
 --
--- TOC entry 5095 (class 0 OID 16826)
+-- TOC entry 5103 (class 0 OID 16826)
 -- Dependencies: 225
 -- Data for Name: floors; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1103,7 +1131,7 @@ INSERT INTO offices_management.floors VALUES (6, 2, 30, '', 3, 150);
 
 
 --
--- TOC entry 5091 (class 0 OID 16808)
+-- TOC entry 5099 (class 0 OID 16808)
 -- Dependencies: 221
 -- Data for Name: offices; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1120,7 +1148,7 @@ INSERT INTO offices_management.offices VALUES (12, 'Бугалтерия', 'пр
 
 
 --
--- TOC entry 5121 (class 0 OID 17040)
+-- TOC entry 5129 (class 0 OID 17040)
 -- Dependencies: 251
 -- Data for Name: offices_status; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1130,7 +1158,7 @@ INSERT INTO offices_management.offices_status OVERRIDING SYSTEM VALUE VALUES (2,
 
 
 --
--- TOC entry 5097 (class 0 OID 16838)
+-- TOC entry 5105 (class 0 OID 16838)
 -- Dependencies: 227
 -- Data for Name: posts; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1146,7 +1174,7 @@ INSERT INTO offices_management.posts VALUES (8, 'Аналитик данных',
 
 
 --
--- TOC entry 5099 (class 0 OID 16847)
+-- TOC entry 5107 (class 0 OID 16847)
 -- Dependencies: 229
 -- Data for Name: rental_agreements; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1155,7 +1183,7 @@ INSERT INTO offices_management.rental_agreements VALUES (1, '2023-02-10', NULL, 
 
 
 --
--- TOC entry 5101 (class 0 OID 16864)
+-- TOC entry 5109 (class 0 OID 16864)
 -- Dependencies: 231
 -- Data for Name: reports; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1169,7 +1197,7 @@ INSERT INTO offices_management.reports VALUES (41, 1, '2025-02-10', 'Отчет_
 
 
 --
--- TOC entry 5117 (class 0 OID 17005)
+-- TOC entry 5125 (class 0 OID 17005)
 -- Dependencies: 247
 -- Data for Name: reports_types; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1178,7 +1206,7 @@ INSERT INTO offices_management.reports_types OVERRIDING SYSTEM VALUE VALUES (1, 
 
 
 --
--- TOC entry 5119 (class 0 OID 17022)
+-- TOC entry 5127 (class 0 OID 17022)
 -- Dependencies: 249
 -- Data for Name: reservation_statuse; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1186,7 +1214,7 @@ INSERT INTO offices_management.reports_types OVERRIDING SYSTEM VALUE VALUES (1, 
 
 
 --
--- TOC entry 5107 (class 0 OID 16901)
+-- TOC entry 5115 (class 0 OID 16901)
 -- Dependencies: 237
 -- Data for Name: reservations; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1194,7 +1222,7 @@ INSERT INTO offices_management.reports_types OVERRIDING SYSTEM VALUE VALUES (1, 
 
 
 --
--- TOC entry 5123 (class 0 OID 17097)
+-- TOC entry 5131 (class 0 OID 17097)
 -- Dependencies: 253
 -- Data for Name: room_status; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1204,7 +1232,7 @@ INSERT INTO offices_management.room_status OVERRIDING SYSTEM VALUE VALUES (2, '�
 
 
 --
--- TOC entry 5103 (class 0 OID 16876)
+-- TOC entry 5111 (class 0 OID 16876)
 -- Dependencies: 233
 -- Data for Name: rooms; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1236,7 +1264,7 @@ INSERT INTO offices_management.rooms VALUES (18, '603', 5, 6, 75, NULL);
 
 
 --
--- TOC entry 5113 (class 0 OID 16934)
+-- TOC entry 5121 (class 0 OID 16934)
 -- Dependencies: 243
 -- Data for Name: statuses_workers; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1257,49 +1285,49 @@ INSERT INTO offices_management.statuses_workers VALUES (13, '2023-08-28', '2025-
 
 
 --
--- TOC entry 5115 (class 0 OID 16961)
+-- TOC entry 5123 (class 0 OID 16961)
 -- Dependencies: 245
 -- Data for Name: statuses_workspaces; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
-INSERT INTO offices_management.statuses_workspaces VALUES (2, '2023-01-01', '2023-01-20', 1, NULL, 1, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (3, '2023-01-21', '2023-01-23', 1, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (15, '2023-01-12', NULL, 12, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (16, '2023-01-13', NULL, 13, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (17, '2023-01-14', NULL, 14, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (18, '2023-01-15', NULL, 15, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (19, '2023-01-16', NULL, 16, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (20, '2023-01-17', NULL, 17, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (21, '2023-01-18', NULL, 18, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (22, '2023-01-19', NULL, 19, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (23, '2023-01-20', NULL, 20, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (24, '2023-01-21', NULL, 21, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (25, '2023-01-22', NULL, 22, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (26, '2023-01-23', NULL, 23, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (9, '2023-01-06', '2026-01-07', 6, NULL, 6, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (10, '2023-01-07', '2026-01-08', 7, NULL, 7, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (11, '2023-01-08', '2026-01-09', 8, NULL, 8, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (12, '2023-01-09', '2026-01-10', 9, NULL, 9, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (13, '2023-01-10', '2026-01-11', 10, NULL, 10, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (4, '2023-01-24', '2023-05-24', 1, NULL, 1, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (31, '2025-08-30', NULL, 1, NULL, 1, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (27, '2023-05-25', '2023-10-30', 1, NULL, 2, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (30, '2023-10-30', '2025-08-30', 1, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (14, '2023-01-11', NULL, 11, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (6, '2023-01-03', '2024-10-26', 3, NULL, 3, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (5, '2023-01-02', '2023-05-30', 2, NULL, 2, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (28, '2023-05-30', '2025-04-30', 2, NULL, 1, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (37, '2024-10-01', NULL, 4, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (7, '2023-01-04', '2024-10-01', 4, NULL, 4, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (34, '2024-10-26', '2025-01-10', 3, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (36, '2025-01-10', NULL, 3, NULL, 3, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (8, '2023-01-05', '2024-10-28', 5, NULL, 5, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (38, '2024-10-28', '2024-11-20', 5, NULL, NULL, 1);
-INSERT INTO offices_management.statuses_workspaces VALUES (39, '2024-11-20', '2025-03-20', 5, NULL, 1, 1);
+INSERT INTO offices_management.statuses_workspaces VALUES (2, '2023-01-01', '2023-01-20', 1, NULL, 1, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (3, '2023-01-21', '2023-01-23', 1, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (15, '2023-01-12', NULL, 12, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (16, '2023-01-13', NULL, 13, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (17, '2023-01-14', NULL, 14, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (18, '2023-01-15', NULL, 15, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (19, '2023-01-16', NULL, 16, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (20, '2023-01-17', NULL, 17, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (21, '2023-01-18', NULL, 18, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (22, '2023-01-19', NULL, 19, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (23, '2023-01-20', NULL, 20, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (24, '2023-01-21', NULL, 21, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (25, '2023-01-22', NULL, 22, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (26, '2023-01-23', NULL, 23, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (9, '2023-01-06', '2026-01-07', 6, NULL, 6, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (10, '2023-01-07', '2026-01-08', 7, NULL, 7, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (11, '2023-01-08', '2026-01-09', 8, NULL, 8, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (12, '2023-01-09', '2026-01-10', 9, NULL, 9, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (13, '2023-01-10', '2026-01-11', 10, NULL, 10, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (4, '2023-01-24', '2023-05-24', 1, NULL, 1, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (31, '2025-08-30', NULL, 1, NULL, 1, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (27, '2023-05-25', '2023-10-30', 1, NULL, 2, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (14, '2023-01-11', NULL, 11, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (6, '2023-01-03', '2024-10-26', 3, NULL, 3, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (5, '2023-01-02', '2023-05-30', 2, NULL, 2, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (28, '2023-05-30', '2025-04-30', 2, NULL, 1, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (37, '2024-10-01', NULL, 4, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (7, '2023-01-04', '2024-10-01', 4, NULL, 4, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (36, '2025-01-10', NULL, 3, NULL, 3, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (8, '2023-01-05', '2024-10-28', 5, NULL, 5, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (39, '2024-11-20', '2025-03-20', 5, NULL, 1, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (30, '2023-10-30', '2025-08-30', 1, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (34, '2024-10-26', '2025-01-10', 3, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (38, '2024-10-28', '2024-11-20', 5, NULL, NULL, 1, NULL);
 
 
 --
--- TOC entry 5093 (class 0 OID 16816)
+-- TOC entry 5101 (class 0 OID 16816)
 -- Dependencies: 223
 -- Data for Name: users; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1308,7 +1336,7 @@ INSERT INTO offices_management.users VALUES (1, 'admin', '\x8cdd9346bbdb6f67e399
 
 
 --
--- TOC entry 5111 (class 0 OID 16927)
+-- TOC entry 5119 (class 0 OID 16927)
 -- Dependencies: 241
 -- Data for Name: workers; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1326,7 +1354,7 @@ INSERT INTO offices_management.workers VALUES (10, 'Николай', 'Ковал
 
 
 --
--- TOC entry 5125 (class 0 OID 17311)
+-- TOC entry 5133 (class 0 OID 17311)
 -- Dependencies: 257
 -- Data for Name: workers_statuses_types; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1337,15 +1365,7 @@ INSERT INTO offices_management.workers_statuses_types OVERRIDING SYSTEM VALUE VA
 
 
 --
--- TOC entry 5109 (class 0 OID 16918)
--- Dependencies: 239
--- Data for Name: workspace_statuses_types; Type: TABLE DATA; Schema: offices_management; Owner: postgres
---
-
-
-
---
--- TOC entry 5105 (class 0 OID 16889)
+-- TOC entry 5113 (class 0 OID 16889)
 -- Dependencies: 235
 -- Data for Name: workspaces; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
@@ -1376,7 +1396,27 @@ INSERT INTO offices_management.workspaces VALUES (23, '014A', 14);
 
 
 --
--- TOC entry 5145 (class 0 OID 0)
+-- TOC entry 5135 (class 0 OID 17347)
+-- Dependencies: 261
+-- Data for Name: workspaces_reservations _statuses; Type: TABLE DATA; Schema: offices_management; Owner: postgres
+--
+
+INSERT INTO offices_management."workspaces_reservations _statuses" OVERRIDING SYSTEM VALUE VALUES (1, 'Забронировано, Ожидание', NULL);
+INSERT INTO offices_management."workspaces_reservations _statuses" OVERRIDING SYSTEM VALUE VALUES (2, 'Забронировано, Отменено', NULL);
+INSERT INTO offices_management."workspaces_reservations _statuses" OVERRIDING SYSTEM VALUE VALUES (3, 'Забронировано, Подтверждено ', NULL);
+INSERT INTO offices_management."workspaces_reservations _statuses" OVERRIDING SYSTEM VALUE VALUES (4, 'Забронировано, Неоплачено', NULL);
+
+
+--
+-- TOC entry 5117 (class 0 OID 16918)
+-- Dependencies: 239
+-- Data for Name: workspaces_statuses_types; Type: TABLE DATA; Schema: offices_management; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 5155 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: departments_id_department_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1385,7 +1425,7 @@ SELECT pg_catalog.setval('offices_management.departments_id_department_seq', 5, 
 
 
 --
--- TOC entry 5146 (class 0 OID 0)
+-- TOC entry 5156 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: floors_id_floor_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1394,7 +1434,7 @@ SELECT pg_catalog.setval('offices_management.floors_id_floor_seq', 5, true);
 
 
 --
--- TOC entry 5147 (class 0 OID 0)
+-- TOC entry 5157 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: offices_id_office_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1403,7 +1443,7 @@ SELECT pg_catalog.setval('offices_management.offices_id_office_seq', 12, true);
 
 
 --
--- TOC entry 5148 (class 0 OID 0)
+-- TOC entry 5158 (class 0 OID 0)
 -- Dependencies: 250
 -- Name: offices_status_id_office_status_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1412,7 +1452,7 @@ SELECT pg_catalog.setval('offices_management.offices_status_id_office_status_seq
 
 
 --
--- TOC entry 5149 (class 0 OID 0)
+-- TOC entry 5159 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: posts_id_post_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1421,7 +1461,7 @@ SELECT pg_catalog.setval('offices_management.posts_id_post_seq', 1, false);
 
 
 --
--- TOC entry 5150 (class 0 OID 0)
+-- TOC entry 5160 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: rental_agreements_id_rental_agreement_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1430,7 +1470,7 @@ SELECT pg_catalog.setval('offices_management.rental_agreements_id_rental_agreeme
 
 
 --
--- TOC entry 5151 (class 0 OID 0)
+-- TOC entry 5161 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: reports_id_report_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1439,7 +1479,7 @@ SELECT pg_catalog.setval('offices_management.reports_id_report_seq', 41, true);
 
 
 --
--- TOC entry 5152 (class 0 OID 0)
+-- TOC entry 5162 (class 0 OID 0)
 -- Dependencies: 246
 -- Name: reports_types_id_reports_types_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1448,7 +1488,7 @@ SELECT pg_catalog.setval('offices_management.reports_types_id_reports_types_seq'
 
 
 --
--- TOC entry 5153 (class 0 OID 0)
+-- TOC entry 5163 (class 0 OID 0)
 -- Dependencies: 236
 -- Name: reservations_id_reservations_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1457,7 +1497,7 @@ SELECT pg_catalog.setval('offices_management.reservations_id_reservations_seq', 
 
 
 --
--- TOC entry 5154 (class 0 OID 0)
+-- TOC entry 5164 (class 0 OID 0)
 -- Dependencies: 248
 -- Name: reservations_statuses_id_reservations_statuses_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1466,7 +1506,7 @@ SELECT pg_catalog.setval('offices_management.reservations_statuses_id_reservatio
 
 
 --
--- TOC entry 5155 (class 0 OID 0)
+-- TOC entry 5165 (class 0 OID 0)
 -- Dependencies: 252
 -- Name: room_status_id_room_status_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1475,7 +1515,7 @@ SELECT pg_catalog.setval('offices_management.room_status_id_room_status_seq', 2,
 
 
 --
--- TOC entry 5156 (class 0 OID 0)
+-- TOC entry 5166 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: rooms_id_room_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1484,16 +1524,16 @@ SELECT pg_catalog.setval('offices_management.rooms_id_room_seq', 1, true);
 
 
 --
--- TOC entry 5157 (class 0 OID 0)
+-- TOC entry 5167 (class 0 OID 0)
 -- Dependencies: 238
 -- Name: statuses_id_statuses_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.statuses_id_statuses_seq', 1, false);
+SELECT pg_catalog.setval('offices_management.statuses_id_statuses_seq', 4, true);
 
 
 --
--- TOC entry 5158 (class 0 OID 0)
+-- TOC entry 5168 (class 0 OID 0)
 -- Dependencies: 242
 -- Name: statuses_workers_id_status_worker_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1502,7 +1542,7 @@ SELECT pg_catalog.setval('offices_management.statuses_workers_id_status_worker_s
 
 
 --
--- TOC entry 5159 (class 0 OID 0)
+-- TOC entry 5169 (class 0 OID 0)
 -- Dependencies: 244
 -- Name: statuses_workspaces_id_status_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1511,7 +1551,7 @@ SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_works
 
 
 --
--- TOC entry 5160 (class 0 OID 0)
+-- TOC entry 5170 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: users_id_user_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1520,7 +1560,7 @@ SELECT pg_catalog.setval('offices_management.users_id_user_seq', 1, true);
 
 
 --
--- TOC entry 5161 (class 0 OID 0)
+-- TOC entry 5171 (class 0 OID 0)
 -- Dependencies: 240
 -- Name: workers_id_worker_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1529,7 +1569,7 @@ SELECT pg_catalog.setval('offices_management.workers_id_worker_seq', 1, false);
 
 
 --
--- TOC entry 5162 (class 0 OID 0)
+-- TOC entry 5172 (class 0 OID 0)
 -- Dependencies: 256
 -- Name: workers_statuses_types_id_status_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1538,7 +1578,7 @@ SELECT pg_catalog.setval('offices_management.workers_statuses_types_id_status_se
 
 
 --
--- TOC entry 5163 (class 0 OID 0)
+-- TOC entry 5173 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: workspaces_id_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
@@ -1547,7 +1587,16 @@ SELECT pg_catalog.setval('offices_management.workspaces_id_workspace_seq', 1, fa
 
 
 --
--- TOC entry 4870 (class 2606 OID 16806)
+-- TOC entry 5174 (class 0 OID 0)
+-- Dependencies: 260
+-- Name: workspaces_reservations _stat_id_workspaces_reservations _s_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
+--
+
+SELECT pg_catalog.setval('offices_management."workspaces_reservations _stat_id_workspaces_reservations _s_seq"', 4, true);
+
+
+--
+-- TOC entry 4875 (class 2606 OID 16806)
 -- Name: departments departments_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1556,7 +1605,7 @@ ALTER TABLE ONLY offices_management.departments
 
 
 --
--- TOC entry 4878 (class 2606 OID 16831)
+-- TOC entry 4883 (class 2606 OID 16831)
 -- Name: floors floors_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1565,7 +1614,7 @@ ALTER TABLE ONLY offices_management.floors
 
 
 --
--- TOC entry 4872 (class 2606 OID 17067)
+-- TOC entry 4877 (class 2606 OID 17067)
 -- Name: offices offices_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1574,7 +1623,7 @@ ALTER TABLE ONLY offices_management.offices
 
 
 --
--- TOC entry 4908 (class 2606 OID 17044)
+-- TOC entry 4913 (class 2606 OID 17044)
 -- Name: offices_status offices_status_pk; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1583,7 +1632,7 @@ ALTER TABLE ONLY offices_management.offices_status
 
 
 --
--- TOC entry 4910 (class 2606 OID 17046)
+-- TOC entry 4915 (class 2606 OID 17046)
 -- Name: offices_status offices_status_unique; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1592,7 +1641,7 @@ ALTER TABLE ONLY offices_management.offices_status
 
 
 --
--- TOC entry 4880 (class 2606 OID 16845)
+-- TOC entry 4885 (class 2606 OID 16845)
 -- Name: posts posts_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1601,7 +1650,7 @@ ALTER TABLE ONLY offices_management.posts
 
 
 --
--- TOC entry 4882 (class 2606 OID 16852)
+-- TOC entry 4887 (class 2606 OID 16852)
 -- Name: rental_agreements rental_agreements_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1610,7 +1659,7 @@ ALTER TABLE ONLY offices_management.rental_agreements
 
 
 --
--- TOC entry 4884 (class 2606 OID 16869)
+-- TOC entry 4889 (class 2606 OID 16869)
 -- Name: reports reports_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1619,7 +1668,7 @@ ALTER TABLE ONLY offices_management.reports
 
 
 --
--- TOC entry 4900 (class 2606 OID 17009)
+-- TOC entry 4905 (class 2606 OID 17009)
 -- Name: reports_types reports_types_pk; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1628,7 +1677,7 @@ ALTER TABLE ONLY offices_management.reports_types
 
 
 --
--- TOC entry 4902 (class 2606 OID 17345)
+-- TOC entry 4907 (class 2606 OID 17345)
 -- Name: reports_types reports_types_unique; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1637,7 +1686,7 @@ ALTER TABLE ONLY offices_management.reports_types
 
 
 --
--- TOC entry 4890 (class 2606 OID 16906)
+-- TOC entry 4895 (class 2606 OID 16906)
 -- Name: reservations reservations_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1646,7 +1695,7 @@ ALTER TABLE ONLY offices_management.reservations
 
 
 --
--- TOC entry 4904 (class 2606 OID 17026)
+-- TOC entry 4909 (class 2606 OID 17026)
 -- Name: reservation_statuse reservations_statuses_pk; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1655,7 +1704,7 @@ ALTER TABLE ONLY offices_management.reservation_statuse
 
 
 --
--- TOC entry 4906 (class 2606 OID 17028)
+-- TOC entry 4911 (class 2606 OID 17028)
 -- Name: reservation_statuse reservations_statuses_unique; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1664,7 +1713,7 @@ ALTER TABLE ONLY offices_management.reservation_statuse
 
 
 --
--- TOC entry 4912 (class 2606 OID 17101)
+-- TOC entry 4917 (class 2606 OID 17101)
 -- Name: room_status room_status_pk; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1673,7 +1722,7 @@ ALTER TABLE ONLY offices_management.room_status
 
 
 --
--- TOC entry 4914 (class 2606 OID 17103)
+-- TOC entry 4919 (class 2606 OID 17103)
 -- Name: room_status room_status_unique; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1682,7 +1731,7 @@ ALTER TABLE ONLY offices_management.room_status
 
 
 --
--- TOC entry 4886 (class 2606 OID 16882)
+-- TOC entry 4891 (class 2606 OID 16882)
 -- Name: rooms rooms_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1691,16 +1740,16 @@ ALTER TABLE ONLY offices_management.rooms
 
 
 --
--- TOC entry 4892 (class 2606 OID 16925)
--- Name: workspace_statuses_types statuses_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
+-- TOC entry 4897 (class 2606 OID 16925)
+-- Name: workspaces_statuses_types statuses_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
-ALTER TABLE ONLY offices_management.workspace_statuses_types
+ALTER TABLE ONLY offices_management.workspaces_statuses_types
     ADD CONSTRAINT statuses_pkey PRIMARY KEY (id_status);
 
 
 --
--- TOC entry 4896 (class 2606 OID 16939)
+-- TOC entry 4901 (class 2606 OID 16939)
 -- Name: statuses_workers statuses_workers_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1709,7 +1758,7 @@ ALTER TABLE ONLY offices_management.statuses_workers
 
 
 --
--- TOC entry 4898 (class 2606 OID 16966)
+-- TOC entry 4903 (class 2606 OID 16966)
 -- Name: statuses_workspaces statuses_workspaces_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1718,7 +1767,7 @@ ALTER TABLE ONLY offices_management.statuses_workspaces
 
 
 --
--- TOC entry 4874 (class 2606 OID 16824)
+-- TOC entry 4879 (class 2606 OID 16824)
 -- Name: users users_login_key; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1727,7 +1776,7 @@ ALTER TABLE ONLY offices_management.users
 
 
 --
--- TOC entry 4876 (class 2606 OID 16822)
+-- TOC entry 4881 (class 2606 OID 16822)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1736,7 +1785,7 @@ ALTER TABLE ONLY offices_management.users
 
 
 --
--- TOC entry 4894 (class 2606 OID 16932)
+-- TOC entry 4899 (class 2606 OID 16932)
 -- Name: workers workers_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1745,7 +1794,7 @@ ALTER TABLE ONLY offices_management.workers
 
 
 --
--- TOC entry 4916 (class 2606 OID 17317)
+-- TOC entry 4921 (class 2606 OID 17317)
 -- Name: workers_statuses_types workers_statuses_types_pk; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1754,7 +1803,7 @@ ALTER TABLE ONLY offices_management.workers_statuses_types
 
 
 --
--- TOC entry 4918 (class 2606 OID 17319)
+-- TOC entry 4923 (class 2606 OID 17319)
 -- Name: workers_statuses_types workers_statuses_types_unique; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1763,7 +1812,7 @@ ALTER TABLE ONLY offices_management.workers_statuses_types
 
 
 --
--- TOC entry 4888 (class 2606 OID 16894)
+-- TOC entry 4893 (class 2606 OID 16894)
 -- Name: workspaces workspaces_pkey; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1772,7 +1821,16 @@ ALTER TABLE ONLY offices_management.workspaces
 
 
 --
--- TOC entry 4920 (class 2606 OID 17068)
+-- TOC entry 4925 (class 2606 OID 17351)
+-- Name: workspaces_reservations _statuses workspaces_reservations__statuses_pk; Type: CONSTRAINT; Schema: offices_management; Owner: postgres
+--
+
+ALTER TABLE ONLY offices_management."workspaces_reservations _statuses"
+    ADD CONSTRAINT workspaces_reservations__statuses_pk PRIMARY KEY ("id_workspaces_reservations _statuses");
+
+
+--
+-- TOC entry 4927 (class 2606 OID 17068)
 -- Name: floors floors_id_office_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1781,7 +1839,7 @@ ALTER TABLE ONLY offices_management.floors
 
 
 --
--- TOC entry 4919 (class 2606 OID 17047)
+-- TOC entry 4926 (class 2606 OID 17047)
 -- Name: offices offices_offices_status_fk; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1790,7 +1848,7 @@ ALTER TABLE ONLY offices_management.offices
 
 
 --
--- TOC entry 4921 (class 2606 OID 17073)
+-- TOC entry 4928 (class 2606 OID 17073)
 -- Name: rental_agreements rental_agreements_id_office_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1799,7 +1857,7 @@ ALTER TABLE ONLY offices_management.rental_agreements
 
 
 --
--- TOC entry 4922 (class 2606 OID 16858)
+-- TOC entry 4929 (class 2606 OID 16858)
 -- Name: rental_agreements rental_agreements_id_user_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1808,7 +1866,7 @@ ALTER TABLE ONLY offices_management.rental_agreements
 
 
 --
--- TOC entry 4923 (class 2606 OID 16870)
+-- TOC entry 4930 (class 2606 OID 16870)
 -- Name: reports reports_id_user_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1817,7 +1875,7 @@ ALTER TABLE ONLY offices_management.reports
 
 
 --
--- TOC entry 4924 (class 2606 OID 17012)
+-- TOC entry 4931 (class 2606 OID 17012)
 -- Name: reports reports_reports_types_fk; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1826,7 +1884,7 @@ ALTER TABLE ONLY offices_management.reports
 
 
 --
--- TOC entry 4928 (class 2606 OID 16907)
+-- TOC entry 4935 (class 2606 OID 16907)
 -- Name: reservations reservations_id_user_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1835,7 +1893,7 @@ ALTER TABLE ONLY offices_management.reservations
 
 
 --
--- TOC entry 4929 (class 2606 OID 16912)
+-- TOC entry 4936 (class 2606 OID 16912)
 -- Name: reservations reservations_id_workspace_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1844,7 +1902,7 @@ ALTER TABLE ONLY offices_management.reservations
 
 
 --
--- TOC entry 4930 (class 2606 OID 17029)
+-- TOC entry 4937 (class 2606 OID 17029)
 -- Name: reservations reservations_reservations_statuses_fk; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1853,7 +1911,7 @@ ALTER TABLE ONLY offices_management.reservations
 
 
 --
--- TOC entry 4925 (class 2606 OID 16883)
+-- TOC entry 4932 (class 2606 OID 16883)
 -- Name: rooms rooms_id_floor_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1862,7 +1920,7 @@ ALTER TABLE ONLY offices_management.rooms
 
 
 --
--- TOC entry 4926 (class 2606 OID 17104)
+-- TOC entry 4933 (class 2606 OID 17104)
 -- Name: rooms rooms_room_status_fk; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1871,7 +1929,7 @@ ALTER TABLE ONLY offices_management.rooms
 
 
 --
--- TOC entry 4931 (class 2606 OID 16945)
+-- TOC entry 4938 (class 2606 OID 16945)
 -- Name: statuses_workers statuses_workers_departments_id_department_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1880,7 +1938,7 @@ ALTER TABLE ONLY offices_management.statuses_workers
 
 
 --
--- TOC entry 4932 (class 2606 OID 16955)
+-- TOC entry 4939 (class 2606 OID 16955)
 -- Name: statuses_workers statuses_workers_id_user_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1889,7 +1947,7 @@ ALTER TABLE ONLY offices_management.statuses_workers
 
 
 --
--- TOC entry 4933 (class 2606 OID 16950)
+-- TOC entry 4940 (class 2606 OID 16950)
 -- Name: statuses_workers statuses_workers_id_worker_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1898,7 +1956,7 @@ ALTER TABLE ONLY offices_management.statuses_workers
 
 
 --
--- TOC entry 4934 (class 2606 OID 16940)
+-- TOC entry 4941 (class 2606 OID 16940)
 -- Name: statuses_workers statuses_workers_posts_id_post_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1907,7 +1965,7 @@ ALTER TABLE ONLY offices_management.statuses_workers
 
 
 --
--- TOC entry 4935 (class 2606 OID 17320)
+-- TOC entry 4942 (class 2606 OID 17320)
 -- Name: statuses_workers statuses_workers_workers_statuses_types_fk; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1916,16 +1974,16 @@ ALTER TABLE ONLY offices_management.statuses_workers
 
 
 --
--- TOC entry 4936 (class 2606 OID 16967)
+-- TOC entry 4943 (class 2606 OID 16967)
 -- Name: statuses_workspaces statuses_workspaces_id_statuses_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
 ALTER TABLE ONLY offices_management.statuses_workspaces
-    ADD CONSTRAINT statuses_workspaces_id_statuses_fkey FOREIGN KEY (id_status) REFERENCES offices_management.workspace_statuses_types(id_status);
+    ADD CONSTRAINT statuses_workspaces_id_statuses_fkey FOREIGN KEY (id_status) REFERENCES offices_management.workspaces_statuses_types(id_status);
 
 
 --
--- TOC entry 4937 (class 2606 OID 16982)
+-- TOC entry 4944 (class 2606 OID 16982)
 -- Name: statuses_workspaces statuses_workspaces_id_user_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1934,7 +1992,7 @@ ALTER TABLE ONLY offices_management.statuses_workspaces
 
 
 --
--- TOC entry 4938 (class 2606 OID 16972)
+-- TOC entry 4945 (class 2606 OID 16972)
 -- Name: statuses_workspaces statuses_workspaces_id_worker_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1943,7 +2001,7 @@ ALTER TABLE ONLY offices_management.statuses_workspaces
 
 
 --
--- TOC entry 4939 (class 2606 OID 16977)
+-- TOC entry 4946 (class 2606 OID 16977)
 -- Name: statuses_workspaces statuses_workspaces_id_workspace_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1952,7 +2010,16 @@ ALTER TABLE ONLY offices_management.statuses_workspaces
 
 
 --
--- TOC entry 4927 (class 2606 OID 16895)
+-- TOC entry 4947 (class 2606 OID 17357)
+-- Name: statuses_workspaces statuses_workspaces_workspaces_reservations__statuses_fk; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
+--
+
+ALTER TABLE ONLY offices_management.statuses_workspaces
+    ADD CONSTRAINT statuses_workspaces_workspaces_reservations__statuses_fk FOREIGN KEY ("id_workspaces_reservations _statuses") REFERENCES offices_management."workspaces_reservations _statuses"("id_workspaces_reservations _statuses");
+
+
+--
+-- TOC entry 4934 (class 2606 OID 16895)
 -- Name: workspaces workspaces_id_room_fkey; Type: FK CONSTRAINT; Schema: offices_management; Owner: postgres
 --
 
@@ -1960,7 +2027,7 @@ ALTER TABLE ONLY offices_management.workspaces
     ADD CONSTRAINT workspaces_id_room_fkey FOREIGN KEY (id_room) REFERENCES offices_management.rooms(id_room);
 
 
--- Completed on 2025-02-11 09:08:58
+-- Completed on 2025-02-11 10:49:14
 
 --
 -- PostgreSQL database dump complete

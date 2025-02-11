@@ -58,7 +58,9 @@ public partial class Context : DbContext
 
     public virtual DbSet<Workspace> Workspaces { get; set; }
 
-    public virtual DbSet<WorkspaceStatusesType> WorkspaceStatusesTypes { get; set; }
+    public virtual DbSet<WorkspacesReservationsStatus> WorkspacesReservationsStatuses { get; set; }
+
+    public virtual DbSet<WorkspacesStatusesType> WorkspacesStatusesTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -264,7 +266,7 @@ public partial class Context : DbContext
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id_reports_types");
             entity.Property(e => e.Name)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasColumnName("name");
         });
 
@@ -275,11 +277,9 @@ public partial class Context : DbContext
             entity.ToTable("reservations", "offices_management");
 
             entity.Property(e => e.IdReservations).HasColumnName("id_reservations");
-            entity.Property(e => e.EndDate).HasColumnName("end_date");
             entity.Property(e => e.IdReservationStatus).HasColumnName("id_reservation_status");
             entity.Property(e => e.IdUser).HasColumnName("id_user");
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
-            entity.Property(e => e.StartDate).HasColumnName("start_date");
 
             entity.HasOne(d => d.IdReservationStatusNavigation).WithMany(p => p.Reservations)
                 .HasForeignKey(d => d.IdReservationStatus)
@@ -408,6 +408,7 @@ public partial class Context : DbContext
             entity.Property(e => e.IdUser).HasColumnName("id_user");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
+            entity.Property(e => e.IdWorkspacesReservationsStatuses).HasColumnName("id_workspaces_reservations _statuses");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
 
             entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.StatusesWorkspaces)
@@ -427,6 +428,10 @@ public partial class Context : DbContext
                 .HasForeignKey(d => d.IdWorkspace)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("statuses_workspaces_id_workspace_fkey");
+
+            entity.HasOne(d => d.IdWorkspacesReservationsStatusesNavigation).WithMany(p => p.StatusesWorkspaces)
+                .HasForeignKey(d => d.IdWorkspacesReservationsStatuses)
+                .HasConstraintName("statuses_workspaces_workspaces_reservations__statuses_fk");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -536,17 +541,34 @@ public partial class Context : DbContext
                 .HasConstraintName("workspaces_id_room_fkey");
         });
 
-        modelBuilder.Entity<WorkspaceStatusesType>(entity =>
+        modelBuilder.Entity<WorkspacesReservationsStatus>(entity =>
+        {
+            entity.HasKey(e => e.IdWorkspacesReservationsStatuses).HasName("workspaces_reservations__statuses_pk");
+
+            entity.ToTable("workspaces_reservations _statuses", "offices_management");
+
+            entity.Property(e => e.IdWorkspacesReservationsStatuses)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id_workspaces_reservations _statuses");
+            entity.Property(e => e.Descriptions)
+                .HasMaxLength(300)
+                .HasColumnName("descriptions");
+            entity.Property(e => e.Name)
+                .HasMaxLength(45)
+                .HasColumnName("name");
+        });
+
+        modelBuilder.Entity<WorkspacesStatusesType>(entity =>
         {
             entity.HasKey(e => e.IdStatus).HasName("statuses_pkey");
 
-            entity.ToTable("workspace_statuses_types", "offices_management");
+            entity.ToTable("workspaces_statuses_types", "offices_management");
 
             entity.Property(e => e.IdStatus)
                 .HasDefaultValueSql("nextval('offices_management.statuses_id_statuses_seq'::regclass)")
                 .HasColumnName("id_status");
             entity.Property(e => e.Descriptions)
-                .HasMaxLength(500)
+                .HasMaxLength(300)
                 .HasColumnName("descriptions");
             entity.Property(e => e.Name)
                 .HasMaxLength(45)

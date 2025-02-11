@@ -43,7 +43,7 @@ namespace backend.Controllers
         }
 
         // PUT: api/WorkersStatusesTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkersStatusesType(int id, WorkersStatusesType workersStatusesType)
         {
@@ -74,7 +74,7 @@ namespace backend.Controllers
         }
 
         // POST: api/WorkersStatusesTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<WorkersStatusesType>> PostWorkersStatusesType(WorkersStatusesType workersStatusesType)
         {
