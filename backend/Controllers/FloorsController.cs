@@ -31,5 +31,22 @@ namespace backend.Controllers
 
             return Ok(floors);
         }
+
+        // GET: api/floors/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Floor>> GetFloor(int id)
+        {
+            var floor = await _context.Floors
+                .Include(f => f.IdOfficeNavigation) // Если нужно включить информацию об офисе
+                .Include(f => f.Rooms) // Если нужно включить информацию о комнатах
+                .FirstOrDefaultAsync(f => f.IdFloor == id);
+
+            if (floor == null)
+            {
+                return NotFound();
+            }
+
+            return floor;
+        }
     }
 }
