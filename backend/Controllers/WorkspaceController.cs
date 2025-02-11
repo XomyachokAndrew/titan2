@@ -103,10 +103,10 @@ namespace backend.Controllers
                 StartDate = statusWorkspaceDto.StartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 EndDate = statusWorkspaceDto.EndDate,
                 IdWorkspace = status.IdWorkspace,
-                IdStatus = statusWorkspaceDto.IdStatus,
+                IdStatusWorkspace = statusWorkspaceDto.IdStatusWorkspace,
                 IdWorker = statusWorkspaceDto.IdWorker,
                 IdUser = statusWorkspaceDto.IdUser,
-                IdWorkspacesReservationsStatuses = statusWorkspaceDto.IdWorkspacesReservationsStatuses // Добавляем статус бронирования
+                IdWorkspaceReservationsStatuses = statusWorkspaceDto.IdWorkspacesReservationsStatuses // Добавляем статус бронирования
             };
 
             _context.StatusesWorkspaces.Add(statusWorkspace);
@@ -173,10 +173,10 @@ namespace backend.Controllers
             // Обновляем текущий статус новыми значениями или оставляем существующие
             currentStatus.StartDate = updatedStatusDto.StartDate ?? currentStatus.StartDate;
             currentStatus.EndDate = updatedStatusDto.EndDate ?? currentStatus.EndDate;
-            currentStatus.IdStatus = updatedStatusDto.IdStatus ?? currentStatus.IdStatus;
+            currentStatus.IdWorkspaceStatusType = updatedStatusDto.IdStatus ?? currentStatus.IdWorkspaceStatusType;
             currentStatus.IdWorker = updatedStatusDto.IdWorker ?? currentStatus.IdWorker;
             currentStatus.IdUser = updatedStatusDto.IdUser;
-            currentStatus.IdWorkspacesReservationsStatuses = updatedStatusDto.IdWorkspacesReservationsStatuses ?? currentStatus.IdWorkspacesReservationsStatuses; // Обновляем статус бронирования
+            currentStatus.IdWorkspaceReservationsStatuses = updatedStatusDto.IdWorkspacesReservationsStatuses ?? currentStatus.IdWorkspaceReservationsStatuses; // Обновляем статус бронирования
 
             await _context.SaveChangesAsync();
 

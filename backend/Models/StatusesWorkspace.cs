@@ -13,15 +13,13 @@ public partial class StatusesWorkspace
 
     public int IdWorkspace { get; set; }
 
-    public int? IdStatus { get; set; }
+    public int? IdWorkspaceStatusType { get; set; }
 
     public int? IdWorker { get; set; }
 
     public int IdUser { get; set; }
 
-    public int? IdWorkspacesReservationsStatuses { get; set; }
-
-    public virtual WorkspacesStatusesType? IdStatusNavigation { get; set; }
+    public int? IdWorkspaceReservationsStatuses { get; set; }
 
     public virtual User IdUserNavigation { get; set; } = null!;
 
@@ -29,5 +27,7 @@ public partial class StatusesWorkspace
 
     public virtual Workspace IdWorkspaceNavigation { get; set; } = null!;
 
-    public virtual WorkspacesReservationsStatus? IdWorkspacesReservationsStatusesNavigation { get; set; }
+    public virtual WorkspaceReservationsStatus? IdWorkspaceReservationsStatusesNavigation { get; set; }
+
+    public virtual WorkspaceStatusesType? IdWorkspaceStatusTypeNavigation { get; set; }
 }

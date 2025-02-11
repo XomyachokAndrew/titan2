@@ -13,7 +13,13 @@ public partial class HistoryWorkspaceStatus
 
     public DateOnly? EndDate { get; set; }
 
-    public string? StatusType { get; set; }
+    public int? IdWorkspaceStatusType { get; set; }
+
+    public string? WorkspaceStatusTypeName { get; set; }
+
+    public int? IdWorkspaceReservationsStatuses { get; set; }
+
+    public string? WorkspaceReservationStatuseName { get; set; }
 
     public string? WorkerFullName { get; set; }
 

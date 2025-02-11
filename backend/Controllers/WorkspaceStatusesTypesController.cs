@@ -12,47 +12,47 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WorkspacesStatusesTypesController : ControllerBase
+    public class WorkspaceStatusesTypesController : ControllerBase
     {
         private readonly Context _context;
 
-        public WorkspacesStatusesTypesController(Context context)
+        public WorkspaceStatusesTypesController(Context context)
         {
             _context = context;
         }
 
-        // GET: api/WorkspacesStatusesTypes
+        // GET: api/WorkspaceStatusesTypes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WorkspacesStatusesType>>> GetWorkspacesStatusesTypes()
+        public async Task<ActionResult<IEnumerable<WorkspaceStatusesType>>> GetWorkspaceStatusesTypes()
         {
-            return await _context.WorkspacesStatusesTypes.ToListAsync();
+            return await _context.WorkspaceStatusesTypes.ToListAsync();
         }
 
-        // GET: api/WorkspacesStatusesTypes/5
+        // GET: api/WorkspaceStatusesTypes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<WorkspacesStatusesType>> GetWorkspacesStatusesType(int id)
+        public async Task<ActionResult<WorkspaceStatusesType>> GetWorkspaceStatusesType(int id)
         {
-            var workspacesStatusesType = await _context.WorkspacesStatusesTypes.FindAsync(id);
+            var workspaceStatusesType = await _context.WorkspaceStatusesTypes.FindAsync(id);
 
-            if (workspacesStatusesType == null)
+            if (workspaceStatusesType == null)
             {
                 return NotFound();
             }
 
-            return workspacesStatusesType;
+            return workspaceStatusesType;
         }
 
-        // PUT: api/WorkspacesStatusesTypes/5
+        // PUT: api/WorkspaceStatusesTypes/5
         // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorkspacesStatusesType(int id, WorkspacesStatusesType workspacesStatusesType)
+        public async Task<IActionResult> PutWorkspaceStatusesType(int id, WorkspaceStatusesType workspaceStatusesType)
         {
-            if (id != workspacesStatusesType.IdStatus)
+            if (id != workspaceStatusesType.IdWorkspaceStatusType)
             {
                 return BadRequest();
             }
 
-            _context.Entry(workspacesStatusesType).State = EntityState.Modified;
+            _context.Entry(workspaceStatusesType).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WorkspacesStatusesTypeExists(id))
+                if (!WorkspaceStatusesTypeExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace backend.Controllers
             return NoContent();
         }
 
-        // POST: api/WorkspacesStatusesTypes
+        // POST: api/WorkspaceStatusesTypes
         // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<WorkspacesStatusesType>> PostWorkspacesStatusesType(WorkspacesStatusesType workspacesStatusesType)
+        public async Task<ActionResult<WorkspaceStatusesType>> PostWorkspaceStatusesType(WorkspaceStatusesType workspaceStatusesType)
         {
-            _context.WorkspacesStatusesTypes.Add(workspacesStatusesType);
+            _context.WorkspaceStatusesTypes.Add(workspaceStatusesType);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkspacesStatusesType", new { id = workspacesStatusesType.IdStatus }, workspacesStatusesType);
+            return CreatedAtAction("GetWorkspaceStatusesType", new { id = workspaceStatusesType.IdWorkspaceStatusType }, workspaceStatusesType);
         }
 
-        // DELETE: api/WorkspacesStatusesTypes/5
+        // DELETE: api/WorkspaceStatusesTypes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkspacesStatusesType(int id)
+        public async Task<IActionResult> DeleteWorkspaceStatusesType(int id)
         {
-            var workspacesStatusesType = await _context.WorkspacesStatusesTypes.FindAsync(id);
-            if (workspacesStatusesType == null)
+            var workspaceStatusesType = await _context.WorkspaceStatusesTypes.FindAsync(id);
+            if (workspaceStatusesType == null)
             {
                 return NotFound();
             }
 
-            _context.WorkspacesStatusesTypes.Remove(workspacesStatusesType);
+            _context.WorkspaceStatusesTypes.Remove(workspaceStatusesType);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool WorkspacesStatusesTypeExists(int id)
+        private bool WorkspaceStatusesTypeExists(int id)
         {
-            return _context.WorkspacesStatusesTypes.Any(e => e.IdStatus == id);
+            return _context.WorkspaceStatusesTypes.Any(e => e.IdWorkspaceStatusType == id);
         }
     }
 }
