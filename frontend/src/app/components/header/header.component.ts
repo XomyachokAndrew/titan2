@@ -23,7 +23,6 @@ import { Location } from '@angular/common'; // Импортируйте Location
     standalone: true,
     exportAs: "Example1",
     imports: [
-        // NgClass,
         FormsModule,
         TuiDataList,
         TuiDropdown,
@@ -55,22 +54,9 @@ export default class HeaderComponent implements OnInit {
                 case '/registration':
                     this.loginPage = true;
                     break;
-                case '/offices/office':
-                    this.title = "Офис";
-                    break;
-                case '/offices':
-                    this.title = "Офисы";
-                    break;
                 default:
-                    this.title = "Интерактивная карта офисов";
                     this.loginPage = false;
                     break;
-            }
-            if(event.urlAfterRedirects !== "/"){
-                this.isSearch = true;
-            }
-            else{
-                this.isSearch = false;
             }
         });
     }
