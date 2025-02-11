@@ -3,6 +3,8 @@ import { DOCUMENT } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { TuiButton } from '@taiga-ui/core';
+import { UserService } from '../../services/controllers/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -18,8 +20,15 @@ import { TuiButton } from '@taiga-ui/core';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
+  isAuth: boolean = false;
 
-  constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private fb: FormBuilder) {
+  constructor(
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
+    private fb: FormBuilder,
+    private authService: UserService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       login: ['', Validators.required],
       password: ['', Validators.required]
@@ -33,8 +42,11 @@ export class LoginComponent implements OnInit {
     this.renderer.setStyle(this.document.documentElement, 'margin', '0');
   }
 
-
   ngOnInit(): void {
+    this.isAuth = this.authService.isAuthenticated();
+    if (this.isAuth) {
+      this.router.navigate(["offices"]);
+    }
     this.initializeForm();
   }
 
@@ -48,7 +60,18 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log('Form Submitted', this.form.value);
+      const loginDto = this.form.value;
+      this.authService.login(loginDto).subscribe({
+        next: () => {
+          this.isAuth = this.authService.isAuthenticated();
+          if (this.isAuth) {
+            this.router.navigate(["offices"]);
+          }
+        },
+        error: (error) => {
+          console.error("Failed", error);
+        }
+      })
     }
   }
 }
