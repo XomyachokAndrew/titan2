@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CurrentWorkspace } from './models/CurrentWorkspace';
-import { WorkspaceInfoDto, StatusWorkspaceDto } from './models/DTO';
+import { CurrentWorkspace } from '../models/CurrentWorkspace';
+import { WorkspaceInfoDto, StatusWorkspaceDto } from '../models/DTO';
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { WorkersStatusesType } from './models/WorkersStatusesType';
+import { WorkersStatusesType } from '../models/WorkersStatusesType';
 
 @Injectable({
   providedIn: 'root'
