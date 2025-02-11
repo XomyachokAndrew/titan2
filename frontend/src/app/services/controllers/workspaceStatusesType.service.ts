@@ -56,7 +56,6 @@ export class WorkspaceStatusesTypeService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
-      console.log(`${operation} failed: ${error.message}`);
       throw error.message;
     };
   }
