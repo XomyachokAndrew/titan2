@@ -38,16 +38,12 @@ svg {
   text-align: left;
   font-size: 16px;
   color: rgba(81, 81, 81, 1);
-  .info-text {
+  &-text {
     display: flex;
     gap: 0.5rem; /* Добавьте отступ между текстом и цифрами, если необходимо */
-  }
-  .span-number {
-    color: black;
-  }
-  .span-rockstar-eb {
-    font-family: 'RockStar-eb';
-    font-size: 21px;
+    & > span {
+      color: black;
+    }
   }
 }
 
