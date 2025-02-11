@@ -7,5 +7,6 @@
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public dynamic? WorkerDetails { get; set; }
+        public string? ReservationStatuseName { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace backend.Controllers
 
             if (!workspaces.Any())
             {
-                return NotFound($"No workspaces found for room ID {roomId}.");
+                return NotFound($"Рабочие пространства не найдены для ID комнаты {roomId}.");
             }
 
             return Ok(workspaces);
@@ -53,6 +53,7 @@ namespace backend.Controllers
             {
                 WorkspaceName = workspaceInfo.WorkspaceName,
                 StatusName = workerDetail?.StatusName, // Получаем статус работника
+                ReservationStatuseName = workspaceInfo.ReservationStatuseName, // Получаем статус бронирования
                 StartDate = workspaceInfo.StartDate,
                 EndDate = workspaceInfo.EndDate,
                 WorkerDetails = new
@@ -82,19 +83,19 @@ namespace backend.Controllers
             return Ok(history);
         }
 
-        // Method to add workspace status
+        // Метод для добавления статуса рабочего пространства
         [HttpPost]
         public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
         {
             if (statusWorkspaceDto == null)
             {
-                return BadRequest("Invalid data.");
+                return BadRequest("Недопустимые данные.");
             }
 
             var status = await _context.StatusesWorkspaces.FindAsync(statusWorkspaceDto.IdStatusWorkspace);
             if (status == null)
             {
-                return NotFound("Status workspace not found.");
+                return NotFound("Статус рабочего пространства не найден.");
             }
 
             var statusWorkspace = new StatusesWorkspace
@@ -104,7 +105,8 @@ namespace backend.Controllers
                 IdWorkspace = status.IdWorkspace,
                 IdStatus = statusWorkspaceDto.IdStatus,
                 IdWorker = statusWorkspaceDto.IdWorker,
-                IdUser = statusWorkspaceDto.IdUser
+                IdUser = statusWorkspaceDto.IdUser,
+                IdWorkspacesReservationsStatuses = statusWorkspaceDto.IdWorkspacesReservationsStatuses // Добавляем статус бронирования
             };
 
             _context.StatusesWorkspaces.Add(statusWorkspace);
@@ -174,6 +176,7 @@ namespace backend.Controllers
             currentStatus.IdStatus = updatedStatusDto.IdStatus ?? currentStatus.IdStatus;
             currentStatus.IdWorker = updatedStatusDto.IdWorker ?? currentStatus.IdWorker;
             currentStatus.IdUser = updatedStatusDto.IdUser;
+            currentStatus.IdWorkspacesReservationsStatuses = updatedStatusDto.IdWorkspacesReservationsStatuses ?? currentStatus.IdWorkspacesReservationsStatuses; // Обновляем статус бронирования
 
             await _context.SaveChangesAsync();
 
@@ -181,3 +184,4 @@ namespace backend.Controllers
         }
     }
 }
+

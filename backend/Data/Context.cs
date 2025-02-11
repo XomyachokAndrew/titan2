@@ -81,6 +81,10 @@ public partial class Context : DbContext
             entity.Property(e => e.IdStatusWorkspace).HasColumnName("id_status_workspace");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
+            entity.Property(e => e.IdWorkspacesReservationsStatuses).HasColumnName("id_workspaces_reservations_statuses");
+            entity.Property(e => e.ReservationStatuseName)
+                .HasMaxLength(45)
+                .HasColumnName("reservation_statuse_name");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
             entity.Property(e => e.StatusName)
                 .HasMaxLength(45)
@@ -408,7 +412,7 @@ public partial class Context : DbContext
             entity.Property(e => e.IdUser).HasColumnName("id_user");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
-            entity.Property(e => e.IdWorkspacesReservationsStatuses).HasColumnName("id_workspaces_reservations _statuses");
+            entity.Property(e => e.IdWorkspacesReservationsStatuses).HasColumnName("id_workspaces_reservations_statuses");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
 
             entity.HasOne(d => d.IdStatusNavigation).WithMany(p => p.StatusesWorkspaces)
@@ -545,11 +549,11 @@ public partial class Context : DbContext
         {
             entity.HasKey(e => e.IdWorkspacesReservationsStatuses).HasName("workspaces_reservations__statuses_pk");
 
-            entity.ToTable("workspaces_reservations _statuses", "offices_management");
+            entity.ToTable("workspaces_reservations_statuses", "offices_management");
 
             entity.Property(e => e.IdWorkspacesReservationsStatuses)
                 .UseIdentityAlwaysColumn()
-                .HasColumnName("id_workspaces_reservations _statuses");
+                .HasColumnName("id_workspaces_reservations_statuses");
             entity.Property(e => e.Descriptions)
                 .HasMaxLength(300)
                 .HasColumnName("descriptions");

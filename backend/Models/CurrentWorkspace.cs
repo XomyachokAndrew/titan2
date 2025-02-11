@@ -19,6 +19,10 @@ public partial class CurrentWorkspace
 
     public int? IdStatus { get; set; }
 
+    public int? IdWorkspacesReservationsStatuses { get; set; }
+
+    public string? ReservationStatuseName { get; set; }
+
     public DateOnly? StartDate { get; set; }
 
     public DateOnly? EndDate { get; set; }
