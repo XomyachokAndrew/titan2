@@ -80,7 +80,9 @@ namespace backend.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Login)
+            new Claim(ClaimTypes.Name, user.Login),
+            new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
+            new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -96,6 +98,7 @@ namespace backend.Controllers
             return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = refreshToken });
         }
 
+        // Метод для обновления токена
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
@@ -112,7 +115,9 @@ namespace backend.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Login)
+            new Claim(ClaimTypes.Name, user.Login),
+            new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
+            new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -127,7 +132,6 @@ namespace backend.Controllers
 
             return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = newRefreshToken });
         }
-
     }
 }
 
