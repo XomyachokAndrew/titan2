@@ -6,6 +6,10 @@ import {
   Renderer2,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ActivatedRoute } from "@angular/router";
+import { Subscription } from "rxjs";
+import { FloorService } from '../../../services/controllers/floor.service';
+import { OfficeDataService } from '../../../services/data/officeData.service';
 
 @Component({
   selector: 'office',
@@ -15,6 +19,19 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class OfficeComponent implements OnInit, AfterViewInit {
   svgContent: SafeHtml = '';
   svgData: any = '';
+
+  id: number = 1;
+  private subscription: Subscription;
+
+  office = {
+    title: "",
+    address: "",
+    countCab: 0,
+    countWorkspace: 0,
+    countAvaibleWorkspace: 0
+  };
+
+  dataFloors: any;
 
   //#region  Test
   cabs = [
@@ -40,12 +57,17 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     },
   ];
   //#endregion
-  
+
   constructor(
     private sanitizer: DomSanitizer,
     private el: ElementRef,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private activateRoute: ActivatedRoute,
+    private floorService: FloorService,
+    private officeData: OfficeDataService
+  ) {
+    this.subscription = activateRoute.params.subscribe(params => this.id = params["id"]);
+  }
 
   ngOnInit() {
     // Получите SVG из базы данных
@@ -79,6 +101,20 @@ export class OfficeComponent implements OnInit, AfterViewInit {
           </a>
         </g>
       </svg>`;
+
+    this.floorService.getFloorsByOfficeId(this.id).subscribe(
+      response => {
+        this.dataFloors = response;
+        console.log(this.dataFloors);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+    this.office = this.officeData.getData();
+
+    console.log(this.office);
+
 
     // Сантизируйте SVG для безопасного использования
     this.svgContent = this.sanitizer.bypassSecurityTrustHtml(this.svgData);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import CardComponent from '../../components/card/card.component';
-import { OfficeService } from '../../services/office.service';
+import { OfficeService } from '../../services/controllers/office.service';
 
 @Component({
   selector: 'offices',

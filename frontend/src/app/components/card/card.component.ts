@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { TuiAppearance, TuiButton, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
+import { OfficeDataService } from '../../services/data/officeData.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'card-office',
@@ -26,6 +28,10 @@ export default class CardComponent implements OnInit {
     adr = "";
     city = "";
 
+    constructor(private officeData: OfficeDataService, private router: Router){
+
+    }
+
     ngOnInit(): void {
         if (this.address) {
             const parts = this.address.split(", ");
@@ -43,4 +49,16 @@ export default class CardComponent implements OnInit {
             this.city = "";
         }
     }
+
+    goToOffice(
+        id: number,
+        title: string,
+        address: string,
+        countCab: number,
+        countWorkspace: number,
+        countAvaibleWorkspace: number
+      ) {
+        this.officeData.setData(title, address, countCab, countWorkspace, countAvaibleWorkspace);
+        this.router.navigate(["/offices", id]);
+      }
 }
