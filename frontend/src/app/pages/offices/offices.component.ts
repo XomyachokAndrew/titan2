@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import CardComponent from '../../components/card/card.component';
 import { OfficeService } from '../../services/controllers/office.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'offices',
@@ -14,10 +15,11 @@ export class OfficesComponent implements OnInit {
   constructor (private officeService: OfficeService) {}
 
   ngOnInit(): void {
-    this.officeService.getOffices().subscribe(
+    this.officeService.getOffices()
+    .pipe(takeUntilDestroyed())
+    .subscribe(
       response => {
         this.data = response;
-        console.log(response);
       },
       error => {
         console.error(error);
