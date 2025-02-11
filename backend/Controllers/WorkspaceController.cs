@@ -66,15 +66,6 @@ namespace backend.Controllers
             return Ok(workspaceInfoDto);
         }
 
-        public class WorkspaceInfoDto
-        {
-            public string? WorkspaceName { get; set; }
-            public string? StatusName { get; set; }
-            public DateOnly? StartDate { get; set; }
-            public DateOnly? EndDate { get; set; }
-            public dynamic? WorkerDetails { get; set; } // Можно заменить на конкретный класс, если нужно
-        }
-
         // GET: api/workspaces/{id}/history
         [HttpGet("{id}/history")]
         public async Task<ActionResult<IEnumerable<StatusWorkspaceDto>>> GetWorkspaceHistory(int id)

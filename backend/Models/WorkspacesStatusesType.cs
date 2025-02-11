@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
-public partial class WorkspaceStatusesType
+public partial class WorkspacesStatusesType
 {
     public int IdStatus { get; set; }
 

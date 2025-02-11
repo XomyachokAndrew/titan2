@@ -7,10 +7,6 @@ public partial class Reservation
 {
     public int IdReservations { get; set; }
 
-    public DateOnly StartDate { get; set; }
-
-    public DateOnly? EndDate { get; set; }
-
     public int? IdReservationStatus { get; set; }
 
     public int IdWorkspace { get; set; }
