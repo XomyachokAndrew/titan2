@@ -1,8 +1,6 @@
-export interface Worker {
+export interface IWorker {
     IdWorker: number;
     Name: string;
     Surname: string;
     Patronymic?: string;
-    // StatusesWorkers: StatusesWorker[];
-    // StatusesWorkspaces: StatusesWorkspace[];
 }

@@ -1,6 +1,5 @@
-export interface WorkspaceStatusesType {
+export interface IWorkspaceStatusesType {
     idStatus: number;
     name: string;
     descriptions?: string;
-    // statusesWorkspaces?: StatusesWorkspace[];
   }

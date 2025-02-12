@@ -1,4 +1,4 @@
-export interface CurrentWorkspace  {
+export interface ICurrentWorkspace  {
     idWorkspace?: number;
     idRoom?: number;
     workspaceName?: string;
@@ -6,7 +6,7 @@ export interface CurrentWorkspace  {
     fullWorkerName?: string;
     idStatusWorkspace?: number;
     idStatus?: number;
-    startDate?: string; // Use string to represent DateOnly in TypeScript
-    endDate?: string;   // Use string to represent DateOnly in TypeScript
+    startDate?: string; 
+    endDate?: string;   
     statusName?: string;
 }

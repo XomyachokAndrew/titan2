@@ -1,4 +1,4 @@
-export interface Office {
+export interface IOffice {
     IdOffice: number;
     OfficeName: string;
     Address: string;
@@ -6,7 +6,4 @@ export interface Office {
     Square?: number;
     Image: string;
     TotalWorkspace?: number;
-    // Floors: Floor[];
-    // IdOfficeStatusNavigation: OfficesStatus;
-    // RentalAgreements: RentalAgreement[];
 }

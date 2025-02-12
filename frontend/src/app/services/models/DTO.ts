@@ -1,8 +1,8 @@
-export interface RefreshTokenDto {
+export interface IRefreshTokenDto {
     refreshToken: string;
 }
 
-export interface StatusWorkspaceDto {
+export interface IStatusWorkspaceDto {
     idStatusWorkspace: number;
     startDate?: string;
     endDate?: string;
@@ -11,12 +11,12 @@ export interface StatusWorkspaceDto {
     idUser: number;
 }
 
-export interface UserLoginDto {
+export interface IUserLoginDto {
     login: string;
     password: string;
 }
 
-export interface UserRegistrationDto {
+export interface IUserRegistrationDto {
     name: string;
     surname: string;
     patronymic?: string;
@@ -24,7 +24,7 @@ export interface UserRegistrationDto {
     password: string;
 }
 
-export interface WorkspaceInfoDto {
+export interface IWorkspaceInfoDto {
     workspaceName?: string;
     statusName?: string;
     startDate?: string;
