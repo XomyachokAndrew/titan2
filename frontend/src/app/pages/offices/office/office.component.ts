@@ -12,6 +12,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import { FloorService } from '../../../services/controllers/floor.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IFloor } from '../../../services/models/Floor';
 
 @Component({
   selector: 'office',
@@ -34,7 +35,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     countAvaibleWorkspace: 0
   };
 
-  dataFloors: any;
+  dataFloors!: IFloor[];
 
   //#region  Test
   cabs = [
