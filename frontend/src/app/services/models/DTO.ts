@@ -31,3 +31,14 @@ export interface IWorkspaceInfoDto {
     endDate?: string;
     workerDetails?: any;
 }
+
+export interface IOfficeDto {
+    idOffice: number;
+    officeName: string;
+    address: string;
+    imageUrl: string;
+    square?: number; 
+    totalWorkspace?: number; 
+    occupiedWorkspaces?: number; 
+    density?: number; 
+}

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
-import { IOffice } from '../models/Office';
 import { environment } from '../../../environments/environment';
+import { IOfficeDto } from '../models/DTO';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +12,14 @@ export class OfficeService {
 
   constructor(private http: HttpClient) { }
 
-  getOffices(): Observable<IOffice[]> {
-    return this.http.get<IOffice[]>(this.apiUrl);
+  getOffices(): Observable<IOfficeDto[]> {
+    return this.http.get<IOfficeDto[]>(this.apiUrl);
   }
   
-  getOfficesById(id: number): Observable<IOffice> {
-    return this.http.get<IOffice>(`${this.apiUrl}/${id}`)
+  getOfficesById(id: number): Observable<IOfficeDto> {
+    return this.http.get<IOfficeDto>(`${this.apiUrl}/${id}`)
       .pipe(
-        catchError(this.handleError<IOffice>(`getPost id=${id}`))
+        catchError(this.handleError<IOfficeDto>(`getPost id=${id}`))
       );
   }
 
