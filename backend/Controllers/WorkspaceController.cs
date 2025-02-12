@@ -30,7 +30,7 @@ namespace backend.Controllers
             // Проверка на наличие рабочих пространств
             if (!workspaces.Any())
             {
-                return NotFound($"No workspaces found for room ID {roomId}.");
+                return NotFound($"Рабочие пространства не найдены для ID комнаты {roomId}.");
             }
 
             return Ok(workspaces); // Возврат найденных рабочих пространств
@@ -58,7 +58,10 @@ namespace backend.Controllers
             var workspaceInfoDto = new WorkspaceInfoDto
             {
                 WorkspaceName = workspaceInfo.WorkspaceName,
-                StatusName = workerDetail?.StatusName, 
+
+                StatusName = workerDetail?.StatusName, // Получаем статус работника
+                ReservationStatuseName = workspaceInfo.ReservationStatuseName, // Получаем статус бронирования
+
                 StartDate = workspaceInfo.StartDate,
                 EndDate = workspaceInfo.EndDate,
                 WorkerDetails = new
@@ -73,6 +76,7 @@ namespace backend.Controllers
         }
 
         // Получение истории статусов рабочего пространства
+        // GET: api/workspaces/{id}/history
         [HttpGet("{id}/history")]
         public async Task<ActionResult<IEnumerable<StatusWorkspaceDto>>> GetWorkspaceHistory(int id)
         {
@@ -97,14 +101,14 @@ namespace backend.Controllers
             // Проверка на валидность входных данных
             if (statusWorkspaceDto == null)
             {
-                return BadRequest("Invalid data.");
+                return BadRequest("Недопустимые данные.");
             }
 
             // Проверка на существование статуса рабочего пространства
             var status = await _context.StatusesWorkspaces.FindAsync(statusWorkspaceDto.IdStatusWorkspace);
             if (status == null)
             {
-                return NotFound("Status workspace not found.");
+                return NotFound("Статус рабочего пространства не найден.");
             }
 
             // Проверка на корректность дат
@@ -119,9 +123,10 @@ namespace backend.Controllers
                 StartDate = statusWorkspaceDto.StartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 EndDate = statusWorkspaceDto.EndDate,
                 IdWorkspace = status.IdWorkspace,
-                IdStatus = statusWorkspaceDto.IdStatus,
+                IdStatusWorkspace = statusWorkspaceDto.IdStatusWorkspace,
                 IdWorker = statusWorkspaceDto.IdWorker,
-                IdUser = statusWorkspaceDto.IdUser
+                IdUser = statusWorkspaceDto.IdUser,
+                IdWorkspaceReservationsStatuses = statusWorkspaceDto.IdWorkspacesReservationsStatuses // Добавляем статус бронирования
             };
 
             _context.StatusesWorkspaces.Add(statusWorkspace); // Добавление статуса в контекст
@@ -202,9 +207,11 @@ namespace backend.Controllers
             // Обновление текущего статуса новыми значениями или оставление существующих
             currentStatus.StartDate = updatedStatusDto.StartDate ?? currentStatus.StartDate;
             currentStatus.EndDate = updatedStatusDto.EndDate ?? currentStatus.EndDate;
-            currentStatus.IdStatus = updatedStatusDto.IdStatus ?? currentStatus.IdStatus;
+            currentStatus.IdWorkspaceStatusType = updatedStatusDto.IdStatus ?? currentStatus.IdWorkspaceStatusType;
             currentStatus.IdWorker = updatedStatusDto.IdWorker ?? currentStatus.IdWorker;
-            currentStatus.IdUser = updatedStatusDto.IdUser; // Обновление ID пользователя
+
+            currentStatus.IdUser = updatedStatusDto.IdUser;
+            currentStatus.IdWorkspaceReservationsStatuses = updatedStatusDto.IdWorkspacesReservationsStatuses ?? currentStatus.IdWorkspaceReservationsStatuses; // Обновляем статус бронирования
 
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
 
@@ -212,3 +219,4 @@ namespace backend.Controllers
         }
     }
 }
+

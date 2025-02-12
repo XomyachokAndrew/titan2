@@ -19,6 +19,8 @@ public partial class Office
 
     public int? TotalWorkspace { get; set; }
 
+    public string City { get; set; } = null!;
+
     public virtual ICollection<Floor> Floors { get; set; } = new List<Floor>();
 
     public virtual OfficesStatus IdOfficeStatusNavigation { get; set; } = null!;

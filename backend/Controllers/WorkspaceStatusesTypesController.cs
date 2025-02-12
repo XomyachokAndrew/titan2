@@ -43,11 +43,11 @@ namespace backend.Controllers
         }
 
         // PUT: api/WorkspaceStatusesTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkspaceStatusesType(int id, WorkspaceStatusesType workspaceStatusesType)
         {
-            if (id != workspaceStatusesType.IdStatus)
+            if (id != workspaceStatusesType.IdWorkspaceStatusType)
             {
                 return BadRequest();
             }
@@ -74,14 +74,14 @@ namespace backend.Controllers
         }
 
         // POST: api/WorkspaceStatusesTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<WorkspaceStatusesType>> PostWorkspaceStatusesType(WorkspaceStatusesType workspaceStatusesType)
         {
             _context.WorkspaceStatusesTypes.Add(workspaceStatusesType);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkspaceStatusesType", new { id = workspaceStatusesType.IdStatus }, workspaceStatusesType);
+            return CreatedAtAction("GetWorkspaceStatusesType", new { id = workspaceStatusesType.IdWorkspaceStatusType }, workspaceStatusesType);
         }
 
         // DELETE: api/WorkspaceStatusesTypes/5
@@ -102,7 +102,7 @@ namespace backend.Controllers
 
         private bool WorkspaceStatusesTypeExists(int id)
         {
-            return _context.WorkspaceStatusesTypes.Any(e => e.IdStatus == id);
+            return _context.WorkspaceStatusesTypes.Any(e => e.IdWorkspaceStatusType == id);
         }
     }
 }

@@ -13,7 +13,7 @@ header[tuiNavigationHeader][tuiNavigationHeader] {
     font-family: 'RockStar-eb';
     font-size: 30pt;
     height: 6rem;
-    padding: 0 10rem;
+    padding: 0 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -52,8 +52,8 @@ header[tuiNavigationHeader][tuiNavigationHeader]:before {
 
 .admin-button {
     background-color: #ffffff;
-    font-family: 'RockStar-sb';
-    font-size: 15pt;
+    font-family: "MyriadPro-r";
+    font-size: 1.125rem;
     color: rgb(0, 0, 0);
     border: none;
     padding: 0.001rem 1.75rem;
@@ -62,6 +62,7 @@ header[tuiNavigationHeader][tuiNavigationHeader]:before {
     display: flex;
     align-items: center;
     transition: 0.3s;
+    height: 2.5rem;
 }
 
 .admin-button:hover {
@@ -95,39 +96,42 @@ tui-icon[tuiIcons]:after {
 .search-container {
     flex: 1; /* Занимает оставшееся пространство */
     display: flex;
-    justify-content: left; /* Центрирует элемент поиска по горизонтали */
+    justify-content: right; /* Центрирует элемент поиска по горизонтали */
+    padding-right: 2rem;
 }
 
-.office-navigation {
-    justify-content: center;
-    width: 50%;
-    display: flex;
-    background: linear-gradient(90deg, #034A8B 56.9%, #003668 100%);
-    height: 2rem;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-    border-radius: 0rem 0rem 1.875rem 1.875rem;
-    align-items: center;
-    padding: 1.25rem 8rem;
-}
+.logo {
+    justify-content: left;
+    width: 20rem;
+    padding-right: 20rem;
+    // transform: scale(0.6);
 
-.navigation-text {
-    color: #FFF;
-    font-family: RockStar-sb;
-    font-size: 1.625rem;
-    margin: 1rem;
-    transition: 0.3s;
-    &:hover {
-        color: rgb(204, 213, 218);
+    svg {
+        width: 18rem;
+        height: 43px;
     }
 }
 
-.text-separator {
+.header-buttons {
+    display: inline-block;
+    justify-content: center;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.header-button {
     color: #FFF;
-    font-family: RockStar-sb;
-    height: 1rem;
-    width: 0.2rem;
-    background: #FFF;
-    border-radius: 2.5rem;
+    font-family: "MyriadPro-r";
+    font-size: 1.6875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    background: none;
+    transition: 0.3s;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.header-button:hover {
+    color: rgb(195, 194, 199);
 }

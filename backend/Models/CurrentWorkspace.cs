@@ -17,11 +17,15 @@ public partial class CurrentWorkspace
 
     public int? IdStatusWorkspace { get; set; }
 
-    public int? IdStatus { get; set; }
+    public int? IdWorkspaceStatusType { get; set; }
+
+    public string? WorkspaceStatusTypeName { get; set; }
+
+    public int? IdWorkspaceReservationsStatuses { get; set; }
+
+    public string? ReservationStatuseName { get; set; }
 
     public DateOnly? StartDate { get; set; }
 
     public DateOnly? EndDate { get; set; }
-
-    public string? StatusName { get; set; }
 }

@@ -1,20 +1,20 @@
 @font-face {
-    font-family: 'RockStar-eb';
-    src: url('../assets/fonts/RS-extrabold.otf') format('opentype');
+    font-family: 'MyriadPro-b';
+    src: url('../assets/fonts/MYRIADPRO-BOLD.OTF') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'RockStar-sb';
-    src: url('../assets/fonts/RS-semibold.otf') format('opentype');
+    font-family: 'MyriadPro-sb';
+    src: url('../assets/fonts/MYRIADPRO-SEMIBOLD.OTF') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'RockStar-r';
-    src: url('../assets/fonts/RS-regular.otf') format('opentype');
+    font-family: 'MyriadPro-r';
+    src: url('../assets/fonts/MYRIADPRO-REGULAR.OTF') format('opentype');
     font-weight: normal;
     font-style: normal;
 }

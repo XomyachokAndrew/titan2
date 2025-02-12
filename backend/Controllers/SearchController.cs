@@ -15,7 +15,7 @@ namespace backend.Controllers
             _context = context;
         }
 
-        [HttpGet("search")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> SearchOffices(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -27,7 +27,9 @@ namespace backend.Controllers
 
             // Поиск офисов
             var offices = await _context.Offices
-                .Where(o => o.OfficeName.ToLower().Contains(lowerQuery) || o.Address.ToLower().Contains(lowerQuery))
+                .Where(o => o.OfficeName.ToLower().Contains(lowerQuery) || 
+                       o.Address.ToLower().Contains(lowerQuery) || 
+                       o.City.ToLower().Contains(lowerQuery))
                 .ToListAsync();
 
             // Поиск комнат
@@ -38,7 +40,7 @@ namespace backend.Controllers
             // Поиск рабочих мест
             var workspaces = await _context.CurrentWorkspaces
                 .Where(w => w.WorkspaceName.ToLower().Contains(lowerQuery) || 
-                            w.StatusName.ToLower().Contains(lowerQuery))
+                            w.WorkspaceStatusTypeName.ToLower().Contains(lowerQuery))
                 .ToListAsync();
 
             // Поиск работников

@@ -23,7 +23,7 @@ import { Location } from '@angular/common'; // Импортируйте Location
     standalone: true,
     exportAs: "Example1",
     imports: [
-        NgClass,
+        // NgClass,
         FormsModule,
         TuiDataList,
         TuiDropdown,
@@ -39,7 +39,7 @@ import { Location } from '@angular/common'; // Импортируйте Location
 export default class HeaderComponent implements OnInit {
     loginPage: boolean = false;
     title: string = "Интерактивная карта офисов";
-    user: string = '';
+    user: string = 'Админ';
     isSearch: boolean = false;
 
     constructor(private router: Router, private location: Location) { }
