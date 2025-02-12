@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router, NavigationEnd } from '@angular/router';
@@ -43,6 +43,7 @@ export default class HeaderComponent implements OnInit {
     user: string = '';
     isSearch: boolean = false;
     isAuthenticated: boolean = false;
+    private destroyRef = inject(DestroyRef);
 
     constructor(
         private router: Router,
@@ -70,7 +71,7 @@ export default class HeaderComponent implements OnInit {
             });
 
         this.userService.isAuthenticated$
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(isAuthenticated => {
                 this.isAuthenticated = isAuthenticated;
             });

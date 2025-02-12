@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Renderer2, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Renderer2, Inject, OnInit, DestroyRef, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { TuiInputModule } from '@taiga-ui/legacy';
@@ -22,6 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class LoginComponent implements OnInit {
   form: FormGroup;
   isAuth: boolean = false;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private renderer: Renderer2,
@@ -63,7 +64,7 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       const loginDto = this.form.value;
       this.authService.login(loginDto)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.isAuth = this.authService.isAuthenticated();

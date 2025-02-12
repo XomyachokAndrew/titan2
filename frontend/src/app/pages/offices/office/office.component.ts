@@ -4,6 +4,8 @@ import {
   AfterViewInit,
   ElementRef,
   Renderer2,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from "@angular/router";
@@ -22,6 +24,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
 
   id: number = 1;
   private subscription: Subscription;
+  private destroyRef = inject(DestroyRef);
 
   office = {
     title: "",
@@ -65,7 +68,9 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
   ) {
-    this.subscription = activateRoute.params.pipe(takeUntilDestroyed()).subscribe(params => this.id = params["id"]);
+    this.subscription = activateRoute.params
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => this.id = params["id"]);
   }
 
   ngOnInit() {
