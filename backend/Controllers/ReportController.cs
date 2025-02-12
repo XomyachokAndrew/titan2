@@ -43,6 +43,9 @@ namespace backend.Controllers
                 // Получаем текущие рабочие места
                 var currentWorkspaces = GetCurrentWorkspaces(roomIds);
 
+                // Получаем рабочие места со статусами бронирования
+                var reservedWorkspaces = GetReservedWorkspaces(roomIds);
+
                 // Получаем первый договор аренды
                 var rentalAgreement = office.RentalAgreements.FirstOrDefault();
                 if (rentalAgreement == null)
@@ -56,8 +59,11 @@ namespace backend.Controllers
                 // Подсчитываем стоимости и количество рабочих мест для каждого отдела
                 var departmentCosts = CalculateDepartmentCosts(currentWorkspaces, priceWorkspace);
 
+                // Обрабатываем рабочие места со статусами бронирования
+                CalculateReservedWorkspacesCosts(reservedWorkspaces, departmentCosts, priceWorkspace);
+
                 // Создаем Excel-файл
-                var filePath = CreateExcelReport(office, rentalAgreement.Price, departmentCosts, currentWorkspaces.Count(), priceWorkspace);
+                var filePath = CreateExcelReport(office, rentalAgreement.Price, departmentCosts, currentWorkspaces.Count(), priceWorkspace, reservedWorkspaces, roomIds);
 
                 // Сохраняем информацию о отчете в БД
                 await SaveReportToDatabase(reportTypeId, idUser, filePath);
@@ -100,6 +106,16 @@ namespace backend.Controllers
                 .ToList();
         }
 
+        // Получение рабочих мест со статусами бронирования
+        private List<StatusesWorkspace> GetReservedWorkspaces(List<int> roomIds)
+        {
+            return _context.StatusesWorkspaces
+                .Include(ws => ws.IdWorkspaceNavigation) // Подключаем навигационное свойство
+                .Where(ws => ws.IdWorkspaceReservationsStatuses != null &&
+                             roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom)) // Используем IdRoom из IdWorkspaceNavigation
+                .ToList();
+        }
+
         // Расчет стоимости рабочего места
         private decimal CalculateWorkspacePrice(decimal rentalPrice, int workspaceCount)
         {
@@ -124,8 +140,34 @@ namespace backend.Controllers
                     });
         }
 
+        // Обработка рабочих мест со статусами бронирования
+        private void CalculateReservedWorkspacesCosts(List<StatusesWorkspace> reservedWorkspaces, Dictionary<int, DepartmentCostInfoDto> departmentCosts, decimal priceWorkspace)
+        {
+            foreach (var reserved in reservedWorkspaces)
+            {
+                var workerDetail = _context.WorkerDetails.SingleOrDefault(wd => wd.IdWorker == reserved.IdWorker);
+                if (workerDetail != null && workerDetail.IdDepartment != null)
+                {
+                    if (departmentCosts.ContainsKey(workerDetail.IdDepartment.Value))
+                    {
+                        departmentCosts[workerDetail.IdDepartment.Value].TotalCost += priceWorkspace;
+                        departmentCosts[workerDetail.IdDepartment.Value].WorkspaceCount += 1;
+                    }
+                    else
+                    {
+                        departmentCosts[workerDetail.IdDepartment.Value] = new DepartmentCostInfoDto
+                        {
+                            DepartmentName = workerDetail.DepartmentName,
+                            TotalCost = priceWorkspace,
+                            WorkspaceCount = 1
+                        };
+                    }
+                }
+            }
+        }
+
         // Создание Excel-отчета
-        private string CreateExcelReport(Office office, decimal rentalPrice, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace)
+        private string CreateExcelReport(Office office, decimal rentalPrice, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<StatusesWorkspace> reservedWorkspaces, List<int> roomIds)
         {
             // Санитизация имени офиса для использования в имени файла
             var sanitizedOfficeName = Regex.Replace(office.OfficeName, @"[<>:""/\\|?*]", "");
@@ -151,6 +193,7 @@ namespace backend.Controllers
                 var headerStyle = CreateCellStyle(workbook, IndexedColors.BrightGreen.Index, true, 12);
                 var departmentInfoStyle = CreateCellStyle(workbook, IndexedColors.LightGreen.Index, false, 11);
                 var freeInfoStyle = CreateCellStyle(workbook, IndexedColors.Red.Index, true, 11);
+                var reservedInfoStyle = CreateCellStyle(workbook, IndexedColors.LightBlue.Index, false, 11); // Новый стиль для забронированных рабочих мест
 
                 // Добавление информации о стоимости офиса и его площади
                 AddOfficeInfoRow(sheet, office, rentalPrice, officeInfoStyle);
@@ -162,7 +205,11 @@ namespace backend.Controllers
                 FillDepartmentData(sheet, departmentCosts, departmentInfoStyle);
 
                 // Добавление информации о свободных рабочих местах
-                AddFreeWorkspacesInfo(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, freeInfoStyle);
+                AddFreeWorkspacesInfo(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, roomIds, freeInfoStyle);
+
+                // Добавление информации о количестве забронированных рабочих мест
+                int reservedWorkspacesCount = reservedWorkspaces.Count;
+                AddReservedWorkspacesCount(sheet, reservedWorkspacesCount, priceWorkspace, reservedInfoStyle);
 
                 // Создание графика пирога
                 CreatePieChart(sheet, departmentCosts, sheet.LastRowNum + 3);
@@ -176,12 +223,24 @@ namespace backend.Controllers
                 // Сохранение файла
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
-                    Console.WriteLine("\n\n\n\n");
                     workbook.Write(fileStream);
                 }
             }
 
             return filePath;
+        }
+
+        // Добавление информации о количестве забронированных рабочих мест
+        private void AddReservedWorkspacesCount(ISheet sheet, int reservedCount, decimal priceWorkspace, ICellStyle style)
+        {
+            var reservedRow = sheet.CreateRow(sheet.LastRowNum + 1);
+            decimal reservedCost = reservedCount * priceWorkspace;
+            reservedRow.CreateCell(0).SetCellValue("Количество забронированных рабочих мест:");
+            reservedRow.GetCell(0).CellStyle = style;
+            reservedRow.CreateCell(1).SetCellValue((double)reservedCost); // Количество забронированных мест
+            reservedRow.GetCell(1).CellStyle = style;
+            reservedRow.CreateCell(2).SetCellValue(reservedCount); // Количество забронированных мест
+            reservedRow.GetCell(2).CellStyle = style;
         }
 
         // Создание стиля ячейки
@@ -243,11 +302,19 @@ namespace backend.Controllers
         }
 
         // Добавление информации о свободных рабочих местах
-        private void AddFreeWorkspacesInfo(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, ICellStyle style)
+        private void AddFreeWorkspacesInfo(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<int> roomIds, ICellStyle style)
         {
-            // Подсчет свободных рабочих мест
+            // Подсчет занятых рабочих мест
             var occupiedWorkspacesCount = departmentCosts.Sum(dc => dc.Value.WorkspaceCount);
-            var freeWorkspacesCount = totalWorkspacesCount - occupiedWorkspacesCount;
+
+            // Подсчет забронированных рабочих мест
+            var reservedWorkspacesCount = _context.StatusesWorkspaces
+                .Include(ws => ws.IdWorkspaceNavigation)
+                .Count(ws => ws.IdWorkspaceReservationsStatuses != null &&
+                             roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom)); // Используем roomIds для фильтрации
+
+            // Подсчет свободных рабочих мест
+            var freeWorkspacesCount = totalWorkspacesCount - occupiedWorkspacesCount - reservedWorkspacesCount;
             var freeWorkspacesCost = freeWorkspacesCount * priceWorkspace;
 
             var freeRow = sheet.CreateRow(sheet.LastRowNum + 1);
@@ -305,3 +372,5 @@ namespace backend.Controllers
         }
     }
 }
+
+
