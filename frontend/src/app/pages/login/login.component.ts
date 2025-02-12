@@ -5,6 +5,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
 import { TuiButton } from '@taiga-ui/core';
 import { UserService } from '../../services/controllers/user.service';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'login',
@@ -61,7 +62,9 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       const loginDto = this.form.value;
-      this.authService.login(loginDto).subscribe({
+      this.authService.login(loginDto)
+      .pipe(takeUntilDestroyed())
+      .subscribe({
         next: () => {
           this.isAuth = this.authService.isAuthenticated();
           if (this.isAuth) {
