@@ -15,4 +15,8 @@ export class OfficeService {
   getOffices(): Observable<Office[]> {
     return this.http.get<Office[]>(this.apiUrl);
   }
+  
+  getOfficesById(id: number): Observable<Office> {
+    return this.http.get<Office>(`${this.apiUrl}/${id}`);
+  }
 }
