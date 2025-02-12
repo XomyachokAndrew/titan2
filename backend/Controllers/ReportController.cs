@@ -30,45 +30,27 @@ namespace backend.Controllers
         {
             try
             {
-                // Получаем офис по его идентификатору
                 var office = await GetOfficeWithDetails(officeId);
                 if (office == null)
                 {
                     return NotFound("Офис не найден.");
                 }
 
-                // Получаем идентификаторы комнат, принадлежащих офису
                 var roomIds = GetRoomIds(office);
-
-                // Получаем текущие рабочие места
-                var currentWorkspaces = GetCurrentWorkspaces(roomIds);
-
-                // Получаем рабочие места со статусами бронирования
-                var reservedWorkspaces = GetReservedWorkspaces(roomIds);
-
-                // Получаем первый договор аренды
+                var currentWorkspaces = await GetCurrentWorkspaces(roomIds);
+                var reservedWorkspaces = await GetReservedWorkspaces(roomIds);
                 var rentalAgreement = office.RentalAgreements.FirstOrDefault();
                 if (rentalAgreement == null)
                 {
                     return NotFound("Нет договора аренды для этого офиса.");
                 }
 
-                // Рассчитываем стоимость рабочего места
                 decimal priceWorkspace = CalculateWorkspacePrice(rentalAgreement.Price, currentWorkspaces.Count());
-
-                // Подсчитываем стоимости и количество рабочих мест для каждого отдела
                 var departmentCosts = CalculateDepartmentCosts(currentWorkspaces, priceWorkspace);
-
-                // Обрабатываем рабочие места со статусами бронирования
                 CalculateReservedWorkspacesCosts(reservedWorkspaces, departmentCosts, priceWorkspace);
-
-                // Создаем Excel-файл
                 var filePath = CreateExcelReport(office, rentalAgreement.Price, departmentCosts, currentWorkspaces.Count(), priceWorkspace, reservedWorkspaces, roomIds);
-
-                // Сохраняем информацию о отчете в БД
                 await SaveReportToDatabase(reportTypeId, idUser, filePath);
 
-                // Отправляем файл пользователю для скачивания
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
                 return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Path.GetFileName(filePath));
             }
@@ -99,21 +81,21 @@ namespace backend.Controllers
         }
 
         // Получение текущих рабочих мест
-        private List<CurrentWorkspace> GetCurrentWorkspaces(List<int> roomIds)
+        private async Task<List<CurrentWorkspace>> GetCurrentWorkspaces(List<int> roomIds)
         {
-            return _context.CurrentWorkspaces
+            return await _context.CurrentWorkspaces
                 .Where(ws => ws.IdRoom != null && roomIds.Contains(ws.IdRoom.Value))
-                .ToList();
+                .ToListAsync();
         }
 
         // Получение рабочих мест со статусами бронирования
-        private List<StatusesWorkspace> GetReservedWorkspaces(List<int> roomIds)
+        private async Task<List<StatusesWorkspace>> GetReservedWorkspaces(List<int> roomIds)
         {
-            return _context.StatusesWorkspaces
-                .Include(ws => ws.IdWorkspaceNavigation) // Подключаем навигационное свойство
+            return await _context.StatusesWorkspaces
+                .Include(ws => ws.IdWorkspaceNavigation)
                 .Where(ws => ws.IdWorkspaceReservationsStatuses != null &&
-                             roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom)) // Используем IdRoom из IdWorkspaceNavigation
-                .ToList();
+                             roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom))
+                .ToListAsync();
         }
 
         // Расчет стоимости рабочего места
@@ -146,22 +128,29 @@ namespace backend.Controllers
             foreach (var reserved in reservedWorkspaces)
             {
                 var workerDetail = _context.WorkerDetails.SingleOrDefault(wd => wd.IdWorker == reserved.IdWorker);
-                if (workerDetail != null && workerDetail.IdDepartment != null)
+
+                // Проверяем, существует ли workerDetail и есть ли у него IdDepartment
+                if (workerDetail == null || workerDetail.IdDepartment == null)
                 {
-                    if (departmentCosts.ContainsKey(workerDetail.IdDepartment.Value))
+                    continue; // Пропускаем итерацию, если условия не выполнены
+                }
+
+                // Проверяем, есть ли уже запись для данного отдела
+                if (departmentCosts.TryGetValue(workerDetail.IdDepartment.Value, out var departmentCostInfo))
+                {
+                    // Если запись существует, обновляем её
+                    departmentCostInfo.TotalCost += priceWorkspace;
+                    departmentCostInfo.WorkspaceCount += 1;
+                }
+                else
+                {
+                    // Если записи нет, создаем новую
+                    departmentCosts[workerDetail.IdDepartment.Value] = new DepartmentCostInfoDto
                     {
-                        departmentCosts[workerDetail.IdDepartment.Value].TotalCost += priceWorkspace;
-                        departmentCosts[workerDetail.IdDepartment.Value].WorkspaceCount += 1;
-                    }
-                    else
-                    {
-                        departmentCosts[workerDetail.IdDepartment.Value] = new DepartmentCostInfoDto
-                        {
-                            DepartmentName = workerDetail.DepartmentName,
-                            TotalCost = priceWorkspace,
-                            WorkspaceCount = 1
-                        };
-                    }
+                        DepartmentName = workerDetail.DepartmentName,
+                        TotalCost = priceWorkspace,
+                        WorkspaceCount = 1
+                    };
                 }
             }
         }
