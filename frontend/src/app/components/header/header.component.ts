@@ -16,7 +16,9 @@ import {
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
 import { SearchComponent } from '../searchBar/search.component';
-import { Location } from '@angular/common'; // Импортируйте Location
+import { Location } from '@angular/common';
+import { UserService } from '../../services/controllers/user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-header',
@@ -40,25 +42,42 @@ export default class HeaderComponent implements OnInit {
     title: string = "Интерактивная карта офисов";
     user: string = 'Админ';
     isSearch: boolean = false;
+    isAuthenticated: boolean = false;
 
-    constructor(private router: Router, private location: Location) { }
+    constructor(
+        private router: Router,
+        private location: Location,
+        private userService: UserService
+    ) { }
 
     ngOnInit() {
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd)
-        ).subscribe((event: NavigationEnd) => {
-            switch (event.urlAfterRedirects) {
-                case '/login':
-                    this.loginPage = true; 
-                    break;
-                case '/registration':
-                    this.loginPage = true;
-                    break;
-                default:
-                    this.loginPage = false;
-                    break;
-            }
-        });
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd)
+            )
+            .subscribe((event: NavigationEnd) => {
+                switch (event.urlAfterRedirects) {
+                    case '/login':
+                        this.loginPage = true;
+                        break;
+                    case '/registration':
+                        this.loginPage = true;
+                        break;
+                    default:
+                        this.loginPage = false;
+                        break;
+                }
+            });
+
+        this.userService.isAuthenticated$
+            .pipe(takeUntilDestroyed())
+            .subscribe(isAuthenticated => {
+                this.isAuthenticated = isAuthenticated;
+            });
+
+        if(this.isAuthenticated){
+            this.user = 'Aдмин'; 
+        }
     }
 
     goBack() {
