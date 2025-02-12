@@ -1,6 +1,7 @@
 <div class="container">
     @for (office of data; track $index) {
         <card-office
+        [data]="office"
         [id]="office.idOffice"
         ></card-office>
     }
