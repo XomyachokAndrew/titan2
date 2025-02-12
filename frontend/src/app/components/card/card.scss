@@ -23,8 +23,13 @@
     --tui-text-action: white;
     --tui-border-normal: white;
 
-    div {
+    .scroll-card {
         overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     .card-header {
@@ -97,35 +102,3 @@
 [tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm])>:last-child:not([tuiCell]) {
     margin-top: 0;
 }
-
-
-/* Custom scrollbar styles */
-::-webkit-scrollbar {
-    width: 12px;
-    /* Width of the scrollbar */
-}
-
-::-webkit-scrollbar-track {
-    background: #ffffff;
-    /* Color of the scrollbar track */
-}
-
-::-webkit-scrollbar-thumb {
-    background: #ff0000;
-    /* Color of the scrollbar thumb */
-    border-radius: 6px;
-    /* Rounded corners */
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #ff00bf;
-    /* Color when hovering over the scrollbar thumb */
-}
-
-// /* For Firefox */
-// * {
-//     scrollbar-width: thin;
-//     /* Width of the scrollbar */
-//     scrollbar-color: #888 #f1f1f1;
-//     /* Thumb and track color */
-// }
