@@ -6,7 +6,7 @@ RUN dotnet restore
 
 COPY . ./
 
-RUN find . -type f -name '*.dev.*' -exec bash -c 'mv "$0" "${0/.dev./.}"' {} \;
+RUN find . -type f -name '*.dev' -exec bash -c 'mv "$0" "${0/.dev}"' {} \;
 
 RUN dotnet publish -c Release -o out
 
