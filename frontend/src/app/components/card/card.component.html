@@ -1,8 +1,8 @@
 <div class="card" tuiAppearance="floating" tuiCardLarge>
     <div>
-        <header class="card-header" tuiHeader>
+        <div class="card-header" tuiHeader>
             <h2 tuiTitle>{{title}}</h2>
-        </header>
+        </div>
     
         <section class="card-container">
             <div class="card-info address">{{address}}<br>
@@ -13,10 +13,10 @@
         </section>
     </div>
 
-    <footer class="card-footer">
+    <div class="card-footer">
         <img src="{{image}}" alt="Офис">
         <a (click)="goToOffice(id())" iconEnd="@tui.chevron-right" appearance="outline" size="xl" tuiButton>
             К офису
         </a>
-    </footer>
+    </div>
 </div>
