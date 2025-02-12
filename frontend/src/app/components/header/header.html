@@ -20,7 +20,8 @@
         <div class="search-container">
             <app-search class="search"/>
         </div>
-    <a href="/login" class="admin-button">
+        <!-- href="/login" -->
+    <button (click)="authOrLogout()" class="admin-button">
         @if (user !== '') {
         <tui-icon icon="./media/account.svg" />
         <p>{{user}}</p>
@@ -28,6 +29,6 @@
         @else {
         <p>Войти</p>
         }
-    </a>
+    </button>
 </header> 
 }

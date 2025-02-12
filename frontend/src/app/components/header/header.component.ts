@@ -40,7 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export default class HeaderComponent implements OnInit {
     loginPage: boolean = false;
     title: string = "Интерактивная карта офисов";
-    user: string = 'Админ';
+    user: string = '';
     isSearch: boolean = false;
     isAuthenticated: boolean = false;
 
@@ -76,11 +76,20 @@ export default class HeaderComponent implements OnInit {
             });
 
         if(this.isAuthenticated){
-            this.user = 'Aдмин'; 
+            this.user = 'Выйти'; 
         }
     }
 
     goBack() {
         this.location.back(); // Метод для возврата на предыдущую страницу
+    }
+
+    authOrLogout() {
+        if (this.isAuthenticated) {
+            this.router.navigate(['/']);
+        }
+        else{
+            this.router.navigate(['/login']);
+        }
     }
 }
