@@ -1,4 +1,4 @@
-export interface LoginResponse {
+export interface ILoginResponse {
   token: string;
   refreshToken: string;
 }

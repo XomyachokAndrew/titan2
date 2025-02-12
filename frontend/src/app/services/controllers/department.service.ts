@@ -2,68 +2,63 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Department } from '../models/Department';
+import { IDepartment } from '../models/Department';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartmentService {
-  private apiUrl = "http://localhost:8080/api/Departments";
+  private url = `${environment.apiUrl}/Departments`;
 
   constructor(private http: HttpClient) { }
 
-  // Получение списка всех департаментов
-  getDepartments(): Observable<Department[]> {
-    return this.http.get<Department[]>(this.apiUrl)
+  getDepartments(): Observable<IDepartment[]> {
+    return this.http.get<IDepartment[]>(this.url)
       .pipe(
-        catchError(this.handleError<Department[]>('getDepartments', []))
+        catchError(this.handleError<IDepartment[]>('getDepartments', []))
       );
   }
 
-  // Получение департамента по ID
-  getDepartment(id: number): Observable<Department> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Department>(url)
+  getDepartment(id: number): Observable<IDepartment> {
+    const url = `${this.url}/${id}`;
+    return this.http.get<IDepartment>(url)
       .pipe(
-        catchError(this.handleError<Department>(`getDepartment id=${id}`))
+        catchError(this.handleError<IDepartment>(`getDepartment id=${id}`))
       );
   }
 
-  // Обновление департамента
-  updateDepartment(department: Department): Observable<any> {
+  updateDepartment(department: IDepartment): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    return this.http.put(this.apiUrl, department, httpOptions)
+    return this.http.put(this.url, department, httpOptions)
       .pipe(
         catchError(this.handleError<any>('updateDepartment'))
       );
   }
 
-  // Добавление нового департамента
-  addDepartment(department: Department): Observable<Department> {
+  addDepartment(department: IDepartment): Observable<IDepartment> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    return this.http.post<Department>(this.apiUrl, department, httpOptions)
+    return this.http.post<IDepartment>(this.url, department, httpOptions)
       .pipe(
-        catchError(this.handleError<Department>('addDepartment'))
+        catchError(this.handleError<IDepartment>('addDepartment'))
       );
   }
 
-  // Удаление департамента
-  deleteDepartment(id: number): Observable<Department> {
-    const url = `${this.apiUrl}/${id}`;
+  deleteDepartment(id: number): Observable<IDepartment> {
+    const url = `${this.url}/${id}`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    return this.http.delete<Department>(url, httpOptions)
+    return this.http.delete<IDepartment>(url, httpOptions)
       .pipe(
-        catchError(this.handleError<Department>('deleteDepartment'))
+        catchError(this.handleError<IDepartment>('deleteDepartment'))
       );
   }
 
-  // Обработка ошибок
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

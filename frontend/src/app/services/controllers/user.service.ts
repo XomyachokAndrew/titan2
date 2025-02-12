@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { UserLoginDto, UserRegistrationDto, RefreshTokenDto } from '../models/DTO';
-import { LoginResponse } from '../response';
+import { IUserLoginDto, IUserRegistrationDto, IRefreshTokenDto } from '../models/DTO';
+import { ILoginResponse } from '../response';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = "http://localhost:8080/api/user";
+  private apiUrl = `${environment.apiUrl}/user`;
   private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
@@ -19,9 +20,8 @@ export class UserService {
     this.isAuthenticatedSubject.next(!!token);
   }
 
-  // Авторизация пользователя
-  login(loginDto: UserLoginDto): Observable<any> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, loginDto)
+  login(loginDto: IUserLoginDto): Observable<any> {
+    return this.http.post<ILoginResponse>(`${this.apiUrl}/login`, loginDto)
       .pipe(
         tap(response => {
           console.log(response.token);
@@ -29,7 +29,7 @@ export class UserService {
           localStorage.setItem('refreshToken', response.refreshToken);
           this.isAuthenticatedSubject.next(true);
         }),
-        catchError(this.handleError<LoginResponse>('login'))
+        catchError(this.handleError<ILoginResponse>('login'))
       );
   }
 
@@ -43,23 +43,20 @@ export class UserService {
     return this.isAuthenticatedSubject.value;
   }
 
-  // Регистрация пользователя
-  register(registrationDto: UserRegistrationDto): Observable<any> {
+  register(registrationDto: IUserRegistrationDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, registrationDto)
       .pipe(
         catchError(this.handleError<any>('register'))
       );
   }
 
-  // Обновление токена
-  refreshToken(refreshTokenDto: RefreshTokenDto): Observable<any> {
+  refreshToken(refreshTokenDto: IRefreshTokenDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/refresh-token`, refreshTokenDto)
       .pipe(
         catchError(this.handleError<any>('refreshToken'))
       );
   }
 
-  // Обработка ошибок
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

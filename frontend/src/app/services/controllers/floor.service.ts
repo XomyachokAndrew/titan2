@@ -1,27 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Floor } from '../models/Floor';
+import { IFloor } from '../models/Floor';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FloorService {
-  private apiUrl = "http://localhost:8080/api/floors";
+  private apiUrl = `${environment.apiUrl}/floors`;
 
   constructor(private http: HttpClient) { }
 
-  // Получение этажей по ID офиса
-  getFloorsByOfficeId(id: number): Observable<Floor[]> {
+  getFloorsByOfficeId(id: number): Observable<IFloor[]> {
     const url = `${this.apiUrl}/office/${id}`;
-    return this.http.get<Floor[]>(url)
+    return this.http.get<IFloor[]>(url)
       .pipe(
-        catchError(this.handleError<Floor[]>('getFloorsByOfficeId', []))
+        catchError(this.handleError<IFloor[]>('getFloorsByOfficeId', []))
       );
   }
 
-  // Обработка ошибок
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

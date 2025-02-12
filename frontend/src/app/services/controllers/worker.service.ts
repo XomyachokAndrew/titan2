@@ -2,36 +2,34 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Worker } from '../models/Worker';
+import { IWorker } from '../models/Worker';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkerService {
-  private apiUrl = "http://localhost:8080/api/worker";
+  private apiUrl = `${environment.apiUrl}/worker`;
 
   constructor(private http: HttpClient) { }
 
-  // Получение списка работников
-  getWorkers(): Observable<Worker[]> {
-    return this.http.get<Worker[]>(this.apiUrl)
+  getWorkers(): Observable<IWorker[]> {
+    return this.http.get<IWorker[]>(this.apiUrl)
       .pipe(
-        catchError(this.handleError<Worker[]>('getWorkers', []))
+        catchError(this.handleError<IWorker[]>('getWorkers', []))
       );
   }
 
-  // Получение работника по ID
-  getWorker(id: number): Observable<Worker> {
+  getWorker(id: number): Observable<IWorker> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Worker>(url)
+    return this.http.get<IWorker>(url)
       .pipe(
-        catchError(this.handleError<Worker>(`getWorker id=${id}`))
+        catchError(this.handleError<IWorker>(`getWorker id=${id}`))
       );
   }
 
-  // Обновление работника
-  updateWorker(worker: Worker): Observable<any> {
+  updateWorker(worker: IWorker): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
@@ -41,30 +39,27 @@ export class WorkerService {
       );
   }
 
-  // Добавление нового работника
-  addWorker(worker: Worker): Observable<Worker> {
+  addWorker(worker: IWorker): Observable<IWorker> {
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    return this.http.post<Worker>(this.apiUrl, worker, httpOptions)
+    return this.http.post<IWorker>(this.apiUrl, worker, httpOptions)
       .pipe(
-        catchError(this.handleError<Worker>('addWorker'))
+        catchError(this.handleError<IWorker>('addWorker'))
       );
   }
 
-  // Удаление работника
-  deleteWorker(id: number): Observable<Worker> {
+  deleteWorker(id: number): Observable<IWorker> {
     const url = `${this.apiUrl}/${id}`;
     const httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    return this.http.delete<Worker>(url, httpOptions)
+    return this.http.delete<IWorker>(url, httpOptions)
       .pipe(
-        catchError(this.handleError<Worker>('deleteWorker'))
+        catchError(this.handleError<IWorker>('deleteWorker'))
       );
   }
 
-  // Обработка ошибок
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

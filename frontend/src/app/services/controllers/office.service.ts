@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Office } from '../models/Office';
+import { IOffice } from '../models/Office';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OfficeService {
-  private apiUrl = "http://localhost:8080/api/Offices";
+  private apiUrl = `${environment.apiUrl}/Offices`;
 
   constructor(private http: HttpClient) { }
 
-  // Получение списка офисов
-  getOffices(): Observable<Office[]> {
-    return this.http.get<Office[]>(this.apiUrl);
+  getOffices(): Observable<IOffice[]> {
+    return this.http.get<IOffice[]>(this.apiUrl);
   }
   
-  getOfficesById(id: number): Observable<Office> {
-    return this.http.get<Office>(`${this.apiUrl}/${id}`);
+  getOfficesById(id: number): Observable<IOffice> {
+    return this.http.get<IOffice>(`${this.apiUrl}/${id}`);
   }
 }

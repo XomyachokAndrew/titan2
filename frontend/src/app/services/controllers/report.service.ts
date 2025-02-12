@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = "http://localhost:8080/api/report";
+  private apiUrl = `${environment.apiUrl}/report`;
 
   constructor(private http: HttpClient) { }
 
-  // Получение отчета о стоимости аренды
   getRentalCost(officeId: number, reportTypeId: number, idUser: number): Observable<Blob> {
     const params = new HttpParams()
       .set('officeId', officeId.toString())
@@ -26,7 +26,6 @@ export class ReportService {
       );
   }
 
-  // Обработка ошибок
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
