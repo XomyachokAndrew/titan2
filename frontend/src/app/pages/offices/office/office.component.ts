@@ -12,7 +12,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import { FloorService } from '../../../services/controllers/floor.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFloor } from '../../../services/models/Floor';
+import { OfficeService } from '../../../services/controllers/office.service';
 
 @Component({
   selector: 'office',
@@ -27,40 +27,16 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   private subscription: Subscription;
   private destroyRef = inject(DestroyRef);
 
-  office = {
-    title: "",
-    address: "",
-    countCab: 0,
-    countWorkspace: 0,
-    countAvaibleWorkspace: 0
-  };
+  // office = {
+  //   title: "",
+  //   address: "",
+  //   countCab: 0,
+  //   countWorkspace: 0,
+  //   countAvaibleWorkspace: 0
+  // };
 
-  dataFloors!: IFloor[];
-
-  //#region  Test
-  cabs = [
-    {
-      id: 1,
-      name: 'K-111',
-    },
-    {
-      id: 2,
-      name: 'K-121',
-    },
-    {
-      id: 3,
-      name: 'K-132',
-    },
-    {
-      id: 4,
-      name: 'K-211',
-    },
-    {
-      id: 5,
-      name: 'K-113',
-    },
-  ];
-  //#endregion
+  dataFloors: any;
+  dataOffice: any;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -68,6 +44,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
+    private officeService: OfficeService
   ) {
     this.subscription = activateRoute.params
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -106,15 +83,24 @@ export class OfficeComponent implements OnInit, AfterViewInit {
           </a>
         </g>
       </svg>`;
-
-    this.floorService.getFloorsByOfficeId(this.id).subscribe(
-      response => {
-        this.dataFloors = response;
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    this.officeService.getOfficesById(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(
+        response => {
+          this.dataOffice = response;
+          console.log(response);
+        }
+      );
+    this.floorService.getFloorsByOfficeId(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(
+        response => {
+          this.dataFloors = response;
+        },
+        error => {
+          console.error(error);
+        }
+      );
 
     // Сантизируйте SVG для безопасного использования
     this.svgContent = this.sanitizer.bypassSecurityTrustHtml(this.svgData);
@@ -130,7 +116,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
       });
       // Добавляем CSS-класс для стилизации
       this.renderer.addClass(element, 'clickable');
-      this.renderer.setAttribute(element, 'id', `${this.cabs[index].id}`);
+      this.renderer.setAttribute(element, 'id', `${index}`);
       // Добавляем инлайн-стили (если нужно)
       this.renderer.setStyle(element, 'cursor', 'pointer');
 
@@ -150,7 +136,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
       this.renderer.setAttribute(text, 'font-size', '20');
       this.renderer.appendChild(
         text,
-        this.renderer.createText(`${this.cabs[index].name}`)
+        this.renderer.createText(`${index}`)
       );
       this.renderer.appendChild(element.parentElement, text);
     });
