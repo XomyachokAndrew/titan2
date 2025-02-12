@@ -18,7 +18,6 @@ export class OfficesComponent implements OnInit {
     this.officeService.getOffices().pipe(takeUntilDestroyed()).subscribe(
       response => {
         this.data = response;
-        console.log(response);
       },
       error => {
         console.error(error);

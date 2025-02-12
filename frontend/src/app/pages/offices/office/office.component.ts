@@ -104,7 +104,6 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     this.floorService.getFloorsByOfficeId(this.id).subscribe(
       response => {
         this.dataFloors = response;
-        console.log(this.dataFloors);
       },
       error => {
         console.error(error);
