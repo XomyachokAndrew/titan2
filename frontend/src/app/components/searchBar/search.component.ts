@@ -29,6 +29,6 @@ export class SearchComponent {
   }
 
   search() {
-    // console.log('Поиск:', this.searchTerm); // Логика поиска (можно заменить на вашу)
+    // TODO Логика поиска (можно заменить на вашу)
   }
 }
