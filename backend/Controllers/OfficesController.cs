@@ -30,7 +30,7 @@ namespace backend.Controllers
                 OfficeName = o.OfficeName,
                 Address = o.Address,
                 OccupiedWorkspaces = _context.CurrentWorkspaces
-                    .Where(w => w.IdWorker != null 
+                    .Where(w => w.IdWorker != null
                         && w.IdRoom != null)
                     .Count(w => o.Floors
                         .SelectMany(f => f.Rooms)
@@ -58,6 +58,14 @@ namespace backend.Controllers
                     IdOffice = o.IdOffice,
                     OfficeName = o.OfficeName,
                     Address = o.Address,
+                    OccupiedWorkspaces = _context.CurrentWorkspaces
+                    .Where(w => w.IdWorker != null
+                        && w.IdRoom != null)
+                    .Count(w => o.Floors
+                        .SelectMany(f => f.Rooms)
+                        .Select(r => r.IdRoom)
+                        .Contains(w.IdRoom.Value)
+                    ),
                     ImageUrl = $"{baseImageUrl}{o.Image}",
                     Square = o.Square,
                     TotalWorkspace = o.TotalWorkspace,
