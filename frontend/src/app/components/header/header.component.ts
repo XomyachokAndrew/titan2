@@ -76,7 +76,7 @@ export default class HeaderComponent implements OnInit {
                 this.isAuthenticated = isAuthenticated;
             });
 
-        if(this.isAuthenticated){
+        if(this.isAuthenticated == true){
             this.user = 'Выйти'; 
         }
     }
