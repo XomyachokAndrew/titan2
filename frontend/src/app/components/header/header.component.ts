@@ -86,6 +86,7 @@ export default class HeaderComponent implements OnInit {
 
     authOrLogout() {
         if (this.isAuthenticated) {
+            this.userService.logout();
             this.router.navigate(['/']);
         }
         else{
