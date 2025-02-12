@@ -1,13 +1,22 @@
 <div class="card" tuiAppearance="floating" tuiCardLarge>
-    <header class="card-header" tuiHeader>
-        <h2 tuiTitle>{{title}}</h2>
-    </header>
+    <div class="scroll-card">
+        <div class="card-header" tuiHeader>
+            <h2 tuiTitle>{{title}}</h2>
+        </div>
+    
+        <section class="card-container">
+            <div class="card-info address">{{address}}<br>
+                <span>{{city}}</span></div>
+            <hr>
+            <div class="card-info">Свободных мест: 30 / 100</div>
+            <div class="card-info">Плотность посадки: 75% / 100%</div>
+        </section>
+    </div>
 
-    <section>
+    <div class="card-footer">
         <img src="{{image}}" alt="Офис">
-    </section>
-
-    <footer>
-        {{address}}
-    </footer>
+        <a (click)="goToOffice(id())" iconEnd="@tui.chevron-right" appearance="outline" size="xl" tuiButton>
+            К офису
+        </a>
+    </div>
 </div>

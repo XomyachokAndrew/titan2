@@ -4,8 +4,15 @@ import {
   AfterViewInit,
   ElementRef,
   Renderer2,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ActivatedRoute } from "@angular/router";
+import { Subscription } from "rxjs";
+import { FloorService } from '../../../services/controllers/floor.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IFloor } from '../../../services/models/Floor';
 
 @Component({
   selector: 'office',
@@ -15,6 +22,20 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class OfficeComponent implements OnInit, AfterViewInit {
   svgContent: SafeHtml = '';
   svgData: any = '';
+
+  id: number = 1;
+  private subscription: Subscription;
+  private destroyRef = inject(DestroyRef);
+
+  office = {
+    title: "",
+    address: "",
+    countCab: 0,
+    countWorkspace: 0,
+    countAvaibleWorkspace: 0
+  };
+
+  dataFloors!: IFloor[];
 
   //#region  Test
   cabs = [
@@ -40,12 +61,18 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     },
   ];
   //#endregion
-  
+
   constructor(
     private sanitizer: DomSanitizer,
     private el: ElementRef,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private activateRoute: ActivatedRoute,
+    private floorService: FloorService,
+  ) {
+    this.subscription = activateRoute.params
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => this.id = params["id"]);
+  }
 
   ngOnInit() {
     // Получите SVG из базы данных
@@ -79,6 +106,15 @@ export class OfficeComponent implements OnInit, AfterViewInit {
           </a>
         </g>
       </svg>`;
+
+    this.floorService.getFloorsByOfficeId(this.id).subscribe(
+      response => {
+        this.dataFloors = response;
+      },
+      error => {
+        console.error(error);
+      }
+    );
 
     // Сантизируйте SVG для безопасного использования
     this.svgContent = this.sanitizer.bypassSecurityTrustHtml(this.svgData);
