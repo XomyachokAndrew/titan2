@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 import { TuiAppearance, TuiButton, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
-import { OfficeDataService } from '../../services/data/officeData.service';
 import { Router } from '@angular/router';
+import { OfficeService } from '../../services/controllers/office.service';
 
 @Component({
     selector: 'card-office',
@@ -20,45 +20,24 @@ import { Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CardComponent implements OnInit {
-    @Input() id: number = 0;
-    @Input() title: string = "";
-    @Input() address: string = "";
-    @Input() image: string = "";
+    id = input<number>(0);
+    title = "Головной"
+    address = "ул Пушкина"
+    city = "Санкт-Питербург"
+    image = "img1"
 
-    adr = "";
-    city = "";
+    constructor(
+        private officeService: OfficeService,
+        private router: Router
+    ) { }
 
-    constructor(private officeData: OfficeDataService, private router: Router){
-
-    }
-
-    ngOnInit(): void {
-        if (this.address) {
-            const parts = this.address.split(", ");
-            if (parts.length >= 2) {
-                this.adr = parts.slice(0, -1).join(", ");
-                this.city = parts[parts.length - 1];
-            } else {
-                // Handle cases where the address does not contain a comma
-                this.adr = this.address;
-                this.city = "";
-            }
-        } else {
-            // Handle cases where the address is empty or undefined
-            this.adr = "";
-            this.city = "";
-        }
+    ngOnInit(): void { 
+        this.officeService.getOfficesById(this.id());
     }
 
     goToOffice(
         id: number,
-        title: string,
-        address: string,
-        countCab: number,
-        countWorkspace: number,
-        countAvaibleWorkspace: number
-      ) {
-        this.officeData.setData(title, address, countCab, countWorkspace, countAvaibleWorkspace);
+    ) {
         this.router.navigate(["/offices", id]);
-      }
+    }
 }

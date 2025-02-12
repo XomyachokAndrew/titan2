@@ -9,7 +9,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import { FloorService } from '../../../services/controllers/floor.service';
-import { OfficeDataService } from '../../../services/data/officeData.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'office',
@@ -64,9 +64,8 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
-    private officeData: OfficeDataService
   ) {
-    this.subscription = activateRoute.params.subscribe(params => this.id = params["id"]);
+    this.subscription = activateRoute.params.pipe(takeUntilDestroyed()).subscribe(params => this.id = params["id"]);
   }
 
   ngOnInit() {
@@ -105,16 +104,11 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     this.floorService.getFloorsByOfficeId(this.id).subscribe(
       response => {
         this.dataFloors = response;
-        console.log(this.dataFloors);
       },
       error => {
         console.error(error);
       }
     );
-    this.office = this.officeData.getData();
-
-    console.log(this.office);
-
 
     // Сантизируйте SVG для безопасного использования
     this.svgContent = this.sanitizer.bypassSecurityTrustHtml(this.svgData);
