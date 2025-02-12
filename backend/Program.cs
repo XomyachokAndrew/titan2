@@ -9,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Регистрация HttpClient
+builder.Services.AddHttpClient();
+
 // ����������� ��������� ���� ������ ��� PostgreSQL
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -64,7 +67,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles(); // Это позволяет использовать файлы из wwwroot
+app.UseStaticFiles();
 
 app.UseCors("AllowSpecificOrigin"); // ��������� CORS
 
