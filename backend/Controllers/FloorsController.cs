@@ -34,11 +34,10 @@ namespace backend.Controllers
 
         // GET: api/floors/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Floor>> GetFloor(int id)
+        public async Task<ActionResult<string>> GetFloor(int id)
         {
             var floor = await _context.Floors
-                .Include(f => f.IdOfficeNavigation) // Если нужно включить информацию об офисе
-                .Include(f => f.Rooms) // Если нужно включить информацию о комнатах
+                .Include(f => f.Rooms) 
                 .FirstOrDefaultAsync(f => f.IdFloor == id);
 
             if (floor == null)
@@ -46,7 +45,56 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            return floor;
+            // Путь к файлу схемы в папке wwwroot
+            var schemePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "resources", "floor", floor.Scheme);
+
+            // Проверяем, существует ли файл
+            if (!System.IO.File.Exists(schemePath))
+            {
+                return NotFound("Схема не найдена.");
+            }
+
+            // Читаем содержимое файла
+            var svgContent = await System.IO.File.ReadAllTextAsync(schemePath);
+
+            // Создаем DTO и заполняем его данными
+            var floorDto = new FloorDto
+            {
+                IdFloor = floor.IdFloor,
+                NumberFloor = floor.NumberFloor,
+                TotalWorkspace = floor.TotalWorkspace,
+                SchemeContent = svgContent,
+                IdOffice = floor.IdOffice,
+                Square = floor.Square,
+                Rooms = floor.Rooms.Select(r => new RoomDto
+                {
+                    IdRoom = r.IdRoom,
+                    Name = r.Name,
+                    TotalWorkspace = r.TotalWorkspace,
+                    Square = r.Square
+                }).ToList()
+            };
+
+            return Ok(floorDto);
+        }
+
+        public class FloorDto
+        {
+            public int IdFloor { get; set; }
+            public short NumberFloor { get; set; }
+            public int TotalWorkspace { get; set; }
+            public string? SchemeContent { get; set; } // Изменено на содержимое схемы
+            public int IdOffice { get; set; }
+            public int? Square { get; set; }
+            public ICollection<RoomDto> Rooms { get; set; } = new List<RoomDto>();
+        }
+
+        public class RoomDto
+        {
+            public int IdRoom { get; set; }
+            public string Name { get; set; } = null!;
+            public int TotalWorkspace { get; set; }
+            public int? Square { get; set; }
         }
     }
 }
