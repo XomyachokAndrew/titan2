@@ -54,7 +54,8 @@ export default class HeaderComponent implements OnInit {
     ngOnInit() {
         this.router.events
             .pipe(
-                filter(event => event instanceof NavigationEnd)
+                filter(event => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((event: NavigationEnd) => {
                 switch (event.urlAfterRedirects) {
