@@ -69,3 +69,10 @@ svg {
 .clickable:hover {
   fill: lightcoral;
 }
+
+.pagination {
+  margin-top: 1rem;
+  --tui-background-accent-1: #0057a6;
+  --tui-text-action: var(--tui-background-accent-1);
+  --tui-background-accent-1-hover: #004682;
+}
