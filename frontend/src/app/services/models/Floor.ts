@@ -1,3 +1,5 @@
+import { IRoom } from "./Room";
+
 export interface IFloor {
     idFloor: number;
     numberFloor: number;
@@ -5,4 +7,5 @@ export interface IFloor {
     scheme?: string;
     idOffice: number;
     square?: number;
+    rooms: IRoom[];
 }
