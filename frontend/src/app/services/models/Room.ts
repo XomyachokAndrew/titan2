@@ -1,8 +1,8 @@
 export interface IRoom {
-    IdRoom: number;
-    Name: string;
-    TotalWorkspace: number;
-    IdFloor: number;
-    Square?: number;
-    IdRoomStatus?: number;
+    idRoom: number;
+    name: string;
+    totalWorkspace: number;
+    idFloor: number;
+    square?: number;
+    idRoomStatus?: number;
 }
