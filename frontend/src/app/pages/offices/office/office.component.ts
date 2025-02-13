@@ -13,13 +13,18 @@ import { Subscription } from "rxjs";
 import { FloorService } from '../../../services/controllers/floor.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OfficeService } from '../../../services/controllers/office.service';
+import { IFloor } from '../../../services/models/Floor';
+import { IOfficeDto } from '../../../services/models/DTO';
+import LoadingComponent from '../../../components/loading/loading.component';
 
 @Component({
   selector: 'office',
   templateUrl: './office.component.html',
+  imports: [LoadingComponent],
   styleUrls: ['./office.scss'],
 })
 export class OfficeComponent implements OnInit, AfterViewInit {
+  isLoading: boolean = true;
   svgContent: SafeHtml = '';
   svgData: any = '';
 
@@ -27,16 +32,8 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   private subscription: Subscription;
   private destroyRef = inject(DestroyRef);
 
-  // office = {
-  //   title: "",
-  //   address: "",
-  //   countCab: 0,
-  //   countWorkspace: 0,
-  //   countAvaibleWorkspace: 0
-  // };
-
-  dataFloors: any;
-  dataOffice: any;
+  dataFloors!: IFloor[];
+  dataOffice!: IOfficeDto;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -88,7 +85,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
       .subscribe(
         response => {
           this.dataOffice = response;
-          console.log(response);
+          this.isLoading = false;
         }
       );
     this.floorService.getFloorsByOfficeId(this.id)
@@ -96,6 +93,8 @@ export class OfficeComponent implements OnInit, AfterViewInit {
       .subscribe(
         response => {
           this.dataFloors = response;
+          console.log(this.dataFloors);
+          
         },
         error => {
           console.error(error);
