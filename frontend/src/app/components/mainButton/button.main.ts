@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
     selector: 'main-button',
@@ -8,10 +8,10 @@ import { Component, Input } from '@angular/core';
     styleUrl: './button.main.scss'
 })
 export class ButtonMComponent {
-    @Input() href: string = "";
-    @Input() title: string = "";
-    @Input() description: string = "";
-    @Input() main: string = "";
-    @Input() enter: string = "";
-    @Input() height: string = "";
+    href = input<string>();
+    title = input<string>();
+    description = input<string>();
+    main = input<string>();
+    enter = input<string>();
+    height = input<string>();
 }

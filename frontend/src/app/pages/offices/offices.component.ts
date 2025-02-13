@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import CardComponent from '../../components/card/card.component';
-import { OfficeService } from '../../services/office.service';
+import { OfficeService } from '../../services/controllers/office.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'offices',
@@ -10,14 +11,16 @@ import { OfficeService } from '../../services/office.service';
 })
 export class OfficesComponent implements OnInit {
   data: any;
+  private destroyRef = inject(DestroyRef);
 
   constructor (private officeService: OfficeService) {}
 
   ngOnInit(): void {
-    this.officeService.getData().subscribe(
+    this.officeService.getOffices()
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(
       response => {
         this.data = response;
-        console.log(response);
       },
       error => {
         console.error(error);

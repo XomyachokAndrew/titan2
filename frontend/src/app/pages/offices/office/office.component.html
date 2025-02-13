@@ -3,18 +3,18 @@
       <h1 class="h1-name">Информация</h1>
       <hr class="office-info-line">
       <div class="info">
-        Главный офис компании
+        {{office.title}}
       </div>
       <hr class="office-info-line">
       <div class="info">
-        Адрес: Улица Пушкина дом Колотушкина
+        Адрес: {{office.address}}
       </div>
       <hr class="office-info-line">
       <div class="info">
-        <div class="info-text">Кабинеты: <span class="span-number">5</span></div>
-        <div class="info-text">Рабочие места: <span class="span-number">25</span></div>
+        <div class="info-text">Кабинеты: <span class="span-number">{{office.countCab}}</span></div>
+        <div class="info-text">Рабочие места: <span class="span-number">{{office.countWorkspace}}</span></div>
         <div class="info-text">Кол-во сотрудников: <span class="span-number">15</span></div>
-        <div class="info-text">Свободных мест: <span class="span-number">10(-2)</span></div>
+        <div class="info-text">Свободных мест: <span class="span-number">{{office.countAvaibleWorkspace}}</span></div>
         <div class="info-text">Забронированные места: <span class="span-number">2</span></div>
       </div>
   </div>

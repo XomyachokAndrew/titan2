@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\resources\floors\**" />
+    <Content Remove="wwwroot\resources\floors\**" />
+    <EmbeddedResource Remove="wwwroot\resources\floors\**" />
+    <None Remove="wwwroot\resources\floors\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Aspose.Cells" Version="25.1.2" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
@@ -25,9 +32,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\resources\floors\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Folder Include="wwwroot\resources\floor\" />
     <None Include="wwwroot\resources\offices\office1.jpg" />
     <None Include="wwwroot\resources\offices\office2.jpeg" />
     <None Include="wwwroot\resources\offices\office3.jpg" />
