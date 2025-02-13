@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ElementRef,
-  Renderer2,
-  DestroyRef,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, DestroyRef, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -16,11 +8,13 @@ import { OfficeService } from '../../../services/controllers/office.service';
 import { IFloor } from '../../../services/models/Floor';
 import { IOfficeDto } from '../../../services/models/DTO';
 import LoadingComponent from '../../../components/loading/loading.component';
+import { NgFor } from '@angular/common';
+import { TuiPagination } from '@taiga-ui/kit';
 
 @Component({
   selector: 'office',
   templateUrl: './office.component.html',
-  imports: [LoadingComponent],
+  imports: [LoadingComponent, TuiPagination],
   styleUrls: ['./office.scss'],
 })
 export class OfficeComponent implements OnInit, AfterViewInit {
@@ -32,8 +26,11 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   private subscription: Subscription;
   private destroyRef = inject(DestroyRef);
 
-  dataFloors!: IFloor[];
+  dataFloors: IFloor[] = [];
   dataOffice!: IOfficeDto;
+  currentPage: number = 0;
+  itemsPerPage: number = 10;
+  totalFloors: number = 0;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -88,21 +85,40 @@ export class OfficeComponent implements OnInit, AfterViewInit {
           this.isLoading = false;
         }
       );
+    this.loadFloors();
+
+    // Сантизируйте SVG для безопасного использования
+    this.svgContent = this.sanitizer.bypassSecurityTrustHtml(this.svgData);
+  }
+
+  loadFloors() {
     this.floorService.getFloorsByOfficeId(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         response => {
           this.dataFloors = response;
-          console.log(this.dataFloors);
-          
+          this.totalFloors = this.dataFloors.length;
         },
         error => {
           console.error(error);
         }
       );
+  }
 
-    // Сантизируйте SVG для безопасного использования
-    this.svgContent = this.sanitizer.bypassSecurityTrustHtml(this.svgData);
+  floor: any;
+
+  get paginatedFloor(): IFloor {
+    this.dataFloors.slice(this.currentPage, this.currentPage + 1).map(f => {
+      this.floor = f;
+    })
+    console.log(this.floor.rooms);
+    
+    return this.floor;
+  }
+
+  onPageChange(pageIndex: number) {
+    this.currentPage = pageIndex;
+    // Здесь вы можете добавить логику для загрузки данных с сервера при изменении страницы
   }
 
   ngAfterViewInit(): void {
