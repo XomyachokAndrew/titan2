@@ -1,5 +1,5 @@
 export interface IDepartment {
-    IdDepartment: number;
-    Name: string;
-    Descriptions?: string;
+    idDepartment: number;
+    name: string;
+    descriptions?: string;
 }

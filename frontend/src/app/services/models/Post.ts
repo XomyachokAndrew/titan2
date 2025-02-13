@@ -1,5 +1,5 @@
 export interface IPost {
-    IdPost: number;
-    Name: string;
-    Descriptions?: string;
+    idPost: number;
+    name: string;
+    descriptions?: string;
 }

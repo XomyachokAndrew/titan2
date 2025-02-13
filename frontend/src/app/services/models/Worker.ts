@@ -1,6 +1,6 @@
 export interface IWorker {
-    IdWorker: number;
-    Name: string;
-    Surname: string;
-    Patronymic?: string;
+    idWorker: number;
+    name: string;
+    surname: string;
+    patronymic?: string;
 }
