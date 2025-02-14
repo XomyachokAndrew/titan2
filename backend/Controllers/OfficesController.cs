@@ -27,9 +27,18 @@ namespace backend.Controllers
                 IdOffice = o.IdOffice,
                 OfficeName = o.OfficeName,
                 Address = o.Address,
+                // Количество занятых рабочих мест
                 OccupiedWorkspaces = _context.CurrentWorkspaces
-                    .Where(w => w.IdWorker != null 
-                        && w.IdRoom != null)
+                    .Where(w => w.IdWorker != null)
+                    .Count(w => o.Floors
+                        .SelectMany(f => f.Rooms)
+                        .Select(r => r.IdRoom)
+                        .Contains(w.IdRoom.Value)
+                    ),
+                // Количество зарезервированных рабочих мест
+                ReservedWorkspaces = _context.CurrentWorkspaces
+                    .Where(w => w.IdWorker == null && w.StartDate <= DateOnly.FromDateTime(DateTime.Now)
+                                                   && w.EndDate >= DateOnly.FromDateTime(DateTime.Now))
                     .Count(w => o.Floors
                         .SelectMany(f => f.Rooms)
                         .Select(r => r.IdRoom)
