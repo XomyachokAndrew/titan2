@@ -1,5 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.ModelsDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -87,27 +88,6 @@ namespace backend.Controllers
             };
 
             return Ok(floorDto);
-        }
-
-        public class FloorDto
-        {
-            public int IdFloor { get; set; }
-            public short NumberFloor { get; set; }
-            public int TotalWorkspace { get; set; }
-            public string? SchemeContent { get; set; }
-            public int IdOffice { get; set; }
-            public int? Square { get; set; }
-            public int OccupiedWorkspaces { get; set; }
-            public int ReservedWorkspaces { get; set; }
-            public ICollection<RoomDto> Rooms { get; set; } = new List<RoomDto>();
-        }
-
-        public class RoomDto
-        {
-            public int IdRoom { get; set; }
-            public string Name { get; set; } = null!;
-            public int TotalWorkspace { get; set; }
-            public int? Square { get; set; }
         }
     }
 }
