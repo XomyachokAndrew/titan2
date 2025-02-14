@@ -33,7 +33,7 @@ namespace backend.Controllers
                     return NotFound("Офис не найден.");
                 }
 
-                var roomIds = GetRoomIds(office);
+                var roomIds = await GetRoomIdsAsync(office);
                 var currentWorkspaces = await GetCurrentWorkspacesAsync(roomIds);
                 var reservedWorkspaces = await GetReservedWorkspacesAsync(roomIds);
                 var rentalAgreement = office.RentalAgreements.FirstOrDefault();
@@ -42,9 +42,9 @@ namespace backend.Controllers
                     return NotFound("Нет договора аренды для этого офиса.");
                 }
 
-                decimal priceWorkspace = CalculateWorkspacePrice(rentalAgreement.Price, currentWorkspaces.Count());
-                var departmentCosts = CalculateDepartmentCosts(currentWorkspaces, priceWorkspace);
-                CalculateReservedWorkspacesCosts(reservedWorkspaces, departmentCosts, priceWorkspace);
+                decimal priceWorkspace = await CalculateWorkspacePriceAsync(rentalAgreement.Price, currentWorkspaces.Count());
+                var departmentCosts = await CalculateDepartmentCostsAsync(currentWorkspaces, priceWorkspace);
+                await CalculateReservedWorkspacesCostsAsync(reservedWorkspaces, departmentCosts, priceWorkspace);
                 var filePath = await CreateExcelReportAsync(office, rentalAgreement.Price, departmentCosts, currentWorkspaces.Count(), priceWorkspace, reservedWorkspaces, roomIds);
                 await SaveReportToDatabaseAsync(reportTypeId, idUser, filePath);
 
@@ -66,12 +66,12 @@ namespace backend.Controllers
                 .FirstOrDefaultAsync(o => o.IdOffice == officeId);
         }
 
-        private List<int> GetRoomIds(Office office)
+        private async Task<List<int>> GetRoomIdsAsync(Office office)
         {
-            return office.Floors
+            return await Task.Run(() => office.Floors
                 .SelectMany(f => f.Rooms)
                 .Select(r => r.IdRoom)
-                .ToList();
+                .ToList());
         }
 
         private async Task<List<CurrentWorkspace>> GetCurrentWorkspacesAsync(List<int> roomIds)
@@ -90,14 +90,14 @@ namespace backend.Controllers
                 .ToListAsync();
         }
 
-        private decimal CalculateWorkspacePrice(decimal rentalPrice, int workspaceCount)
+        private async Task<decimal> CalculateWorkspacePriceAsync(decimal rentalPrice, int workspaceCount)
         {
-            return workspaceCount > 0 ? Math.Round(rentalPrice / workspaceCount, 3) : 0;
+            return await Task.Run(() => workspaceCount > 0 ? Math.Round(rentalPrice / workspaceCount, 3) : 0);
         }
 
-        private Dictionary<int, DepartmentCostInfoDto> CalculateDepartmentCosts(List<CurrentWorkspace> currentWorkspaces, decimal priceWorkspace)
+        private async Task<Dictionary<int, DepartmentCostInfoDto>> CalculateDepartmentCostsAsync(List<CurrentWorkspace> currentWorkspaces, decimal priceWorkspace)
         {
-            return currentWorkspaces
+            return await Task.Run(() => currentWorkspaces
                 .Where(ws => ws.IdWorker != null)
                 .Select(ws => _context.WorkerDetails.SingleOrDefault(wd => wd.IdWorker == ws.IdWorker))
                 .Where(worker => worker != null && worker.IdDepartment != null)
@@ -109,14 +109,15 @@ namespace backend.Controllers
                         DepartmentName = group.First().DepartmentName,
                         TotalCost = group.Count() * priceWorkspace,
                         WorkspaceCount = group.Count()
-                    });
+                    }));
         }
 
-        private void CalculateReservedWorkspacesCosts(List<StatusesWorkspace> reservedWorkspaces, Dictionary<int, DepartmentCostInfoDto> departmentCosts, decimal priceWorkspace)
+        private async Task CalculateReservedWorkspacesCostsAsync(List<StatusesWorkspace> reservedWorkspaces, Dictionary<int, DepartmentCostInfoDto> departmentCosts, decimal priceWorkspace)
         {
             foreach (var reserved in reservedWorkspaces)
             {
-                var workerDetail = _context.WorkerDetails.SingleOrDefault(wd => wd.IdWorker == reserved.IdWorker);
+                var workerDetail = await _context.WorkerDetails
+                                    .SingleOrDefaultAsync(wd => wd.IdWorker == reserved.IdWorker);
 
                 if (workerDetail == null || workerDetail.IdDepartment == null)
                 {
@@ -160,12 +161,12 @@ namespace backend.Controllers
                 var freeInfoStyle = CreateCellStyle(workbook, IndexedColors.Red.Index, true, 11);
                 var reservedInfoStyle = CreateCellStyle(workbook, IndexedColors.LightBlue.Index, false, 11);
 
-                AddOfficeInfoRow(sheet, office, rentalPrice, officeInfoStyle);
+                await AddOfficeInfoRowAsync(sheet, office, rentalPrice, officeInfoStyle);
                 AddHeaderRow(sheet, headerStyle);
                 FillDepartmentData(sheet, departmentCosts, departmentInfoStyle);
-                AddFreeWorkspacesInfo(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, roomIds, freeInfoStyle);
+                await AddFreeWorkspacesInfoAsync(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, roomIds, freeInfoStyle);
                 int reservedWorkspacesCount = reservedWorkspaces.Count;
-                AddReservedWorkspacesCount(sheet, reservedWorkspacesCount, priceWorkspace, reservedInfoStyle);
+                await AddReservedWorkspacesCountAsync(sheet, reservedWorkspacesCount, priceWorkspace, reservedInfoStyle);
                 CreatePieChart(sheet, departmentCosts, sheet.LastRowNum + 3);
 
                 for (int i = 0; i < sheet.GetRow(0).LastCellNum; i++)
@@ -182,7 +183,7 @@ namespace backend.Controllers
             return filePath;
         }
 
-        private void AddReservedWorkspacesCount(ISheet sheet, int reservedCount, decimal priceWorkspace, ICellStyle style)
+        private async Task AddReservedWorkspacesCountAsync(ISheet sheet, int reservedCount, decimal priceWorkspace, ICellStyle style)
         {
             var reservedRow = sheet.CreateRow(sheet.LastRowNum + 1);
             decimal reservedCost = reservedCount * priceWorkspace;
@@ -206,7 +207,7 @@ namespace backend.Controllers
             return cellStyle;
         }
 
-        private void AddOfficeInfoRow(ISheet sheet, Office office, decimal rentalPrice, ICellStyle style)
+        private async Task AddOfficeInfoRowAsync(ISheet sheet, Office office, decimal rentalPrice, ICellStyle style)
         {
             var officeInfoRow = sheet.CreateRow(0);
             officeInfoRow.CreateCell(0).SetCellValue("Аренда офиса руб/мес");
@@ -248,13 +249,13 @@ namespace backend.Controllers
             }
         }
 
-        private void AddFreeWorkspacesInfo(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<int> roomIds, ICellStyle style)
+        private async Task AddFreeWorkspacesInfoAsync(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<int> roomIds, ICellStyle style)
         {
             var occupiedWorkspacesCount = departmentCosts.Sum(dc => dc.Value.WorkspaceCount);
-            var reservedWorkspacesCount = _context.StatusesWorkspaces
+            var reservedWorkspacesCount = await _context.StatusesWorkspaces
                 .Include(ws => ws.IdWorkspaceNavigation)
-                .Count(ws => ws.IdWorkspaceReservationsStatuses != null &&
-                             roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom));
+                .CountAsync(ws => ws.IdWorkspaceReservationsStatuses != null &&
+                                  roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom));
 
             var freeWorkspacesCount = totalWorkspacesCount - occupiedWorkspacesCount - reservedWorkspacesCount;
             var freeWorkspacesCost = freeWorkspacesCount * priceWorkspace;
@@ -312,5 +313,3 @@ namespace backend.Controllers
         }
     }
 }
-
-
