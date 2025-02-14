@@ -76,3 +76,10 @@ svg {
   --tui-text-action: var(--tui-background-accent-1);
   --tui-background-accent-1-hover: #004682;
 }
+
+svg {
+  pointer-events: none;
+}
+path{
+  pointer-events: auto;
+}
