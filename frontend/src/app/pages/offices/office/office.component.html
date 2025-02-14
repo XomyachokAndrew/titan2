@@ -35,9 +35,10 @@
       </div>
     </div>
     <div class="office-image">
-      @if (paginatedFloor.scheme) {
-        <div [innerHTML]="paginatedFloor.scheme | safeHtml"></div>
-      }
+        <app-floor-schema [floorInfo]="paginatedFloor"></app-floor-schema>
+      <!-- @if (paginatedFloor.scheme) {
+        <div [innerHTML]="paginatedFloor.scheme | safeHtml" roomId="room.id" (click)="ShowRoomDetails()"></div>
+      } -->
     </div>
   </div>
   }

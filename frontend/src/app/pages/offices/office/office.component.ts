@@ -11,11 +11,12 @@ import LoadingComponent from '../../../components/loading/loading.component';
 import { NgFor } from '@angular/common';
 import { TuiPagination } from '@taiga-ui/kit';
 import { SafeHtmlPipe } from '../../../services/safe-html.pipe';
+import { FloorSchemaComponent } from "../../../components/floor-schema/floor-schema.component";
 
 @Component({
   selector: 'office',
   templateUrl: './office.component.html',
-  imports: [LoadingComponent, TuiPagination, SafeHtmlPipe],
+  imports: [LoadingComponent, TuiPagination, SafeHtmlPipe, FloorSchemaComponent],
   styleUrls: ['./office.scss'],
 })
 export class OfficeComponent implements OnInit, AfterViewInit {
@@ -62,14 +63,15 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     this.floorService.getFloorsByOfficeId(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
-        response => {
-          this.dataFloors = response;
-          this.totalFloors = this.dataFloors.length;
-        },
-        error => {
-          console.error(error);
-        }
-      );
+        {
+          next: (data) => {
+            this.dataFloors = data;
+            this.totalFloors = this.dataFloors.length;
+          },
+          error: (error) => {
+            console.error(error)
+          }
+        })
   }
 
   floor!: IFloor;
@@ -78,31 +80,32 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     this.dataFloors.slice(this.currentPage, this.currentPage + 1).map(f => {
       this.floor = f;
     });
-    
+
     return this.floor;
   }
 
   onRoomClick(event: MouseEvent, roomId: string): void {
     event.preventDefault();
-    console.log(`Clicked on room with ID: ${roomId}`);
+    alert(`Clicked on room with ID: ${roomId}`);
     // Добавьте здесь логику для обработки клика на комнату
   }
-  
+
   async onPageChange(pageIndex: number) {
-    await this.addEventListeners();
     this.currentPage = pageIndex;
+    await this.addEventListeners();
   }
 
   ngAfterViewInit(): void {
+    this.addEventListeners();
   }
 
   async addEventListeners() {
     console.log(this.el.nativeElement);
     if (this.paginatedFloor) {
-    
+
       const links = this.el.nativeElement.querySelectorAll('a');
       console.log(links);
-      
+
       links.forEach((link: { addEventListener: (arg0: string, arg1: (event: any) => void) => void; getAttribute: (arg0: string) => any; }) => {
         link.addEventListener('click', (event: MouseEvent) => {
           event.preventDefault();
