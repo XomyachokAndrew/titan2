@@ -437,6 +437,9 @@ public partial class Context : DbContext
             entity.ToTable("workers", "offices_management");
 
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
