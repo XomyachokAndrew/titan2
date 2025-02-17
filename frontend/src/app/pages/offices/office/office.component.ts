@@ -4,11 +4,12 @@ import { Subscription } from "rxjs";
 import { FloorService } from '../../../services/controllers/floor.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OfficeService } from '../../../services/controllers/office.service';
-import { IFloor } from '../../../services/models/Floor';
-import { IOfficeDto } from '../../../services/models/DTO';
+import { IFloorDto, IOfficeDto } from '../../../services/models/DTO';
 import LoadingComponent from '../../../components/loading/loading.component';
 import { TuiPagination } from '@taiga-ui/kit';
 import { FloorSchemaComponent } from "../../../components/floor-schema/floor-schema.component";
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'office',
@@ -23,7 +24,8 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   private subscription: Subscription;
   private destroyRef = inject(DestroyRef);
 
-  dataFloors: IFloor[] = [];
+  dataFloors: IFloorDto[] = [];
+  floors!: IFloorDto;
   dataOffice!: IOfficeDto;
   currentPage: number = 0;
   itemsPerPage: number = 10;
@@ -40,41 +42,74 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.officeService.getOfficesById(this.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(
-        response => {
-          this.dataOffice = response;
-          this.isLoading = false;
-        }
-      );
+    this.loadOffice();
     this.loadFloors();
   }
 
-  loadFloors() {
-    this.floorService.getFloorsByOfficeId(this.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+  loadOffice = () => {
+    this.officeService.getOfficesById(this.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных офиса: ', error);
+          this.isLoading = false;
+          return of(null); // Возвращаем пустой поток
+        })
+      )
       .subscribe({
         next: (data) => {
-          this.dataFloors = data;
-          this.totalFloors = this.dataFloors.length;
-          this.currentPage = 0; // Reset to the first page after loading
-        },
-        error: (error) => {
-          console.error(error);
+          if (data) {
+            this.dataOffice = data;
+          }
+          this.isLoading = false;
         }
       });
   }
 
-  get paginatedFloor(): IFloor {
-    return this.dataFloors[this.currentPage];
+  loadFloors = () => {
+    this.floorService.getFloorsByOfficeId(this.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных этажей: ', error);
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.dataFloors = data;
+          this.totalFloors = this.dataFloors.length;
+          this.currentPage = 0;
+        }
+      });
+  }
+
+  loadFloor = (id: number) => {
+    this.floorService.getFloorById(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error("Ошибка при обработке данных этажa: ", error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this.floors = data;
+          }
+        }
+      })
+  }
+
+  get paginatedFloor(): IFloorDto {
+    this.loadFloor(this.dataFloors[this.currentPage].idFloor);
+    return this.floors;
   }
 
   onPageChange(pageIndex: number) {
     this.currentPage = pageIndex;
   }
 
-  ngAfterViewInit(): void {
-    // Implement any logic needed after view initialization
-  }
+  ngAfterViewInit(): void { }
 }

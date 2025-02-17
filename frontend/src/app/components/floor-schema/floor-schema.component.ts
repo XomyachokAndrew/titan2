@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { IFloor } from '../../services/models/Floor';
 import { SafeHtmlPipe } from '../../services/safe-html.pipe';
 import { NgFor } from '@angular/common';
+import { IFloorDto } from '../../services/models/DTO';
 
 @Component({
   selector: 'app-floor-schema',
@@ -10,7 +10,7 @@ import { NgFor } from '@angular/common';
   styleUrl: './floor-schema.component.css'
 })
 export class FloorSchemaComponent implements OnInit, OnChanges  {
-  @Input() floorInfo!: IFloor;
+  @Input() floorInfo!: IFloorDto;
   rooms: any = [];
   matches: RegExpStringIterator<RegExpExecArray> | undefined;
 
@@ -18,15 +18,15 @@ export class FloorSchemaComponent implements OnInit, OnChanges  {
   }
 
   ngOnInit(): void {
-    if (this.floorInfo.scheme) {
-      this.processSvg(this.floorInfo.scheme)
+    if (this.floorInfo.schemeContent) {
+      this.processSvg(this.floorInfo.schemeContent)
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['floorInfo']) {
       console.log('Floor info changed:', changes['floorInfo'].currentValue);
-      this.processSvg(changes['floorInfo'].currentValue.scheme);
+      this.processSvg(changes['floorInfo'].currentValue.schemeContent);
       this.cdr.detectChanges(); // Вручную запускаем обновление
     }
   }
