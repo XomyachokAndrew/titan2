@@ -9,6 +9,7 @@
         public int? Square { get; set; }
         public int? TotalWorkspace { get; set; }
         public decimal? OccupiedWorkspaces { get; set; }
+        public int ReservedWorkspaces { get; set; }
         public decimal? Density { get; set; }
     }
 }
