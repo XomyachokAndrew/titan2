@@ -95,7 +95,7 @@ namespace backend.Controllers
         }
 
         // Метод для добавления статуса рабочего пространства
-        [HttpPost]
+        [HttpPost("Create/Status")]
         public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
         {
             // Проверка на валидность входных данных
@@ -216,6 +216,49 @@ namespace backend.Controllers
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
 
             return NoContent(); // Возврат 204 No Content
+        }
+
+        // POST: api/workspaces/create
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateWorkspace([FromBody] WorkspaceDto workspaceDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Возвращаем 400, если модель не валидна
+            }
+
+            // Создаем новый объект Workspace из DTO
+            var workspace = new Workspace
+            {
+                Name = workspaceDto.Name,
+                IdRoom = workspaceDto.IdRoom,
+                IsDeleted = false // Устанавливаем IsDeleted в false по умолчанию
+            };
+
+            await _context.Workspaces.AddAsync(workspace);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        // DELETE: api/workspaces/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteWorkspace(int id)
+        {
+            // Находим рабочее место по ID
+            var workspace = _context.Workspaces.Find(id);
+            if (workspace == null)
+            {
+                return NotFound(); // Возвращаем 404, если рабочее место не найдено
+            }
+
+            // Устанавливаем статус IsDeleted на true
+            workspace.IsDeleted = true;
+
+            // Сохраняем изменения в базе данных
+            _context.SaveChanges();
+
+            return NoContent(); // Возвращаем 204 No Content
         }
     }
 }
