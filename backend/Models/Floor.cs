@@ -17,7 +17,7 @@ public partial class Floor
 
     public int? FreeWorkspaces { get; set; }
 
-    public string Sheme { get; set; } = null!;
+    public string Scheme { get; set; } = null!;
 
     public virtual Office IdOfficeNavigation { get; set; } = null!;
 

@@ -115,9 +115,9 @@ public partial class Context : DbContext
             entity.Property(e => e.FreeWorkspaces).HasColumnName("free_workspaces");
             entity.Property(e => e.IdOffice).HasColumnName("id_office");
             entity.Property(e => e.NumberFloor).HasColumnName("number_floor");
-            entity.Property(e => e.Sheme)
+            entity.Property(e => e.Scheme)
                 .HasColumnType("character varying")
-                .HasColumnName("sheme");
+                .HasColumnName("scheme");
             entity.Property(e => e.Square).HasColumnName("square");
             entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
 
