@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-02-17 14:43:32
+-- Started on 2025-02-17 16:38:41
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1846,7 +1846,7 @@ ALTER TABLE ONLY offices_management.workspaces
     ADD CONSTRAINT workspaces_id_room_fkey FOREIGN KEY (id_room) REFERENCES offices_management.rooms(id_room);
 
 
--- Completed on 2025-02-17 14:43:32
+-- Completed on 2025-02-17 16:38:42
 
 --
 -- PostgreSQL database dump complete
