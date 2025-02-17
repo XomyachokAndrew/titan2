@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="resources\**" />
     <Compile Remove="wwwroot\resources\floors\**" />
+    <Content Remove="resources\**" />
     <Content Remove="wwwroot\resources\floors\**" />
+    <EmbeddedResource Remove="resources\**" />
     <EmbeddedResource Remove="wwwroot\resources\floors\**" />
+    <None Remove="resources\**" />
     <None Remove="wwwroot\resources\floors\**" />
   </ItemGroup>
 

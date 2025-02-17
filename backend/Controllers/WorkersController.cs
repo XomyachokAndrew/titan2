@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
@@ -89,7 +90,8 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            _context.Workers.Remove(worker);
+            // Устанавливаем статус IsDeleted на true   
+            worker.IsDeleted = true;
             await _context.SaveChangesAsync();
 
             return NoContent();

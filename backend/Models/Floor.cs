@@ -11,11 +11,13 @@ public partial class Floor
 
     public int TotalWorkspace { get; set; }
 
-    public string? Scheme { get; set; }
-
     public int IdOffice { get; set; }
 
     public int? Square { get; set; }
+
+    public int? FreeWorkspaces { get; set; }
+
+    public string Scheme { get; set; } = null!;
 
     public virtual Office IdOfficeNavigation { get; set; } = null!;
 
