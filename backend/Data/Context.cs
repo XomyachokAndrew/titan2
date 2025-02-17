@@ -172,9 +172,6 @@ public partial class Context : DbContext
             entity.Property(e => e.OfficeName)
                 .HasMaxLength(100)
                 .HasColumnName("office_name");
-            entity.Property(e => e.Sheme)
-                .HasColumnType("character varying")
-                .HasColumnName("sheme");
             entity.Property(e => e.Square).HasColumnName("square");
             entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
 

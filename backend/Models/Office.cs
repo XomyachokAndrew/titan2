@@ -23,8 +23,6 @@ public partial class Office
 
     public int? FreeWorkspaces { get; set; }
 
-    public string? Sheme { get; set; }
-
     public virtual ICollection<Floor> Floors { get; set; } = new List<Floor>();
 
     public virtual OfficesStatus IdOfficeStatusNavigation { get; set; } = null!;
