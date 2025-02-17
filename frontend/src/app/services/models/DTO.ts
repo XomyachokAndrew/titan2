@@ -1,3 +1,5 @@
+import { IRoom } from "./Room";
+
 export interface IRefreshTokenDto {
     refreshToken: string;
 }
@@ -42,3 +44,15 @@ export interface IOfficeDto {
     occupiedWorkspaces?: number; 
     density?: number; 
 }
+
+export interface IFloorDto {
+    idFloor: number;
+    numberFloor: number;
+    totalWorkspace: number;
+    schemeContent?: string;
+    idOffice: number;
+    square?: number;
+    occupiedWorkspaces: number;
+    reservedWorkspaces: number;
+    rooms: IRoom[];
+  }
