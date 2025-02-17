@@ -21,7 +21,7 @@
         <div class="info-text">Рабочие места: <span
             class="span-number">{{paginatedFloor.totalWorkspace}}</span></div>
         <div class="info-text">Кол-во сотрудников: <span
-            class="span-number">0<!--paginatedFloor.occupiedWorkspaces--></span></div>
+           class="span-number">0</span></div>
         <div class="info-text">Свободных мест: <span
             class="span-number">{{paginatedFloor.totalWorkspace}}</span></div>
         <div class="info-text">Забронированные места: <span class="span-number">2</span></div>
@@ -35,10 +35,9 @@
       </div>
     </div>
     <div class="office-image">
+      @if (paginatedFloor) {
         <app-floor-schema [floorInfo]="paginatedFloor"></app-floor-schema>
-      <!-- @if (paginatedFloor.scheme) {
-        <div [innerHTML]="paginatedFloor.scheme | safeHtml" roomId="room.id" (click)="ShowRoomDetails()"></div>
-      } -->
+      }
     </div>
   </div>
   }
