@@ -112,10 +112,11 @@ public partial class Context : DbContext
             entity.ToTable("floors", "offices_management");
 
             entity.Property(e => e.IdFloor).HasColumnName("id_floor");
+            entity.Property(e => e.FreeWorkspaces).HasColumnName("free_workspaces");
             entity.Property(e => e.IdOffice).HasColumnName("id_office");
             entity.Property(e => e.NumberFloor).HasColumnName("number_floor");
             entity.Property(e => e.Scheme)
-                .HasMaxLength(100)
+                .HasColumnType("character varying")
                 .HasColumnName("scheme");
             entity.Property(e => e.Square).HasColumnName("square");
             entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
@@ -163,6 +164,7 @@ public partial class Context : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(30)
                 .HasColumnName("city");
+            entity.Property(e => e.FreeWorkspaces).HasColumnName("free_workspaces");
             entity.Property(e => e.IdOfficeStatus).HasColumnName("id_office_status");
             entity.Property(e => e.Image)
                 .HasMaxLength(100)
@@ -170,6 +172,9 @@ public partial class Context : DbContext
             entity.Property(e => e.OfficeName)
                 .HasMaxLength(100)
                 .HasColumnName("office_name");
+            entity.Property(e => e.Sheme)
+                .HasColumnType("character varying")
+                .HasColumnName("sheme");
             entity.Property(e => e.Square).HasColumnName("square");
             entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
 
@@ -437,6 +442,9 @@ public partial class Context : DbContext
             entity.ToTable("workers", "offices_management");
 
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
@@ -497,6 +505,9 @@ public partial class Context : DbContext
 
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
             entity.Property(e => e.IdRoom).HasColumnName("id_room");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.Name)
                 .HasMaxLength(45)
                 .HasColumnName("name");
