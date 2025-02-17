@@ -27,6 +27,7 @@ namespace backend.Controllers
                 IdOffice = o.IdOffice,
                 OfficeName = o.OfficeName,
                 Address = o.Address,
+                City = o.City,
                 // Количество занятых рабочих мест
                 OccupiedWorkspaces = _context.CurrentWorkspaces
                     .Where(w => w.IdWorker != null)

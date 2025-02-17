@@ -5,6 +5,7 @@
         public int IdOffice { get; set; }
         public string OfficeName { get; set; }
         public string Address { get; set; }
+        public string City { get; set; }
         public string ImageUrl { get; set; }
         public int? Square { get; set; }
         public int? TotalWorkspace { get; set; }
