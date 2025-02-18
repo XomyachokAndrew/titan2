@@ -1,0 +1,21 @@
+.employe {
+  display: flex;
+  width: 24rem;
+  height: 9rem;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 1.875rem;
+  background: #e6e6e6;
+  padding-left: 30px;
+  font-family: "MyriadPro-r";
+}
+
+.circle {
+  padding-top: 10px;
+  padding-left: 340px;
+}
+
+.delete {
+  padding-bottom: 10px;
+  padding-left: 335px;
+}

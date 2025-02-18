@@ -3,6 +3,26 @@
     --tui-background-base: #D9D9D9;
 }
 
+.PP {
+    font-size: 12px;
+}
+
+.P {
+    font-size: 18px;
+}
+
+.H3 {
+    font-size: 27px;
+}
+
+H2 {
+    font-size: 40px;
+}
+
+H1 {
+    font-size: 60px;
+}
+
 tui-root {
     position: relative;
     display: block;

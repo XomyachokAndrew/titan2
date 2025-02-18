@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="employes">
+    <span class="workspace-edit">Редактирование кабинета №13</span>
+    <span class="workspace-edit-employment">Занято 2 места из 3</span>
+    <tui-scrollbar class="box">
+      <div class="content">
+        <worker></worker>
+        <worker></worker>
+        <worker></worker>
+        <worker></worker>
+        <worker></worker>
+        <worker></worker>
+      </div>
+    </tui-scrollbar>
+    <span class="edit-mode">Режим редактиования</span>
+  </div>
+  <div class="workspace">
+    <div class="workspase-worker">
+      <span class="workspace-name">Рабочее место</span>
+      <span class="employes-data">Данные сотрудника</span>
+      <tui-select
+        class="custom-select"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [(ngModel)]="value"
+      >
+        Работник
+        <tui-data-list-wrapper *tuiDataList [items]="items" />
+      </tui-select>
+      <tui-input
+        class="custom-input"
+        tuiAutoFocus
+        tuiTextfieldSize="m"
+        [(ngModel)]="name"
+        disabled="true"
+      >
+        Менеджер
+      </tui-input>
+      <tui-input
+        class="custom-input"
+        tuiAutoFocus
+        tuiTextfieldSize="m"
+        [(ngModel)]="name"
+        disabled="true"
+      >
+        Организация
+      </tui-input>
+      <span class="employes-data">Данные сотрудника</span>
+      <tui-select
+        class="custom-select"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [(ngModel)]="value"
+      >
+        Статус
+        <tui-data-list-wrapper *tuiDataList [items]="items" />
+      </tui-select>
+      <tui-input-date-range class="custom-input" [formControl]="control"
+        >Период</tui-input-date-range
+      >
+      <span class="clear">Очистить</span>
+    </div>
+    <div class="workspace-history">
+      <span class="workspace-history-dates">История рабочего места</span>
+      <span class="worker-date-end">Сотрудник дата/конец</span>
+      <span class="worker-date-end">Сотрудник дата/конец</span>
+      <span class="worker-date-end">Сотрудник дата/конец</span>
+      <span class="worker-date-end">Сотрудник дата/конец</span>
+    </div>
+  </div>
