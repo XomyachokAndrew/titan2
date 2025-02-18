@@ -25,11 +25,11 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   private destroyRef = inject(DestroyRef);
 
   dataFloors: IFloorDto[] = [];
-  floors!: IFloorDto;
   dataOffice!: IOfficeDto;
   currentPage: number = 0;
   itemsPerPage: number = 10;
   totalFloors: number = 0;
+  currentFloor: IFloorDto | null = null;
 
   constructor(
     private activateRoute: ActivatedRoute,
@@ -46,14 +46,14 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     this.loadFloors();
   }
 
-  loadOffice = () => {
+  loadOffice() {
     this.officeService.getOfficesById(this.id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
           console.error('Ошибка при обработке данных офиса: ', error);
           this.isLoading = false;
-          return of(null); // Возвращаем пустой поток
+          return of(null);
         })
       )
       .subscribe({
@@ -66,7 +66,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
       });
   }
 
-  loadFloors = () => {
+  loadFloors() {
     this.floorService.getFloorsByOfficeId(this.id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -80,35 +80,40 @@ export class OfficeComponent implements OnInit, AfterViewInit {
           this.dataFloors = data;
           this.totalFloors = this.dataFloors.length;
           this.currentPage = 0;
+          if (this.dataFloors.length > 0) {
+            this.loadFloor(this.dataFloors[this.currentPage].idFloor); // Загружаем первый этаж
+          }
         }
       });
   }
 
-  loadFloor = (id: number) => {
+  loadFloor(id: number) {
     this.floorService.getFloorById(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error("Ошибка при обработке данных этажa: ", error);
+          console.error("Ошибка при обработке данных этажа: ", error);
           return of(null);
         })
       )
       .subscribe({
         next: (data) => {
           if (data) {
-            this.floors = data;
+            this.currentFloor = data;
           }
         }
-      })
+      });
   }
 
-  get paginatedFloor(): IFloorDto {
-    this.loadFloor(this.dataFloors[this.currentPage].idFloor);
-    return this.floors;
+  get paginatedFloor(): IFloorDto | null {
+    return this.currentFloor;
   }
 
   onPageChange(pageIndex: number) {
     this.currentPage = pageIndex;
+    if (this.dataFloors.length > 0) {
+      this.loadFloor(this.dataFloors[this.currentPage].idFloor); // Загружаем этаж при изменении страницы
+    }
   }
 
   ngAfterViewInit(): void { }
