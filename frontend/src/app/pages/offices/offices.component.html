@@ -3,7 +3,7 @@
 }
 @else {
     <div class="container">
-        @for (office of data; track $index) {
+        @for (office of offices; track $index) {
             <card-office
             [data]="office"
             [id]="office.idOffice"

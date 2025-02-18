@@ -4,6 +4,8 @@ import { OfficeService } from '../../services/controllers/office.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IOfficeDto } from '../../services/models/DTO';
 import LoadingComponent from '../../components/loading/loading.component';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs'
 
 @Component({
   selector: 'offices',
@@ -16,22 +18,25 @@ import LoadingComponent from '../../components/loading/loading.component';
 })
 export class OfficesComponent implements OnInit {
   isLoading: boolean = true;
-  data!: IOfficeDto[];
+  offices!: IOfficeDto[];
   private destroyRef = inject(DestroyRef);
 
-  constructor (private officeService: OfficeService) {}
+  constructor(private officeService: OfficeService) { }
 
   ngOnInit(): void {
     this.officeService.getOffices()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(
-      response => {
-        this.isLoading = false;
-        this.data = response;
-      },
-      error => {
-        console.error(error);
-      }
-    );
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных офисов: ', error);
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.offices = data;
+          this.isLoading = false;
+        }
+      });
   }
 }
