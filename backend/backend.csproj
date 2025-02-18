@@ -37,6 +37,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\resources\floors\" />
     <Folder Include="wwwroot\resources\floor\" />
+    <Folder Include="wwwroot\resources\reports\" />
     <None Include="wwwroot\resources\offices\office1.jpg" />
     <None Include="wwwroot\resources\offices\office2.jpeg" />
     <None Include="wwwroot\resources\offices\office3.jpg" />

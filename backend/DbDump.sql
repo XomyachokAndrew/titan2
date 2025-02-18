@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-02-17 12:03:08
+-- Started on 2025-02-17 16:38:41
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -311,7 +311,7 @@ CREATE TABLE offices_management.floors (
     id_office integer NOT NULL,
     square integer,
     free_workspaces integer,
-    sheme character varying NOT NULL
+    scheme character varying NOT NULL
 );
 
 
@@ -400,8 +400,7 @@ CREATE TABLE offices_management.offices (
     image character varying(100),
     total_workspace integer,
     city character varying(30) NOT NULL,
-    free_workspaces integer,
-    sheme character varying
+    free_workspaces integer
 );
 
 
@@ -1061,8 +1060,8 @@ INSERT INTO offices_management.floors VALUES (4, 2, 30, 2, 300, 15, '2floor.svg'
 -- Data for Name: offices; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
-INSERT INTO offices_management.offices VALUES (1, 'Офис 1', 'Улица Ленина, 1', 1, 500, NULL, 25, 'Москва', 10, 'Схема 1');
-INSERT INTO offices_management.offices VALUES (2, 'Офис 2', 'Улица Пушкина, 2', 1, 600, NULL, 30, 'Москва', 15, 'Схема 2');
+INSERT INTO offices_management.offices VALUES (1, 'Офис 1', 'Улица Ленина, 1', 1, 500, 'office1.jpg', 25, 'Москва', 10);
+INSERT INTO offices_management.offices VALUES (2, 'Офис 2', 'Улица Пушкина, 2', 1, 600, 'office2.jpeg', 30, 'Москва', 15);
 
 
 --
@@ -1131,26 +1130,26 @@ INSERT INTO offices_management.room_status OVERRIDING SYSTEM VALUE VALUES (3, '�
 -- Data for Name: rooms; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
-INSERT INTO offices_management.rooms VALUES (21, 'Кабинет 101', 5, 1, 50, 1);
-INSERT INTO offices_management.rooms VALUES (22, 'Кабинет 102', 5, 1, 50, 1);
-INSERT INTO offices_management.rooms VALUES (23, 'Кабинет 103', 5, 1, 50, 1);
-INSERT INTO offices_management.rooms VALUES (24, 'Кабинет 104', 5, 1, 50, 1);
-INSERT INTO offices_management.rooms VALUES (25, 'Кабинет 105', 5, 1, 50, 1);
-INSERT INTO offices_management.rooms VALUES (26, 'Кабинет 201', 5, 2, 50, 1);
-INSERT INTO offices_management.rooms VALUES (27, 'Кабинет 202', 5, 2, 50, 1);
-INSERT INTO offices_management.rooms VALUES (28, 'Кабинет 203', 5, 2, 50, 1);
-INSERT INTO offices_management.rooms VALUES (29, 'Кабинет 204', 5, 2, 50, 1);
-INSERT INTO offices_management.rooms VALUES (30, 'Кабинет 205', 5, 2, 50, 1);
-INSERT INTO offices_management.rooms VALUES (31, 'Кабинет 301', 6, 1, 60, 1);
-INSERT INTO offices_management.rooms VALUES (32, 'Кабинет 302', 6, 1, 60, 1);
-INSERT INTO offices_management.rooms VALUES (33, 'Кабинет 303', 6, 1, 60, 1);
-INSERT INTO offices_management.rooms VALUES (34, 'Кабинет 304', 6, 1, 60, 1);
-INSERT INTO offices_management.rooms VALUES (35, 'Кабинет 305', 6, 1, 60, 1);
-INSERT INTO offices_management.rooms VALUES (36, 'Кабинет 401', 6, 2, 60, 1);
-INSERT INTO offices_management.rooms VALUES (37, 'Кабинет 402', 6, 2, 60, 1);
-INSERT INTO offices_management.rooms VALUES (38, 'Кабинет 403', 6, 2, 60, 1);
-INSERT INTO offices_management.rooms VALUES (39, 'Кабинет 404', 6, 2, 60, 1);
-INSERT INTO offices_management.rooms VALUES (40, 'Кабинет 405', 6, 2, 60, 1);
+INSERT INTO offices_management.rooms VALUES (1, 'Кабинет 101', 5, 1, 50, 1);
+INSERT INTO offices_management.rooms VALUES (2, 'Кабинет 102', 5, 1, 50, 1);
+INSERT INTO offices_management.rooms VALUES (3, 'Кабинет 103', 5, 1, 50, 1);
+INSERT INTO offices_management.rooms VALUES (4, 'Кабинет 104', 5, 1, 50, 1);
+INSERT INTO offices_management.rooms VALUES (5, 'Кабинет 105', 5, 1, 50, 1);
+INSERT INTO offices_management.rooms VALUES (6, 'Кабинет 201', 5, 2, 50, 1);
+INSERT INTO offices_management.rooms VALUES (7, 'Кабинет 202', 5, 2, 50, 1);
+INSERT INTO offices_management.rooms VALUES (8, 'Кабинет 203', 5, 2, 50, 1);
+INSERT INTO offices_management.rooms VALUES (9, 'Кабинет 204', 5, 2, 50, 1);
+INSERT INTO offices_management.rooms VALUES (10, 'Кабинет 205', 5, 2, 50, 1);
+INSERT INTO offices_management.rooms VALUES (11, 'Кабинет 301', 6, 1, 60, 1);
+INSERT INTO offices_management.rooms VALUES (12, 'Кабинет 302', 6, 1, 60, 1);
+INSERT INTO offices_management.rooms VALUES (13, 'Кабинет 303', 6, 1, 60, 1);
+INSERT INTO offices_management.rooms VALUES (14, 'Кабинет 304', 6, 1, 60, 1);
+INSERT INTO offices_management.rooms VALUES (15, 'Кабинет 305', 6, 1, 60, 1);
+INSERT INTO offices_management.rooms VALUES (16, 'Кабинет 401', 6, 2, 60, 1);
+INSERT INTO offices_management.rooms VALUES (17, 'Кабинет 402', 6, 2, 60, 1);
+INSERT INTO offices_management.rooms VALUES (18, 'Кабинет 403', 6, 2, 60, 1);
+INSERT INTO offices_management.rooms VALUES (19, 'Кабинет 404', 6, 2, 60, 1);
+INSERT INTO offices_management.rooms VALUES (20, 'Кабинет 405', 6, 2, 60, 1);
 
 
 --
@@ -1162,6 +1161,13 @@ INSERT INTO offices_management.rooms VALUES (40, 'Кабинет 405', 6, 2, 60,
 INSERT INTO offices_management.statuses_workers VALUES (1, '2023-01-01', NULL, 1, 1, 1, 1, 1);
 INSERT INTO offices_management.statuses_workers VALUES (2, '2023-01-01', NULL, 2, 2, 2, 1, 1);
 INSERT INTO offices_management.statuses_workers VALUES (3, '2023-01-01', NULL, 3, 3, 3, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (4, '2023-01-01', NULL, 1, 1, 4, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (5, '2023-01-01', NULL, 2, 2, 5, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (6, '2023-01-01', NULL, 3, 3, 6, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (7, '2023-01-01', NULL, 1, 1, 7, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (8, '2023-01-01', NULL, 2, 2, 8, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (9, '2023-01-01', NULL, 3, 3, 9, 1, 1);
+INSERT INTO offices_management.statuses_workers VALUES (10, '2023-01-01', NULL, 1, 1, 10, 1, 1);
 
 
 --
@@ -1170,6 +1176,36 @@ INSERT INTO offices_management.statuses_workers VALUES (3, '2023-01-01', NULL, 3
 -- Data for Name: statuses_workspaces; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
+INSERT INTO offices_management.statuses_workspaces VALUES (1, '2023-01-01', NULL, 1, NULL, 1, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (2, '2023-01-01', NULL, 2, NULL, 2, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (3, '2023-01-01', NULL, 3, NULL, 3, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (4, '2023-01-01', NULL, 4, NULL, 4, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (5, '2023-01-01', NULL, 5, NULL, 5, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (6, '2023-01-01', NULL, 6, NULL, 6, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (7, '2023-01-01', NULL, 7, NULL, 7, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (8, '2023-01-01', NULL, 8, NULL, 8, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (9, '2023-01-01', NULL, 9, NULL, 9, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (10, '2023-01-01', NULL, 10, NULL, 10, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (11, '2023-01-01', NULL, 11, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (12, '2023-01-01', NULL, 12, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (13, '2023-01-01', NULL, 13, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (14, '2023-01-01', NULL, 14, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (15, '2023-01-01', NULL, 15, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (16, '2023-01-01', NULL, 16, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (17, '2023-01-01', NULL, 17, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (18, '2023-01-01', NULL, 18, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (19, '2023-01-01', NULL, 19, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (20, '2023-01-01', NULL, 20, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (21, '2023-01-01', NULL, 21, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (22, '2023-01-01', NULL, 22, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (23, '2023-01-01', NULL, 23, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (24, '2023-01-01', NULL, 24, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (25, '2023-01-01', NULL, 25, NULL, NULL, 1, 1);
+INSERT INTO offices_management.statuses_workspaces VALUES (26, '2023-01-01', NULL, 26, NULL, NULL, 1, 3);
+INSERT INTO offices_management.statuses_workspaces VALUES (27, '2023-01-01', NULL, 27, NULL, NULL, 1, 2);
+INSERT INTO offices_management.statuses_workspaces VALUES (28, '2023-01-01', NULL, 28, NULL, NULL, 1, 1);
+INSERT INTO offices_management.statuses_workspaces VALUES (29, '2023-01-01', NULL, 29, NULL, NULL, 1, 1);
+INSERT INTO offices_management.statuses_workspaces VALUES (30, '2023-01-01', NULL, 30, NULL, NULL, 1, 1);
 
 
 --
@@ -1238,6 +1274,36 @@ INSERT INTO offices_management.workspace_statuses_types VALUES (3, 'Ремонт
 -- Data for Name: workspaces; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
+INSERT INTO offices_management.workspaces VALUES (1, 'Рабочее место 1', 1, false);
+INSERT INTO offices_management.workspaces VALUES (2, 'Рабочее место 2', 1, false);
+INSERT INTO offices_management.workspaces VALUES (3, 'Рабочее место 3', 1, false);
+INSERT INTO offices_management.workspaces VALUES (4, 'Рабочее место 4', 2, false);
+INSERT INTO offices_management.workspaces VALUES (5, 'Рабочее место 5', 2, false);
+INSERT INTO offices_management.workspaces VALUES (6, 'Рабочее место 6', 2, false);
+INSERT INTO offices_management.workspaces VALUES (7, 'Рабочее место 7', 3, false);
+INSERT INTO offices_management.workspaces VALUES (8, 'Рабочее место 8', 3, false);
+INSERT INTO offices_management.workspaces VALUES (9, 'Рабочее место 9', 3, false);
+INSERT INTO offices_management.workspaces VALUES (10, 'Рабочее место 10', 4, false);
+INSERT INTO offices_management.workspaces VALUES (11, 'Рабочее место 11', 4, false);
+INSERT INTO offices_management.workspaces VALUES (12, 'Рабочее место 12', 4, false);
+INSERT INTO offices_management.workspaces VALUES (13, 'Рабочее место 13', 5, false);
+INSERT INTO offices_management.workspaces VALUES (14, 'Рабочее место 14', 5, false);
+INSERT INTO offices_management.workspaces VALUES (15, 'Рабочее место 15', 5, false);
+INSERT INTO offices_management.workspaces VALUES (16, 'Рабочее место 16', 6, false);
+INSERT INTO offices_management.workspaces VALUES (17, 'Рабочее место 17', 6, false);
+INSERT INTO offices_management.workspaces VALUES (18, 'Рабочее место 18', 6, false);
+INSERT INTO offices_management.workspaces VALUES (19, 'Рабочее место 19', 7, false);
+INSERT INTO offices_management.workspaces VALUES (20, 'Рабочее место 20', 7, false);
+INSERT INTO offices_management.workspaces VALUES (21, 'Рабочее место 21', 7, false);
+INSERT INTO offices_management.workspaces VALUES (22, 'Рабочее место 22', 8, false);
+INSERT INTO offices_management.workspaces VALUES (23, 'Рабочее место 23', 8, false);
+INSERT INTO offices_management.workspaces VALUES (24, 'Рабочее место 24', 8, false);
+INSERT INTO offices_management.workspaces VALUES (25, 'Рабочее место 25', 9, false);
+INSERT INTO offices_management.workspaces VALUES (26, 'Рабочее место 26', 9, false);
+INSERT INTO offices_management.workspaces VALUES (27, 'Рабочее место 27', 9, false);
+INSERT INTO offices_management.workspaces VALUES (28, 'Рабочее место 28', 10, false);
+INSERT INTO offices_management.workspaces VALUES (29, 'Рабочее место 29', 10, false);
+INSERT INTO offices_management.workspaces VALUES (30, 'Рабочее место 30', 10, false);
 
 
 --
@@ -1300,7 +1366,7 @@ SELECT pg_catalog.setval('offices_management.rental_agreements_id_rental_agreeme
 -- Name: reports_id_report_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.reports_id_report_seq', 1, false);
+SELECT pg_catalog.setval('offices_management.reports_id_report_seq', 2, true);
 
 
 --
@@ -1327,7 +1393,7 @@ SELECT pg_catalog.setval('offices_management.room_status_id_room_status_seq', 3,
 -- Name: rooms_id_room_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.rooms_id_room_seq', 40, true);
+SELECT pg_catalog.setval('offices_management.rooms_id_room_seq', 20, true);
 
 
 --
@@ -1345,7 +1411,7 @@ SELECT pg_catalog.setval('offices_management.statuses_id_statuses_seq', 3, true)
 -- Name: statuses_workers_id_status_worker_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.statuses_workers_id_status_worker_seq', 3, true);
+SELECT pg_catalog.setval('offices_management.statuses_workers_id_status_worker_seq', 10, true);
 
 
 --
@@ -1354,7 +1420,7 @@ SELECT pg_catalog.setval('offices_management.statuses_workers_id_status_worker_s
 -- Name: statuses_workspaces_id_status_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_workspace_seq', 1, false);
+SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_workspace_seq', 30, true);
 
 
 --
@@ -1390,7 +1456,7 @@ SELECT pg_catalog.setval('offices_management.workers_statuses_types_id_status_se
 -- Name: workspaces_id_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.workspaces_id_workspace_seq', 1, false);
+SELECT pg_catalog.setval('offices_management.workspaces_id_workspace_seq', 30, true);
 
 
 --
@@ -1780,7 +1846,7 @@ ALTER TABLE ONLY offices_management.workspaces
     ADD CONSTRAINT workspaces_id_room_fkey FOREIGN KEY (id_room) REFERENCES offices_management.rooms(id_room);
 
 
--- Completed on 2025-02-17 12:03:08
+-- Completed on 2025-02-17 16:38:42
 
 --
 -- PostgreSQL database dump complete
