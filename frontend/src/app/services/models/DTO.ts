@@ -37,6 +37,7 @@ export interface IWorkspaceInfoDto {
 export interface IOfficeDto {
     idOffice: number;
     officeName: string;
+    city: string;
     address: string;
     imageUrl: string;
     square?: number; 
