@@ -1,7 +1,7 @@
-<svg width="1021" height="706" viewBox="0 0 1021 706" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg [attr.width]="widthSvg" [attr.height]="heightSvg" fill="none" xmlns="http://www.w3.org/2000/svg" id="{{floorInfo.totalWorkspace}}">
     <g filter="url(#filter0_d_299_152)">
         <ng-container *ngFor="let room of floorInfo.rooms; let i = index">
-            <a id="{{room.idRoom}}" (click)='onRoomClick(room.idRoom)' [innerHTML]="rooms[i] | safeHtml"></a>
+            <a id="{{room.idRoom}}" (click)='onRoomClick(room)' [innerHTML]="rooms[i] | safeHtml"></a>
         </ng-container>
     </g>
 </svg>
