@@ -62,24 +62,9 @@ svg {
   justify-content: center;
 }
 
-.clickable {
-  transition: fill 0.3s ease;
-}
-
-.clickable:hover {
-  fill: lightcoral;
-}
-
 .pagination {
-  margin-top: 1rem;
+  margin: 1rem 0;
   --tui-background-accent-1: #0057a6;
   --tui-text-action: var(--tui-background-accent-1);
   --tui-background-accent-1-hover: #004682;
-}
-
-svg {
-  pointer-events: none;
-}
-path{
-  pointer-events: auto;
 }

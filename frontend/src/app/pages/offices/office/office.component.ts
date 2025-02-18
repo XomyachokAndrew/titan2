@@ -10,11 +10,17 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { FloorSchemaComponent } from "../../../components/floor-schema/floor-schema.component";
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { TuiButton } from '@taiga-ui/core';
 
 @Component({
   selector: 'office',
   templateUrl: './office.component.html',
-  imports: [LoadingComponent, TuiPagination, FloorSchemaComponent],
+  imports: [
+    LoadingComponent, 
+    TuiPagination, 
+    FloorSchemaComponent,
+    TuiButton,
+  ],
   styleUrls: ['./office.scss'],
 })
 export class OfficeComponent implements OnInit, AfterViewInit {
