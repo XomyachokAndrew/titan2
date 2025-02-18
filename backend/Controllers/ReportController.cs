@@ -1,13 +1,12 @@
 ﻿using backend.Data;
-using backend.ModelsDto;
 using backend.Models;
+using backend.ModelsDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-using System.IO;
 using NPOI.SS.UserModel.Charts;
 using NPOI.SS.Util;
+using NPOI.XSSF.UserModel;
 using System.Text.RegularExpressions;
 
 namespace backend.Controllers
@@ -18,63 +17,47 @@ namespace backend.Controllers
     {
         private readonly Context _context;
 
-        // Конструктор контроллера, принимающий контекст базы данных
         public ReportController(Context context)
         {
             _context = context;
         }
 
-        // Эндпоинт для получения стоимости аренды
         [HttpGet("{reportTypeId}/{officeId}")]
         public async Task<IActionResult> GetRentalCost(int officeId, int reportTypeId, int idUser)
         {
             try
             {
-                // Получаем офис по его идентификатору
-                var office = await GetOfficeWithDetails(officeId);
+                var office = await GetOfficeWithDetailsAsync(officeId);
                 if (office == null)
                 {
                     return NotFound("Офис не найден.");
                 }
 
-                // Получаем идентификаторы комнат, принадлежащих офису
-                var roomIds = GetRoomIds(office);
-
-                // Получаем текущие рабочие места
-                var currentWorkspaces = GetCurrentWorkspaces(roomIds);
-
-                // Получаем первый договор аренды
+                var roomIds = await GetRoomIdsAsync(office);
+                var currentWorkspaces = await GetCurrentWorkspacesAsync(roomIds);
+                var reservedWorkspaces = await GetReservedWorkspacesAsync(roomIds);
                 var rentalAgreement = office.RentalAgreements.FirstOrDefault();
                 if (rentalAgreement == null)
                 {
                     return NotFound("Нет договора аренды для этого офиса.");
                 }
 
-                // Рассчитываем стоимость рабочего места
-                decimal priceWorkspace = CalculateWorkspacePrice(rentalAgreement.Price, currentWorkspaces.Count());
+                decimal priceWorkspace = await CalculateWorkspacePriceAsync(rentalAgreement.Price, currentWorkspaces.Count());
+                var departmentCosts = await CalculateDepartmentCostsAsync(currentWorkspaces, priceWorkspace);
+                await CalculateReservedWorkspacesCostsAsync(reservedWorkspaces, departmentCosts, priceWorkspace);
+                var filePath = await CreateExcelReportAsync(office, rentalAgreement.Price, departmentCosts, currentWorkspaces.Count(), priceWorkspace, reservedWorkspaces, roomIds);
+                await SaveReportToDatabaseAsync(reportTypeId, idUser, filePath);
 
-                // Подсчитываем стоимости и количество рабочих мест для каждого отдела
-                var departmentCosts = CalculateDepartmentCosts(currentWorkspaces, priceWorkspace);
-
-                // Создаем Excel-файл
-                var filePath = CreateExcelReport(office, rentalAgreement.Price, departmentCosts, currentWorkspaces.Count(), priceWorkspace);
-
-                // Сохраняем информацию о отчете в БД
-                await SaveReportToDatabase(reportTypeId, idUser, filePath);
-
-                // Отправляем файл пользователю для скачивания
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
                 return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Path.GetFileName(filePath));
             }
             catch (Exception ex)
             {
-                // Обработка ошибок
                 return StatusCode(500, $"Внутренняя ошибка сервера: {ex.Message}");
             }
         }
 
-        // Получение офиса с деталями
-        private async Task<Office> GetOfficeWithDetails(int officeId)
+        private async Task<Office> GetOfficeWithDetailsAsync(int officeId)
         {
             return await _context.Offices
                 .Include(o => o.RentalAgreements)
@@ -83,33 +66,38 @@ namespace backend.Controllers
                 .FirstOrDefaultAsync(o => o.IdOffice == officeId);
         }
 
-        // Получение идентификаторов комнат
-        private List<int> GetRoomIds(Office office)
+        private async Task<List<int>> GetRoomIdsAsync(Office office)
         {
-            return office.Floors
+            return await Task.Run(() => office.Floors
                 .SelectMany(f => f.Rooms)
                 .Select(r => r.IdRoom)
-                .ToList();
+                .ToList());
         }
 
-        // Получение текущих рабочих мест
-        private List<CurrentWorkspace> GetCurrentWorkspaces(List<int> roomIds)
+        private async Task<List<CurrentWorkspace>> GetCurrentWorkspacesAsync(List<int> roomIds)
         {
-            return _context.CurrentWorkspaces
+            return await _context.CurrentWorkspaces
                 .Where(ws => ws.IdRoom != null && roomIds.Contains(ws.IdRoom.Value))
-                .ToList();
+                .ToListAsync();
         }
 
-        // Расчет стоимости рабочего места
-        private decimal CalculateWorkspacePrice(decimal rentalPrice, int workspaceCount)
+        private async Task<List<StatusesWorkspace>> GetReservedWorkspacesAsync(List<int> roomIds)
         {
-            return workspaceCount > 0 ? Math.Round(rentalPrice / workspaceCount, 3) : 0;
+            return await _context.StatusesWorkspaces
+                .Include(ws => ws.IdWorkspaceNavigation)
+                .Where(ws => ws.IdWorkspaceReservationsStatuses != null &&
+                             roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom))
+                .ToListAsync();
         }
 
-        // Подсчет стоимости и количества рабочих мест для каждого отдела
-        private Dictionary<int, DepartmentCostInfoDto> CalculateDepartmentCosts(List<CurrentWorkspace> currentWorkspaces, decimal priceWorkspace)
+        private async Task<decimal> CalculateWorkspacePriceAsync(decimal rentalPrice, int workspaceCount)
         {
-            return currentWorkspaces
+            return await Task.Run(() => workspaceCount > 0 ? Math.Round(rentalPrice / workspaceCount, 3) : 0);
+        }
+
+        private async Task<Dictionary<int, DepartmentCostInfoDto>> CalculateDepartmentCostsAsync(List<CurrentWorkspace> currentWorkspaces, decimal priceWorkspace)
+        {
+            return await Task.Run(() => currentWorkspaces
                 .Where(ws => ws.IdWorker != null)
                 .Select(ws => _context.WorkerDetails.SingleOrDefault(wd => wd.IdWorker == ws.IdWorker))
                 .Where(worker => worker != null && worker.IdDepartment != null)
@@ -121,70 +109,92 @@ namespace backend.Controllers
                         DepartmentName = group.First().DepartmentName,
                         TotalCost = group.Count() * priceWorkspace,
                         WorkspaceCount = group.Count()
-                    });
+                    }));
         }
 
-        // Создание Excel-отчета
-        private string CreateExcelReport(Office office, decimal rentalPrice, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace)
+        private async Task CalculateReservedWorkspacesCostsAsync(List<StatusesWorkspace> reservedWorkspaces, Dictionary<int, DepartmentCostInfoDto> departmentCosts, decimal priceWorkspace)
         {
-            // Санитизация имени офиса для использования в имени файла
+            foreach (var reserved in reservedWorkspaces)
+            {
+                var workerDetail = await _context.WorkerDetails
+                                    .SingleOrDefaultAsync(wd => wd.IdWorker == reserved.IdWorker);
+
+                if (workerDetail == null || workerDetail.IdDepartment == null)
+                {
+                    continue;
+                }
+
+                if (departmentCosts.TryGetValue(workerDetail.IdDepartment.Value, out var departmentCostInfo))
+                {
+                    // Если запись существует, обновляем её
+                    departmentCostInfo.TotalCost += priceWorkspace;
+                    departmentCostInfo.WorkspaceCount += 1;
+                }
+                else
+                {
+                    // Если записи нет, создаем новую
+                    departmentCosts[workerDetail.IdDepartment.Value] = new DepartmentCostInfoDto
+                    {
+                        DepartmentName = workerDetail.DepartmentName,
+                        TotalCost = priceWorkspace,
+                        WorkspaceCount = 1
+                    };
+                }
+            }
+        }
+
+        private async Task<string> CreateExcelReportAsync(Office office, decimal rentalPrice, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<StatusesWorkspace> reservedWorkspaces, List<int> roomIds)
+        {
             var sanitizedOfficeName = Regex.Replace(office.OfficeName, @"[<>:""/\\|?*]", "");
             sanitizedOfficeName = sanitizedOfficeName.Replace(" ", "_");
-
-            // Получение текущей даты и времени
             var currentDateTime = DateTime.Now;
-
-            // Форматирование времени в строку (чч_мм_сс)
             var timeString = currentDateTime.ToString("HHmm");
-
-            // Создание имени файла с добавлением времени
             var fileName = $"Отчет_{sanitizedOfficeName}_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
-
             var filePath = Path.Combine("wwwroot", "resources", "reports", fileName);
 
             using (var workbook = new XSSFWorkbook())
             {
                 var sheet = workbook.CreateSheet("Отчет о стоимости офиса");
-
-                // Создание стилей для ячеек
                 var officeInfoStyle = CreateCellStyle(workbook, IndexedColors.Yellow.Index, true, 12);
                 var headerStyle = CreateCellStyle(workbook, IndexedColors.BrightGreen.Index, true, 12);
                 var departmentInfoStyle = CreateCellStyle(workbook, IndexedColors.LightGreen.Index, false, 11);
                 var freeInfoStyle = CreateCellStyle(workbook, IndexedColors.Red.Index, true, 11);
+                var reservedInfoStyle = CreateCellStyle(workbook, IndexedColors.LightBlue.Index, false, 11);
 
-                // Добавление информации о стоимости офиса и его площади
-                AddOfficeInfoRow(sheet, office, rentalPrice, officeInfoStyle);
-
-                // Добавление заголовков
+                await AddOfficeInfoRowAsync(sheet, office, rentalPrice, officeInfoStyle);
                 AddHeaderRow(sheet, headerStyle);
-
-                // Заполнение данными по отделам
                 FillDepartmentData(sheet, departmentCosts, departmentInfoStyle);
-
-                // Добавление информации о свободных рабочих местах
-                AddFreeWorkspacesInfo(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, freeInfoStyle);
-
-                // Создание графика пирога
+                await AddFreeWorkspacesInfoAsync(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, roomIds, freeInfoStyle);
+                int reservedWorkspacesCount = reservedWorkspaces.Count;
+                await AddReservedWorkspacesCountAsync(sheet, reservedWorkspacesCount, priceWorkspace, reservedInfoStyle);
                 CreatePieChart(sheet, departmentCosts, sheet.LastRowNum + 3);
 
-                // Автоматическая подстройка ширины столбцов
                 for (int i = 0; i < sheet.GetRow(0).LastCellNum; i++)
                 {
                     sheet.AutoSizeColumn(i);
                 }
 
-                // Сохранение файла
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
-                    Console.WriteLine("\n\n\n\n");
-                    workbook.Write(fileStream);
+                    await Task.Run(() => workbook.Write(fileStream)); // Асинхронное выполнение записи в файл
                 }
             }
 
             return filePath;
         }
 
-        // Создание стиля ячейки
+        private async Task AddReservedWorkspacesCountAsync(ISheet sheet, int reservedCount, decimal priceWorkspace, ICellStyle style)
+        {
+            var reservedRow = sheet.CreateRow(sheet.LastRowNum + 1);
+            decimal reservedCost = reservedCount * priceWorkspace;
+            reservedRow.CreateCell(0).SetCellValue("Количество забронированных рабочих мест:");
+            reservedRow.GetCell(0).CellStyle = style;
+            reservedRow.CreateCell(1).SetCellValue((double)reservedCost);
+            reservedRow.GetCell(1).CellStyle = style;
+            reservedRow.CreateCell(2).SetCellValue(reservedCount);
+            reservedRow.GetCell(2).CellStyle = style;
+        }
+
         private ICellStyle CreateCellStyle(IWorkbook workbook, short colorIndex, bool isBold, short fontSize)
         {
             var cellStyle = workbook.CreateCellStyle();
@@ -197,8 +207,7 @@ namespace backend.Controllers
             return cellStyle;
         }
 
-        // Добавление информации о стоимости офиса
-        private void AddOfficeInfoRow(ISheet sheet, Office office, decimal rentalPrice, ICellStyle style)
+        private async Task AddOfficeInfoRowAsync(ISheet sheet, Office office, decimal rentalPrice, ICellStyle style)
         {
             var officeInfoRow = sheet.CreateRow(0);
             officeInfoRow.CreateCell(0).SetCellValue("Аренда офиса руб/мес");
@@ -214,7 +223,6 @@ namespace backend.Controllers
             sheet.CreateRow(1);
         }
 
-        // Добавление заголовков
         private void AddHeaderRow(ISheet sheet, ICellStyle style)
         {
             var headerRow = sheet.CreateRow(2);
@@ -226,7 +234,6 @@ namespace backend.Controllers
             headerRow.GetCell(2).CellStyle = style;
         }
 
-        // Заполнение данными по отделам
         private void FillDepartmentData(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, ICellStyle style)
         {
             int rowIndex = 3; // Начинаем с 3-й строки
@@ -242,12 +249,15 @@ namespace backend.Controllers
             }
         }
 
-        // Добавление информации о свободных рабочих местах
-        private void AddFreeWorkspacesInfo(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, ICellStyle style)
+        private async Task AddFreeWorkspacesInfoAsync(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<int> roomIds, ICellStyle style)
         {
-            // Подсчет свободных рабочих мест
             var occupiedWorkspacesCount = departmentCosts.Sum(dc => dc.Value.WorkspaceCount);
-            var freeWorkspacesCount = totalWorkspacesCount - occupiedWorkspacesCount;
+            var reservedWorkspacesCount = await _context.StatusesWorkspaces
+                .Include(ws => ws.IdWorkspaceNavigation)
+                .CountAsync(ws => ws.IdWorkspaceReservationsStatuses != null &&
+                                  roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom));
+
+            var freeWorkspacesCount = totalWorkspacesCount - occupiedWorkspacesCount - reservedWorkspacesCount;
             var freeWorkspacesCost = freeWorkspacesCount * priceWorkspace;
 
             var freeRow = sheet.CreateRow(sheet.LastRowNum + 1);
@@ -259,7 +269,6 @@ namespace backend.Controllers
             freeRow.GetCell(2).CellStyle = style;
         }
 
-        // Создание графика пирога
         private void CreatePieChart(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int startRowIndex)
         {
             IDrawing drawing = sheet.CreateDrawingPatriarch();
@@ -289,8 +298,7 @@ namespace backend.Controllers
             pieChart.Plot(data);
         }
 
-        // Сохранение информации о отчете в БД
-        private async Task SaveReportToDatabase(int reportTypeId, int idUser, string filePath)
+        private async Task SaveReportToDatabaseAsync(int reportTypeId, int idUser, string filePath)
         {
             var report = new Report
             {
