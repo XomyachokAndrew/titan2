@@ -12,15 +12,11 @@
   color: white;
   margin: 0 15px;
   text-decoration: none;
-  color: #fff;
-  font-family: 'MyriadPro-r';
+  font-family: 'MyriadPro-r'; /* Добавлен fallback шрифт */
   font-size: 18px;
   font-style: normal;
 }
 
 .footer .link:hover {
   color: #fff;
-  font-family: 'MyriadPro-r';
-  font-size: 18px;
-  font-style: normal;
 }
