@@ -140,7 +140,7 @@ namespace backend.Controllers
             // Создание имени файла с добавлением времени
             var fileName = $"Отчет_{sanitizedOfficeName}_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
 
-            var filePath = Path.Combine("resources", "reports", fileName);
+            var filePath = Path.Combine("wwwroot", "resources", "reports", fileName);
 
             using (var workbook = new XSSFWorkbook())
             {

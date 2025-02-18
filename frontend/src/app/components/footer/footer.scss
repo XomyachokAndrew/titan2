@@ -1,0 +1,22 @@
+.footer {
+  background: linear-gradient(90deg, #0057a6 60.5%, #002240 100%);
+  padding: 0.625rem 0;
+  text-align: center;
+  justify-content: center;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+}
+
+.footer .link {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-family: 'MyriadPro-r'; /* Добавлен fallback шрифт */
+  font-size: 18px;
+  font-style: normal;
+}
+
+.footer .link:hover {
+  color: #fff;
+}

@@ -1,24 +1,44 @@
+@if (isLoading) {
+<app-loading />
+}
+@else {
 <div class="container">
   <div class="office-info">
     <h1 class="h1-name">Информация</h1>
     <hr class="office-info-line">
     <div class="info">
-      Главный офис компании
+      {{dataOffice.officeName}}
     </div>
     <hr class="office-info-line">
     <div class="info">
-      Адрес: Улица Пушкина дом Колотушкина
+      Адрес: {{dataOffice.address}}
     </div>
     <hr class="office-info-line">
     <div class="info">
-      <div class="info-text">Кабинеты: <span class="span-number">5</span></div>
-      <div class="info-text">Рабочие места: <span class="span-number">25</span></div>
-      <div class="info-text">Кол-во сотрудников: <span class="span-number">15</span></div>
-      <div class="info-text">Свободных мест: <span class="span-number">10(-2)</span></div>
+      <!-- Здесь должна быть информация о Floor -->
+      @if (paginatedFloor) {
+      <div class="info-text">Кабинеты: <span class="span-number">{{paginatedFloor.rooms?.length || 0}}</span></div>
+      <div class="info-text">Рабочие места: <span class="span-number">{{paginatedFloor.totalWorkspace || 0}}</span>
+      </div>
+      <div class="info-text">Кол-во сотрудников: <span class="span-number">0</span></div>
+      <div class="info-text">Свободных мест: <span class="span-number">{{paginatedFloor.totalWorkspace || 0}}</span>
+      </div>
       <div class="info-text">Забронированные места: <span class="span-number">2</span></div>
+      }
+      <!-- Здесь конец информации -->
+      @if (totalFloors > 1) {
+      <div class="pagination">
+        <tui-pagination [index]="currentPage" [length]="totalFloors" (indexChange)="onPageChange($event)">
+        </tui-pagination>
+      </div>
+      }
+      <button tuiButton size="m" type="button">Создать отчет</button>
     </div>
   </div>
   <div class="office-image">
-    <div [innerHTML]="svgContent"></div>
+    @if (paginatedFloor) {
+    <app-floor-schema [floorInfo]="paginatedFloor"></app-floor-schema>
+    }
   </div>
 </div>
+}
