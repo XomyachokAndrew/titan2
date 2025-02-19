@@ -1,7 +1,5 @@
-import {
-  Component,
-} from '@angular/core';
-import {TuiIcon, TuiIconPipe} from '@taiga-ui/core';
+import { Component } from '@angular/core';
+import { TuiIcon, TuiIconPipe } from '@taiga-ui/core';
 
 @Component({
   selector: 'worker',
@@ -9,8 +7,6 @@ import {TuiIcon, TuiIconPipe} from '@taiga-ui/core';
   imports: [TuiIcon, TuiIconPipe],
   styleUrls: ['./worker.scss'],
 })
-export class WorkerComponent   {
- 
-  constructor(
-  ) {}
+export class WorkerComponent {
+  constructor() {}
 }
