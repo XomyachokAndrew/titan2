@@ -19,7 +19,7 @@
 }
 
 .employes-data {
-  font-family: "MyriadPro-r";
+  font-family: 'MyriadPro-r';
   padding-left: 5px;
 }
 
@@ -49,8 +49,7 @@
 }
 
 .workspace-edit {
-  font-size: 27px;
-  font-family: "MyriadPro-r";
+  font-family: 'MyriadPro-r';
   padding-left: 20px;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -58,7 +57,7 @@
 
 .workspace-edit-employment {
   font-size: 27px;
-  font-family: "MyriadPro-r";
+  font-family: 'MyriadPro-r';
   padding-left: 20px;
   padding-bottom: 20px;
 }
@@ -78,53 +77,50 @@
   padding-right: 10px;
   padding-top: 30px;
   gap: 10xp;
-  border-left: 1px solid rgba(0, 0, 0, 0.20);
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .workspace-name {
-  font-size: 27px;
-  font-family: "MyriadPro-r";
   padding-left: 5px;
 }
 
 .workspace-history-dates {
-  font-size: 27px;
-  font-family: "MyriadPro-r";
+  font-family: 'MyriadPro-r';
   padding-bottom: 25px;
   padding-left: 20px;
 }
 
 .worker-date-end {
   padding-left: 20px;
-  font-family: "MyriadPro-r";
+  font-family: 'MyriadPro-r';
 }
 
 .clear {
-  font-family: "MyriadPro-r";
+  font-family: 'MyriadPro-r';
   color: rgba(156, 65, 65, 1);
   padding-left: 5px;
 }
 
 .edit-mode {
-  color: #9F9A9A;
+  color: #9f9a9a;
   padding-left: 150px;
   padding-bottom: 25px;
 }
 
 .custom-select {
-  --tui-font-text-m: normal 1rem / 0.5rem "MyriadPro-r";
+  --tui-font-text-m: normal 1rem / 1rem 'MyriadPro-r';
   --tui-radius-m: 8rem;
   --tui-text-secondary: black;
   --tui-background-accent-1: black;
   --tui-background-base: white;
-  --tui-padding-l: 2rem;
+  --tui-padding-l: 1rem;
 }
 
 .custom-input {
-  --tui-font-text-m: normal 1rem / 0.5rem "MyriadPro-r";
+  --tui-font-text-m: normal 1rem / 1rem 'MyriadPro-r';
   --tui-radius-m: 8rem;
   --tui-text-secondary: black;
   --tui-background-accent-1: black;
   --tui-background-base: white;
-  --tui-padding-l: 2rem;
+  --tui-padding-l: 1rem;
 }

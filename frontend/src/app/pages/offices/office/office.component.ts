@@ -4,10 +4,13 @@ import {
   AfterViewInit,
   ElementRef,
   Renderer2,
+  inject,
+  DestroyRef,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { tuiDialog } from '@taiga-ui/core/components/dialog';
 import { ModalComponent } from '../../../components/modalWindow/modalWindow.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'office',
@@ -20,6 +23,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   showModal = false;
   modalTitle = '';
   modalMessage = '';
+  private destroyRef = inject(DestroyRef);
 
   cabs = [
     { id: 1, name: 'K-111' },
@@ -108,7 +112,7 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   });
 
   onSvgElementClick(element: HTMLElement, index: number): void {
-    this.dialog(237).subscribe({
+    this.dialog(237).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         console.info(`Dialog emitted data = ${data}`);
       },

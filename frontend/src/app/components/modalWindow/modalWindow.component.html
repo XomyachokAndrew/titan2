@@ -1,70 +1,67 @@
 <div class="container">
   <div class="employes">
-    <span class="workspace-edit">Редактирование кабинета №13</span>
-    <span class="workspace-edit-employment">Занято 2 места из 3</span>
+    <span class="H3 workspace-edit">Редактирование кабинета №13</span>
+    <span class="H3 workspace-edit-employment">Занято 2 места из 3</span>
     <tui-scrollbar class="box">
       <div class="content">
-        <worker></worker>
-        <worker></worker>
-        <worker></worker>
-        <worker></worker>
-        <worker></worker>
-        <worker></worker>
+        @for (item of items; track $index) {
+          <worker></worker>
+        }
       </div>
     </tui-scrollbar>
-    <span class="edit-mode">Режим редактиования</span>
+    <span class="P edit-mode">Режим редактиования</span>
   </div>
   <div class="workspace">
-    <div class="workspase-worker">
-      <span class="workspace-name">Рабочее место</span>
-      <span class="employes-data">Данные сотрудника</span>
-      <tui-select
-        class="custom-select"
-        tuiTextfieldSize="m"
-        [tuiTextfieldLabelOutside]="true"
-        [(ngModel)]="value"
-      >
-        Работник
-        <tui-data-list-wrapper *tuiDataList [items]="items" />
-      </tui-select>
-      <tui-input
-        class="custom-input"
-        tuiAutoFocus
-        tuiTextfieldSize="m"
-        [(ngModel)]="name"
-        disabled="true"
-      >
-        Менеджер
-      </tui-input>
-      <tui-input
-        class="custom-input"
-        tuiAutoFocus
-        tuiTextfieldSize="m"
-        [(ngModel)]="name"
-        disabled="true"
-      >
-        Организация
-      </tui-input>
-      <span class="employes-data">Данные сотрудника</span>
-      <tui-select
-        class="custom-select"
-        tuiTextfieldSize="m"
-        [tuiTextfieldLabelOutside]="true"
-        [(ngModel)]="value"
-      >
-        Статус
-        <tui-data-list-wrapper *tuiDataList [items]="items" />
-      </tui-select>
-      <tui-input-date-range class="custom-input" [formControl]="control"
-        >Период</tui-input-date-range
-      >
-      <span class="clear">Очистить</span>
-    </div>
+    <form [formGroup]="form" action="" method="POST">
+      <div class="workspase-worker">
+        <span class="H3 workspace-name">Рабочее место</span>
+        <span class="P employes-data">Данные сотрудника</span>
+        <tui-select
+          class="P custom-select"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          formControlName="worker">
+          Работник
+          <tui-data-list-wrapper *tuiDataList [items]="items" />
+        </tui-select>
+        <tui-textfield class="P custom-input">
+          <label tuiLabel>Должность</label>
+          <input
+            value="Менеджер"
+            placeholder=""
+            tuiTextfield
+            tuiTextfieldSize="m"
+            disabled />
+        </tui-textfield>
+        <tui-textfield class="P custom-input">
+          <label tuiLabel>Организация</label>
+          <input
+            value="АХО"
+            placeholder=""
+            tuiTextfield
+            tuiTextfieldSize="m"
+            disabled />
+        </tui-textfield>
+        <span class="P employes-data">Данные сотрудника</span>
+        <tui-select
+          class="P custom-select"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          formControlName="status">
+          Статус
+          <tui-data-list-wrapper *tuiDataList [items]="items" />
+        </tui-select>
+        <tui-input-date-range
+          class="P custom-input"
+          formControlName="dateRange">
+          Период
+        </tui-input-date-range>
+        <span class="P clear">Очистить</span>
+      </div>
+    </form>
     <div class="workspace-history">
-      <span class="workspace-history-dates">История рабочего места</span>
-      <span class="worker-date-end">Сотрудник дата/конец</span>
-      <span class="worker-date-end">Сотрудник дата/конец</span>
-      <span class="worker-date-end">Сотрудник дата/конец</span>
-      <span class="worker-date-end">Сотрудник дата/конец</span>
+      <span class="H3 workspace-history-dates">История рабочего места</span>
+      <span class="P worker-date-end">Сотрудник дата/конец</span>
     </div>
   </div>
+</div>
