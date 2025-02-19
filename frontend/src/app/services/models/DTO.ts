@@ -40,10 +40,10 @@ export interface IOfficeDto {
     city: string;
     address: string;
     imageUrl: string;
-    square?: number; 
-    totalWorkspace?: number; 
-    occupiedWorkspaces?: number; 
-    density?: number; 
+    square?: number;
+    totalWorkspace?: number;
+    occupiedWorkspaces?: number;
+    density?: number;
 }
 
 export interface IFloorDto {
@@ -56,4 +56,9 @@ export interface IFloorDto {
     occupiedWorkspaces: number;
     reservedWorkspaces: number;
     rooms: IRoom[];
-  }
+}
+
+export interface IWorkspaceDto {
+    name: string;
+    idRoom: number;
+}

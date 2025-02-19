@@ -3,14 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ICurrentWorkspace } from '../models/CurrentWorkspace';
-import { IWorkspaceInfoDto, IStatusWorkspaceDto } from '../models/DTO';
+import { IWorkspaceInfoDto, IStatusWorkspaceDto, IWorkspaceDto } from '../models/DTO';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkspaceService {
-  private baseUrl = `${environment.apiUrl}/workspaces`;
+  private baseUrl = `${environment.apiUrl}/workspace`;
 
   constructor(private http: HttpClient) { }
 
@@ -42,15 +42,12 @@ export class WorkspaceService {
       );
   }
 
-  updateEndDate(id: number, endDate?: string): Observable<void> {
-    let params = new HttpParams();
-    if (endDate) {
-      params = params.append('endDate', endDate);
-    }
-    return this.http.put<void>(`${this.baseUrl}/${id}/end-date`, {}, { params })
-      .pipe(
-        catchError(this.handleError<void>('updateEndDate'))
-      );
+  updateEndDate(id: number, endDate?: Date): Observable<void> {
+    const url = `${this.baseUrl}/${id}/end-date`;
+    const body = endDate ? { endDate } : {};
+    return this.http
+      .put<void>(url, body)
+      .pipe(catchError(this.handleError<void>('updateEndDate')));
   }
 
   updateStatus(id: number, updatedStatusDto: IStatusWorkspaceDto): Observable<void> {
@@ -58,6 +55,18 @@ export class WorkspaceService {
       .pipe(
         catchError(this.handleError<void>('updateStatus'))
       );
+  }
+
+  createWorkspace(workspaceDto: IWorkspaceDto): Observable<void> {
+    return this.http
+      .post<void>(`${this.baseUrl}/create`, workspaceDto)
+      .pipe(catchError(this.handleError<void>('createWorkspace')));
+  }
+
+  deleteWorkspace(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError<void>('deleteWorkspace')));
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
