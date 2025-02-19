@@ -1,7 +1,7 @@
 <div class="container">
   <div class="employes">
-    <span class="H3 workspace-edit">Редактирование кабинета №13</span>
-    <span class="H3 workspace-edit-employment">Занято 2 места из 3</span>
+    <span class="H3 MP-R workspace-edit">Редактирование кабинета №13</span>
+    <span class="H3 MP-R workspace-edit-employment">Занято 2 места из 3</span>
     <tui-scrollbar class="box">
       <div class="content">
         @for (item of items; track $index) {
@@ -9,22 +9,22 @@
         }
       </div>
     </tui-scrollbar>
-    <span class="P edit-mode">Режим редактиования</span>
+    <span class="P MP-R edit-mode">Режим редактиования</span>
   </div>
   <div class="workspace">
     <form [formGroup]="form" action="" method="POST">
       <div class="workspase-worker">
-        <span class="H3 workspace-name">Рабочее место</span>
-        <span class="P employes-data">Данные сотрудника</span>
+        <span class="H3 MP-R workspace-name">Рабочее место</span>
+        <span class="P MP-R employes-data">Данные сотрудника</span>
         <tui-select
-          class="P custom-select"
+          class="P MP-R custom-select"
           tuiTextfieldSize="m"
           [tuiTextfieldLabelOutside]="true"
           formControlName="worker">
           Работник
           <tui-data-list-wrapper *tuiDataList [items]="items" />
         </tui-select>
-        <tui-textfield class="P custom-input">
+        <tui-textfield class="P MP-R custom-input">
           <label tuiLabel>Должность</label>
           <input
             value="Менеджер"
@@ -33,7 +33,7 @@
             tuiTextfieldSize="m"
             disabled />
         </tui-textfield>
-        <tui-textfield class="P custom-input">
+        <tui-textfield class="P MP-R custom-input">
           <label tuiLabel>Организация</label>
           <input
             value="АХО"
@@ -42,9 +42,9 @@
             tuiTextfieldSize="m"
             disabled />
         </tui-textfield>
-        <span class="P employes-data">Данные сотрудника</span>
+        <span class="P MP-R employes-data">Данные сотрудника</span>
         <tui-select
-          class="P custom-select"
+          class="P MP-R custom-select"
           tuiTextfieldSize="m"
           [tuiTextfieldLabelOutside]="true"
           formControlName="status">
@@ -52,16 +52,16 @@
           <tui-data-list-wrapper *tuiDataList [items]="items" />
         </tui-select>
         <tui-input-date-range
-          class="P custom-input"
+          class="P MP-R custom-input"
           formControlName="dateRange">
           Период
         </tui-input-date-range>
-        <span class="P clear">Очистить</span>
+        <span class="P MP-R clear">Очистить</span>
       </div>
     </form>
     <div class="workspace-history">
-      <span class="H3 workspace-history-dates">История рабочего места</span>
-      <span class="P worker-date-end">Сотрудник дата/конец</span>
+      <span class="H3 MP-R workspace-history-dates">История рабочего места</span>
+      <span class="P MP-R worker-date-end">Сотрудник дата/конец</span>
     </div>
   </div>
 </div>
