@@ -1,13 +1,24 @@
-import { Component, OnInit, AfterViewInit, DestroyRef, inject } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { Subscription } from "rxjs";
-import { FloorService } from '../../../services/controllers/floor.service';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ElementRef,
+  Renderer2,
+  DestroyRef,
+  inject
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { tuiDialog } from '@taiga-ui/core/components/dialog';
+import { ModalComponent } from '../../../components/modalWindow/modalWindow.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FloorService } from '../../../services/controllers/floor.service';
 import { OfficeService } from '../../../services/controllers/office.service';
 import { IFloorDto, IOfficeDto } from '../../../services/models/DTO';
 import LoadingComponent from '../../../components/loading/loading.component';
 import { TuiPagination } from '@taiga-ui/kit';
-import { FloorSchemaComponent } from "../../../components/floor-schema/floor-schema.component";
+import { FloorSchemaComponent } from '../../../components/floor-schema/floor-schema.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TuiButton } from '@taiga-ui/core';
@@ -37,6 +48,10 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   totalFloors: number = 0;
   currentFloor: IFloorDto | null = null;
 
+  showModal = false;
+  modalTitle = '';
+  modalMessage = '';
+
   constructor(
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
@@ -50,6 +65,27 @@ export class OfficeComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.loadOffice();
     this.loadFloors();
+  }
+
+  private readonly dialog = tuiDialog(ModalComponent, {
+    dismissible: true,
+    label: 'Информация о кабинете',
+    size: 'auto'
+  });
+
+  onSvgElementClick(element: HTMLElement, index: number): void {
+    this.dialog(237).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+        console.info(`Dialog emitted data = ${data}`);
+      },
+      complete: () => {
+        console.info('Dialog closed');
+      },
+    });
+  }
+
+  closeModal(): void {
+    this.showModal = false;
   }
 
   loadOffice() {

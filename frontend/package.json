@@ -27,7 +27,8 @@
     "@taiga-ui/cdk": "^4.21.0",
     "@taiga-ui/core": "^4.21.0",
     "@taiga-ui/event-plugins": "^4.0.2",
-    "@taiga-ui/icons": "^4.21.0",
+    "@taiga-ui/icons": "^4.25.0",
+    "@taiga-ui/icons-fontawesome": "^4.25.0",
     "@taiga-ui/kit": "^4.21.0",
     "@taiga-ui/layout": "^4.21.0",
     "rxjs": "~7.8.0",
@@ -45,7 +46,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "prettier": "^3.5.0",
+    "prettier": "^3.5.1",
     "typescript": "~5.6.2"
   }
 }
