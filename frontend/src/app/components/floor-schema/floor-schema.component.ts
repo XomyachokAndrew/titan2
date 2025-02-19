@@ -6,6 +6,8 @@ import { IRoom } from '../../services/models/Room';
 import { RoomService } from '../../services/controllers/room.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
+import { tuiDialog } from '@taiga-ui/core/components/dialog';
+import { ModalComponent } from '../../components/modalWindow/modalWindow.component';
 
 @Component({
   selector: 'app-floor-schema',
@@ -19,6 +21,9 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
   roomData!: IRoom;
   widthSvg: any = 0;
   heightSvg: any = 0;
+  showModal = false;
+  modalTitle = '';
+  modalMessage = '';
   private destroyRef = inject(DestroyRef);
 
   constructor(
@@ -33,6 +38,12 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
       console.warn("floorInfo или schemeContent не определены в ngOnInit");
     }
   }
+
+  private readonly dialog = tuiDialog(ModalComponent, {
+    dismissible: true,
+    label: 'Информация о кабинете',
+    size: 'auto'
+  });
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['floorInfo']) {
@@ -72,7 +83,14 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
 
   async onRoomClick(room: IRoom) {
     await this.loadRoom(room.idRoom);
-    alert(JSON.stringify(this.roomData));
+    this.dialog(this.roomData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+        console.info(`Dialog emitted data = ${data}`);
+      },
+      complete: () => {
+        console.info('Dialog closed');
+      },
+    });
   }
 
   loadRoom(id: number): Promise<void> {
@@ -97,5 +115,9 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
           error: (err) => reject(err)
         });
     });
+  }
+
+  closeModal(): void {
+    this.showModal = false;
   }
 }

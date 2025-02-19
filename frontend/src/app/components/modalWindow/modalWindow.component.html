@@ -1,11 +1,11 @@
 <div class="container">
   <div class="employes">
-    <span class="H3 MP-R workspace-edit">Редактирование кабинета №13</span>
+    <span class="H3 MP-R workspace-edit">Редактирование кабинета {{ data.name }}</span>
     <span class="H3 MP-R workspace-edit-employment">Занято 2 места из 3</span>
     <tui-scrollbar class="box">
       <div class="content">
-        @for (item of items; track $index) {
-          <worker></worker>
+        @for (item of workspaces; track $index) {
+          <worker [currentWorkspace]="item"></worker>
         }
       </div>
     </tui-scrollbar>

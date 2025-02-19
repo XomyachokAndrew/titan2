@@ -2,6 +2,7 @@ import type { TemplateRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   signal,
 } from '@angular/core';
@@ -27,6 +28,11 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
+import { IRoom } from '../../services/models/Room';
+import { WorkspaceService } from '../../services/controllers/workspace.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, of } from 'rxjs';
+import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 
 @Component({
   standalone: true,
@@ -52,9 +58,11 @@ export class ModalComponent {
   form: FormGroup; // Объявляем FormGroup
   private readonly dialogs = inject(TuiDialogService);
   protected readonly disable = signal(true);
-  protected value: number | null = null;
+  protected value: IRoom | null = null;
   protected name = '';
   protected items = [10, 50, 100];
+  protected workspaces!: ICurrentWorkspace[];
+  private destroyRef = inject(DestroyRef);
   protected dateRangeItems: Array<{ label: string; value: TuiDayRange }> = [
     {
       label: 'Last 7 days',
@@ -66,7 +74,10 @@ export class ModalComponent {
     },
   ];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private workspaceService: WorkspaceService
+  ) {
     this.form = this.fb.group({
       worker: [null, Validators.required], // Для работника
       manager: [{ value: '', disabled: true }], // Для менеджера
@@ -77,11 +88,31 @@ export class ModalComponent {
         Validators.required
       ),
     });
+    
+    this.loadWorkspaces(this.data.idRoom);
   }
 
-  public readonly context = injectContext<TuiDialogContext<number, number>>();
+  loadWorkspaces(id: number) {
+    this.workspaceService.getWorkspacesByRoom(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this.workspaces = data;
+          }
+        }
+      });
+  }
 
-  protected get data(): number {
+  public readonly context = injectContext<TuiDialogContext<IRoom, IRoom>>();
+
+  protected get data(): IRoom {
     return this.context.data;
   }
 

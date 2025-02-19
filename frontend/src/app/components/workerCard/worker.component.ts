@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TuiIcon, TuiIconPipe } from '@taiga-ui/core';
+import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 
 @Component({
   selector: 'worker',
@@ -8,5 +9,6 @@ import { TuiIcon, TuiIconPipe } from '@taiga-ui/core';
   styleUrls: ['./worker.scss'],
 })
 export class WorkerComponent {
-  constructor() {}
+  @Input() currentWorkspace!: ICurrentWorkspace;
+  constructor() { }
 }
