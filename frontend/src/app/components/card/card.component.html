@@ -1,13 +1,25 @@
 <div class="card" tuiAppearance="floating" tuiCardLarge>
-    <header class="card-header" tuiHeader>
-        <h2 tuiTitle>{{title}}</h2>
-    </header>
+    <div class="scroll-card">
+        <div class="card-header" tuiHeader>
+            <h2 tuiTitle>{{data.officeName}}</h2>
+        </div>
 
-    <section>
-        <img src="{{image}}" alt="Офис">
-    </section>
+        <section class="card-container">
+            <div class="card-info address">
+                {{data.city}}<br>
+                <span>{{data.address}}</span>
+            </div>
+            <hr>
+            <div class="card-info">Свободных мест: {{data.totalWorkspace - data.occupiedWorkspaces}} /
+                {{data.totalWorkspace}}</div>
+            <div class="card-info">Плотность посадки: {{data.density}} м²</div>
+        </section>
+    </div>
 
-    <footer>
-        {{address}}
-    </footer>
+    <div class="card-footer">
+        <img src="{{data.imageUrl}}" alt="Офис">
+        <a (click)="goToOffice(id())" iconEnd="@tui.chevron-right" appearance="outline" size="xl" tuiButton>
+            К офису
+        </a>
+    </div>
 </div>

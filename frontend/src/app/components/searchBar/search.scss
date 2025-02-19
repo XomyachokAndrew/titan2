@@ -1,4 +1,4 @@
-// @import "../../styles/font.css";
+@import "../../styles/font.css";
 
 .search-bar {
   display: flex;
@@ -41,18 +41,3 @@ input[type="text"] {
   border-color: transparent;
   justify-content: right;
 }
-
-// .search-bar {
-//   position: relative; /* Для позиционирования дочерних элементов */
-// }
-
-// .search-bar .search-icon {
-//   position: absolute; /* Позиционируем иконку */
-//   left: 1rem; /* Отступ от левого края */
-//   top: 50%; /* Центрируем по вертикали */
-//   transform: translateY(-50%); /* Центрируем по вертикали */
-//   width: 2rem; /* Ширина иконки */
-//   height: 2rem; /* Высота иконки */
-//   fill: black; /* Цвет иконки */
-//   pointer-events: none; /* Игнорируем события мыши для иконки */
-// }
