@@ -52,11 +52,9 @@ export class ModalComponent {
   form: FormGroup; // Объявляем FormGroup
   private readonly dialogs = inject(TuiDialogService);
   protected readonly disable = signal(true);
-
   protected value: number | null = null;
   protected name = '';
   protected items = [10, 50, 100];
-
   protected dateRangeItems: Array<{ label: string; value: TuiDayRange }> = [
     {
       label: 'Last 7 days',
@@ -76,16 +74,12 @@ export class ModalComponent {
       status: [null, Validators.required], // Для статуса
       dateRange: new FormControl(
         new TuiDayRange(new TuiDay(2018, 2, 10), new TuiDay(2018, 3, 20)),
-        Validators.required,
+        Validators.required
       ),
     });
   }
 
   public readonly context = injectContext<TuiDialogContext<number, number>>();
-
-  protected get hasValue(): boolean {
-    return this.value !== null;
-  }
 
   protected get data(): number {
     return this.context.data;
