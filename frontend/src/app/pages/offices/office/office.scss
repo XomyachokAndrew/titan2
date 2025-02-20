@@ -33,9 +33,7 @@ svg {
 }
 
 .info {
-  font-family: 'RockStar-r';
   text-align: left;
-  font-size: 16px;
   color: rgba(81, 81, 81, 1);
 
   &-text {
@@ -43,7 +41,7 @@ svg {
     gap: 0.5rem;
 
     /* Добавьте отступ между текстом и цифрами, если необходимо */
-    &>span {
+    & > span {
       color: black;
     }
   }
@@ -55,16 +53,16 @@ svg {
   height: 0.0005rem;
 }
 
-.h1-name {
+.name {
   color: rgba(81, 81, 81, 1);
   display: inline-flex;
   gap: 2rem;
-  font-size: 29px;
-  font-family: 'RockStar-sb';
-  justify-content: center;
+  justify-content: left;
 }
 
 .pagination {
+  padding-top: 20px;
+  padding-bottom: 20px;
   margin: 1rem 0;
   --tui-background-accent-1: #0057a6;
   --tui-text-action: var(--tui-background-accent-1);

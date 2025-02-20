@@ -1,46 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --tui-background-base: #D9D9D9;
+  --tui-background-base: #d9d9d9;
 }
 
 .PP {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .P {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .H3 {
-    font-size: 27px;
+  font-size: 27px;
 }
 
-H2 {
-    font-size: 40px;
+.H2 {
+  font-size: 40px;
 }
 
-H1 {
-    font-size: 60px;
+.H1 {
+  font-size: 60px;
 }
 
 .MP-R {
-    font-family: 'MyriadPro-r';
+  font-family: 'MyriadPro-r';
 }
 
 .MP-SB {
-    font-family: 'MyriadPro-sb';
+  font-family: 'MyriadPro-sb';
 }
 
 .MP-B {
-    font-family: 'MyriadPro-b';
+  font-family: 'MyriadPro-b';
 }
 
 tui-root {
-    position: relative;
-    display: block;
-    font: var(--tui-font-text-s);
-    color: var(--tui-text-primary);
-    flex: 1;
-    border-image: conic-gradient(var(--tui-background-base) 0 0) fill 0 / 0 / 0 0 100vh 0;
-    -webkit-tap-highlight-color: transparent;
+  position: relative;
+  display: block;
+  font: var(--tui-font-text-s);
+  color: var(--tui-text-primary);
+  flex: 1;
+  border-image: conic-gradient(var(--tui-background-base) 0 0) fill 0 / 0 / 0 0
+    100vh 0;
+  -webkit-tap-highlight-color: transparent;
 }
