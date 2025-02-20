@@ -40,7 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export default class HeaderComponent implements OnInit {
     loginPage: boolean = false;
     title: string = "Интерактивная карта офисов";
-    user: string = '';
+    user: string = 'fl';
     isSearch: boolean = false;
     isAuthenticated: boolean = false;
     private destroyRef = inject(DestroyRef);
