@@ -1,5 +1,12 @@
 <div class="P employe" (click)="onClick()">
-  <img class="circle" src="public/dot.svg" />
+  @switch (currentWorkspace.fullWorkerName) {
+    @case ("") {
+      <img class="circle" src="public/dot_gray.svg" />
+    }
+    @default {
+      <img class="circle" src="public/dot_red.svg" />
+    }
+  }
   <span>{{currentWorkspace.workspaceName}} {{currentWorkspace.fullWorkerName}}</span>
   <span>
     @switch (currentWorkspace.fullWorkerName) {

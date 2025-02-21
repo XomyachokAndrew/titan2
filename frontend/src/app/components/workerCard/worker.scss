@@ -23,8 +23,9 @@
 
 .delete {
   height: 18px;
-  padding-bottom: 10px;
-  padding-left: 330px;
+  padding-left: 347px;
+  padding-top: 106px;
+  position: absolute;
 }
 
 .circle-free {
@@ -32,5 +33,6 @@
 }
 
 .circle-occupied {
-  background-color: red; /* или любой другой цвет, который вы предпочитаете для занятого состояния */
+  background-color: red;
+  /* или любой другой цвет, который вы предпочитаете для занятого состояния */
 }
