@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-02-20 16:39:24
+-- Started on 2025-02-21 11:24:54
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -447,19 +447,19 @@ CREATE VIEW offices_management.current_workspaces AS
     w.name AS workspace_name,
     wo.id_worker,
     concat_ws(' '::text, wo.name, wo.surname, wo.patronymic) AS full_worker_name,
-    s.id_status_workspace,
-    s.id_workspace_status_type,
+    COALESCE(s.id_status_workspace, NULL::integer) AS id_status_workspace,
+    COALESCE(s.id_workspace_status_type, NULL::integer) AS id_workspace_status_type,
     st.name AS workspace_status_type_name,
-    s.id_workspace_reservations_statuses,
+    COALESCE(s.id_workspace_reservations_statuses, NULL::integer) AS id_workspace_reservations_statuses,
     wrs.name AS reservation_statuse_name,
     s.start_date,
     s.end_date
    FROM ((((offices_management.workspaces w
-     JOIN offices_management.statuses_workspaces s ON ((w.id_workspace = s.id_workspace)))
+     LEFT JOIN offices_management.statuses_workspaces s ON (((w.id_workspace = s.id_workspace) AND ((s.end_date IS NULL) OR (s.end_date > CURRENT_DATE)) AND (s.start_date < CURRENT_DATE))))
      LEFT JOIN offices_management.workspace_reservations_statuses wrs ON ((s.id_workspace_reservations_statuses = wrs.id_workspace_reservations_statuses)))
      LEFT JOIN offices_management.workers wo ON ((s.id_worker = wo.id_worker)))
      LEFT JOIN offices_management.workspace_statuses_types st ON ((s.id_workspace_status_type = st.id_workspace_status_type)))
-  WHERE (((s.end_date IS NULL) OR (s.end_date > CURRENT_DATE)) AND (s.start_date < CURRENT_DATE) AND (w.is_deleted <> true));
+  WHERE (w.is_deleted <> true);
 
 
 ALTER VIEW offices_management.current_workspaces OWNER TO postgres;
@@ -1255,7 +1255,7 @@ INSERT INTO offices_management.departments VALUES (3, 'Отдел разрабо
 INSERT INTO offices_management.floors VALUES (3, 1, 0, 2, 300, 0, '1floor.svg');
 INSERT INTO offices_management.floors VALUES (4, 2, 0, 2, 300, 0, '2floor.svg');
 INSERT INTO offices_management.floors VALUES (1, 1, 15, 1, 250, 5, '1floor.svg');
-INSERT INTO offices_management.floors VALUES (2, 2, 16, 1, 250, 11, '2floor.svg');
+INSERT INTO offices_management.floors VALUES (2, 2, 16, 1, 250, 12, '2floor.svg');
 
 
 --
@@ -1264,7 +1264,7 @@ INSERT INTO offices_management.floors VALUES (2, 2, 16, 1, 250, 11, '2floor.svg'
 -- Data for Name: offices; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
-INSERT INTO offices_management.offices VALUES (1, 'Офис 1', 'Улица Ленина, 1', 1, 500, 'office1.jpg', 31, 'Москва', 16);
+INSERT INTO offices_management.offices VALUES (1, 'Офис 1', 'Улица Ленина, 1', 1, 500, 'office1.jpg', 31, 'Москва', 17);
 INSERT INTO offices_management.offices VALUES (2, 'Офис 2', 'Улица Пушкина, 2', 1, 600, 'office2.jpeg', 0, 'Москва', 0);
 
 
@@ -1407,12 +1407,13 @@ INSERT INTO offices_management.statuses_workspaces VALUES (28, '2023-01-01', NUL
 INSERT INTO offices_management.statuses_workspaces VALUES (29, '2023-01-01', NULL, 29, NULL, NULL, 1, 1);
 INSERT INTO offices_management.statuses_workspaces VALUES (8, '2023-01-01', NULL, 8, NULL, 8, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (6, '2023-01-01', NULL, 6, NULL, 6, 1, NULL);
-INSERT INTO offices_management.statuses_workspaces VALUES (42, '2023-10-10', NULL, 30, NULL, NULL, 1, 1);
 INSERT INTO offices_management.statuses_workspaces VALUES (1, '2023-01-01', NULL, 1, NULL, 1, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (24, '2023-01-01', NULL, 24, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (25, '2023-01-01', NULL, 25, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (12, '2023-01-01', NULL, 12, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (13, '2023-01-01', NULL, 13, NULL, NULL, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (42, '2023-10-10', '2024-10-10', 30, NULL, NULL, 1, 1);
+INSERT INTO offices_management.statuses_workspaces VALUES (66, '2024-10-10', '2024-10-30', 30, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (11, '2023-01-01', NULL, 11, NULL, NULL, 1, NULL);
 
 
@@ -1629,7 +1630,7 @@ SELECT pg_catalog.setval('offices_management.statuses_workers_id_status_worker_s
 -- Name: statuses_workspaces_id_status_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_workspace_seq', 65, true);
+SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_workspace_seq', 66, true);
 
 
 --
@@ -2071,7 +2072,7 @@ ALTER TABLE ONLY offices_management.workspaces
     ADD CONSTRAINT workspaces_id_room_fkey FOREIGN KEY (id_room) REFERENCES offices_management.rooms(id_room);
 
 
--- Completed on 2025-02-20 16:39:24
+-- Completed on 2025-02-21 11:24:55
 
 --
 -- PostgreSQL database dump complete
