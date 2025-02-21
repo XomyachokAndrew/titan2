@@ -1,42 +1,32 @@
 @import '../../styles/font.css';
 
-$card-width: 20.25rem;
-$card-height: 30.75rem;
-$card-padding: 2rem 1.625rem;
-$card-radius: 1.875rem;
-$card-background: #3379B8;
-$card-shadow: 4px 4px 8px 0px rgba(11, 45, 65, 0.21);
-$card-gap: 1rem;
-$card-text-color: white;
-
 [tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm]) {
     flex-direction: column;
-    gap: $card-gap;
+    gap: 1rem;
     align-items: flex-start;
 }
 
 .card {
     display: flex;
-    width: $card-width;
-    height: $card-height;
-    padding: $card-padding;
+    width: 20.25rem;
+    height: 30.75rem;
+    padding: 2rem 1.625rem;
     flex-direction: column;
     align-items: flex-start;
-    border-radius: $card-radius;
-    background: $card-background;
-    box-shadow: $card-shadow;
+    border-radius: 1.875rem;
+    background: #3379B8;
+    box-shadow: 4px 4px 8px 0px rgba(11, 45, 65, 0.21);
     flex: 1;
-    --t-space: $card-gap;
+    --t-space: 1rem;
     --tui-font-heading-5: 2.5rem / 1.75rem "MyriadPro-r";
-    --tui-text-primary: $card-text-color;
-    --tui-text-action: $card-text-color;
-    --tui-border-normal: $card-text-color;
+    --tui-text-primary: white;
+    --tui-text-action: white;
+    --tui-border-normal: white;
 
     .scroll-card {
         overflow-y: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
-
         &::-webkit-scrollbar {
             display: none;
         }
@@ -50,7 +40,7 @@ $card-text-color: white;
         padding-bottom: 15px;
 
         .name {
-            color: $card-text-color;
+            color: white;
         }
     }
 
@@ -85,12 +75,14 @@ $card-text-color: white;
         flex-direction: column;
         width: 100%;
 
+
         img {
             margin-bottom: 1rem;
             height: 9.625rem;
             align-self: stretch;
-            border-radius: $card-radius;
+            border-radius: 1.875rem;
             background: lightgray 50% / cover no-repeat;
+
             filter: blur(0px);
         }
 
