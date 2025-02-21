@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class WorkersStatusesTypeService {
-  private apiUrl = `${environment.apiUrl}/WorkspaceStatusesType`;
+  private apiUrl = `${environment.apiUrl}/WorkersStatusesTypes`;
 
   constructor(private http: HttpClient) { }
 
