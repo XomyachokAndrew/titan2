@@ -76,7 +76,6 @@ import { IWorkersStatusesType } from '../../services/models/WorkersStatusesType'
 export class ModalComponent {
   //#region Variables
   form: FormGroup;
-  private initialFormValue: any;
   private readonly dialogs = inject(TuiDialogService);
   protected isEditMode = false;
   protected items = [10, 50, 100];
@@ -113,11 +112,10 @@ export class ModalComponent {
       organization: [{ value: 'Организация', disabled: true }], // Для организации
       status: [{ value: "Статус", disabled: true }, Validators.required], // Для статуса
       dateRange: [{
-        value: new TuiDayRange(new TuiDay(2018, 2, 10), new TuiDay(2018, 3, 20)),
+        value: null,
         disabled: true
       }, Validators.required]
     });
-    this.initialFormValue = this.form.value
 
     this.loadWorkspaces(this.data.idRoom);
     this.loadWorkers();
@@ -414,7 +412,18 @@ export class ModalComponent {
   }
 
   clearClick(): void {
-    this.form.reset(this.initialFormValue); // Сбрасываем форму до исходных значений
+    let initialValue = this.fb.group({
+      idStatusWorkspace: this.form.value.idStatusWorkspace,
+      worker: [{ value: "Работник", disabled: true }, Validators.required], // Для работника
+      position: [{ value: 'Должность', disabled: true }], // Для менеджера
+      organization: [{ value: 'Организация', disabled: true }], // Для организации
+      status: [{ value: "Статус", disabled: true }, Validators.required], // Для статуса
+      dateRange: [{
+        value: null,
+        disabled: true
+      }, Validators.required]
+    }).value;
+    this.form.reset(initialValue); // Сбрасываем форму до исходных значений
     this.form.disable();
     if (this.isEditMode) {
       this.form.enable();

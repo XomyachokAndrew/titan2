@@ -25,6 +25,7 @@
         <input type="hidden" formControlName="idStatusWorkspace">
         <span class="H3 MP-R workspace-name">Рабочее место</span>
         <span class="P MP-R employes-data">Данные сотрудника</span>
+        <!-- Работник -->
         <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="worker">
           Работник
@@ -39,6 +40,7 @@
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
+        <!-- Должность -->
         <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="position">
           Должность
@@ -51,6 +53,7 @@
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
+        <!-- Организация -->
         <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="organization">
           Организация
@@ -64,6 +67,7 @@
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <span class="P MP-R employes-data">Данные сотрудника</span>
+        <!-- Статус -->
         <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="status">
           Статус
@@ -76,7 +80,8 @@
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
-        <tui-input-date-range class="P MP-R custom-input" formControlName="dateRange">
+        <!-- Период -->
+        <tui-input-date-range class="P MP-R custom-input" [tuiTextfieldSize]="'m'" formControlName="dateRange">
           Период
         </tui-input-date-range>
         <div class="button-container">
