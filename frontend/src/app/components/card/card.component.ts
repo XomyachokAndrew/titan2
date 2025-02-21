@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, Input, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input } from '@angular/core';
 import { TuiAppearance, TuiButton, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { Router } from '@angular/router';
-import { OfficeService } from '../../services/controllers/office.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IOffice } from '../../services/models/Office';
-import { TuiProgress } from '@taiga-ui/kit';
+import { IOfficeDto } from '../../services/models/DTO';
 
 @Component({
     selector: 'card-office',
@@ -17,24 +14,18 @@ import { TuiProgress } from '@taiga-ui/kit';
         TuiHeader,
         TuiTitle,
         TuiButton,
-        TuiProgress
     ],
     templateUrl: './card.component.html',
     styleUrl: './card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class CardComponent implements OnInit {
-    @Input() data: any;
+export default class CardComponent {
+    @Input() data!: IOfficeDto;
     id = input<number>(0);
 
-
     constructor(
-        private officeService: OfficeService,
         private router: Router
     ) { }
-
-    ngOnInit(): void {
-    }
 
     goToOffice(
         id: number,
