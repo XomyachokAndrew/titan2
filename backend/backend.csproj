@@ -43,8 +43,6 @@
     <None Include="wwwroot\resources\reports\Отчет_Бизнес-центр_Сити_20250206_12_08.xlsx" />
     <None Include="wwwroot\resources\reports\Отчет_Бизнес-центр_Сити_20250206_12_09.xlsx" />
     <None Include="wwwroot\resources\reports\Отчет_Бизнес-центр_Сити_20250207_1141.xlsx" />
-    <Folder Include="resources\floors\" />
-    <Folder Include="resources\reports\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
