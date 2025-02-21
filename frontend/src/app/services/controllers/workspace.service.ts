@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { ICurrentWorkspace } from '../models/CurrentWorkspace';
 import { IWorkspaceInfoDto, IStatusWorkspaceDto, IWorkspaceDto } from '../models/DTO';
 import { environment } from '../../../environments/environment';
+import { IHistoryWorkspaceStatus } from '../models/HistoryWorkspaceStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -28,15 +29,15 @@ export class WorkspaceService {
       );
   }
 
-  getWorkspaceHistory(id: number): Observable<IStatusWorkspaceDto[]> {
-    return this.http.get<IStatusWorkspaceDto[]>(`${this.baseUrl}/${id}/history`)
+  getWorkspaceHistory(id: number): Observable<IHistoryWorkspaceStatus[]> {
+    return this.http.get<IHistoryWorkspaceStatus[]>(`${this.baseUrl}/${id}/history`)
       .pipe(
-        catchError(this.handleError<IStatusWorkspaceDto[]>('getWorkspaceHistory', []))
+        catchError(this.handleError<IHistoryWorkspaceStatus[]>('getWorkspaceHistory', []))
       );
   }
 
   addStatusWorkspace(statusWorkspaceDto: IStatusWorkspaceDto): Observable<void> {
-    return this.http.post<void>(this.baseUrl, statusWorkspaceDto)
+    return this.http.post<void>(`${this.baseUrl}/Create/Status`, statusWorkspaceDto)
       .pipe(
         catchError(this.handleError<void>('addStatusWorkspace'))
       );
