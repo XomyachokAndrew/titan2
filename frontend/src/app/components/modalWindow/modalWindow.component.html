@@ -67,7 +67,14 @@
         <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="status">
           Статус
-          <tui-data-list-wrapper *tuiDataList [items]="items" />
+          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+            <tui-data-list>
+              <button *cdkVirtualFor="let item of workersStatuseTypes" tuiOption type="button"
+                [value]="item.name" id="{{item.idStatus}}">
+                {{item.name}}
+              </button>
+            </tui-data-list>
+          </cdk-virtual-scroll-viewport>
         </tui-select>
         <tui-input-date-range class="P MP-R custom-input" formControlName="dateRange">
           Период

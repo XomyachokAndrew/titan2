@@ -1,10 +1,10 @@
-import type { TemplateRef } from '@angular/core';
+//#region IMPORTS
+import { ChangeDetectorRef, TemplateRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   inject,
-  signal,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -12,10 +12,9 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  FormControl,
 } from '@angular/forms';
 import type { TuiDialogContext } from '@taiga-ui/core';
-import { TuiButton, TuiDialogService, TuiTextfield } from '@taiga-ui/core';
+import { TuiDialogService, TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSlider } from '@taiga-ui/kit';
 import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { tuiDateFormatProvider } from '@taiga-ui/core';
@@ -47,7 +46,9 @@ import { PostService } from '../../services/controllers/post.service';
 import { IPost } from '../../services/models/Post';
 import { DepartmentService } from '../../services/controllers/department.service';
 import { IDepartment } from '../../services/models/Department';
-
+import { WorkersStatusesTypeService } from '../../services/controllers/workersStatusesType.service';
+import { IWorkersStatusesType } from '../../services/models/WorkersStatusesType';
+//#endregion
 @Component({
   standalone: true,
   imports: [
@@ -83,6 +84,7 @@ export class ModalComponent {
   selectedWorkerId: number = 0;
   selectedPostId: number = 0;
   selectedDepartmentId: number = 0;
+  selectedStatusId: number = 0;
   //#region Use Interfaces
   protected value: IRoom | null = null;
   protected workspaces!: ICurrentWorkspace[];
@@ -90,6 +92,7 @@ export class ModalComponent {
   protected posts!: IPost[];
   protected departments!: IDepartment[];
   protected historyWorkspace!: IHistoryWorkspaceStatus[];
+  protected workersStatuseTypes!: IWorkersStatusesType[];
   //#endregion
   //#endregion
 
@@ -99,7 +102,9 @@ export class ModalComponent {
     private workspaceService: WorkspaceService,
     private workerService: WorkerService,
     private postService: PostService,
-    private departmentService: DepartmentService
+    private departmentService: DepartmentService,
+    private WorkersStatusesTypeService: WorkersStatusesTypeService,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       idStatusWorkspace: [{ value: 0 }],
@@ -112,54 +117,19 @@ export class ModalComponent {
         disabled: true
       }, Validators.required]
     });
-
     this.initialFormValue = this.form.value
 
     this.loadWorkspaces(this.data.idRoom);
     this.loadWorkers();
     this.loadPost();
     this.loadDepartment();
+    this.loadWorkersStatusesType();
 
-    this.form.get('worker')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedWorker = this.workers.find(worker => 
-          `${worker.surname} ${worker.name} ${worker.patronymic}` === selectedValue
-        );
-        if (selectedWorker) {
-          this.selectedWorkerId = selectedWorker.idWorker
-          // console.log('Worker ', this.selectedWorkerId);
-        }
-      }
-    });
-
-    this.form.get('position')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedPost = this.posts.find(post => post.name === selectedValue);
-        if (selectedPost) {
-          this.selectedPostId = selectedPost.idPost;
-          // console.log('Post ', this.selectedPostId);
-        }
-      }
-    });
-
-    this.form.get('organization')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
-        if (selectedDepartment) {
-          this.selectedDepartmentId = selectedDepartment.idDepartment;
-          // console.log('Department ', this.selectedDepartmentId);
-        }
-      }
-    });
-
-    // this.form.get('status')?.valueChanges.subscribe({
-    //   next: (selectedValue) => {
-    //     // const selectedStatus
-    //   }
-    // })
+    this.getForms();
   }
   //#endregion
 
+  //#region DialogData
   public readonly context = injectContext<TuiDialogContext<IRoom, IRoom>>();
 
   protected get data(): IRoom {
@@ -175,10 +145,7 @@ export class ModalComponent {
   protected showDialog(content: TemplateRef<TuiDialogContext>): void {
     this.dialogs.open(content, { dismissible: true }).subscribe();
   }
-
-  onWorkerClicked(workspace: ICurrentWorkspace) {
-    this.loadData(workspace.idWorkspace, workspace);
-  }
+  //#endregion
 
   //#region load data from database
   async loadWorkspaces(id: number) {
@@ -194,6 +161,7 @@ export class ModalComponent {
         next: (data) => {
           if (data) {
             this.workspaces = data;
+            this.cdr.markForCheck();
           }
         }
       });
@@ -306,6 +274,24 @@ export class ModalComponent {
     await this.loadHistoryWorkspace(id);
     await this.loadWorkspace(id, workspace);
   }
+
+  async loadWorkersStatusesType() {
+    this.WorkersStatusesTypeService.getWorkersStatusesTypes()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных о типах рабочих: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this.workersStatuseTypes = data;
+          }
+        }
+      });
+  }
   //#endregion
 
   //#region Post data into database
@@ -321,7 +307,11 @@ export class ModalComponent {
       .subscribe({
         next: (data) => {
           if (data) {
-            console.log(data);
+            this.loadWorkspaces(this.data.idRoom);
+            this.loadWorkers();
+            this.loadPost();
+            this.loadDepartment();
+            this.cdr.markForCheck();
           }
         },
         error: (error) => console.error(error)
@@ -330,6 +320,53 @@ export class ModalComponent {
   //#endregion
 
   //#region Methods
+  onWorkerClicked(workspace: ICurrentWorkspace) {
+    this.loadData(workspace.idWorkspace, workspace);
+  }
+
+  getForms() {
+    this.form.get('worker')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedWorker = this.workers.find(worker =>
+          `${worker.surname} ${worker.name} ${worker.patronymic}` === selectedValue
+        );
+        if (selectedWorker) {
+          this.selectedWorkerId = selectedWorker.idWorker
+          console.log('Worker ', this.selectedWorkerId);
+        }
+      }
+    });
+
+    this.form.get('position')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedPost = this.posts.find(post => post.name === selectedValue);
+        if (selectedPost) {
+          this.selectedPostId = selectedPost.idPost;
+          // console.log('Post ', this.selectedPostId);
+        }
+      }
+    });
+
+    this.form.get('organization')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
+        if (selectedDepartment) {
+          this.selectedDepartmentId = selectedDepartment.idDepartment;
+          // console.log('Department ', this.selectedDepartmentId);
+        }
+      }
+    });
+
+    this.form.get('status')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedStatus = this.workersStatuseTypes.find(wSt => wSt.name === selectedValue);
+        if (selectedStatus) {
+          this.selectedStatusId = selectedStatus.idStatus;
+        }
+      }
+    })
+  }
+
   saveClick() {
     if (this.form.invalid) {
       console.error('Ошибка валидации');
@@ -392,18 +429,16 @@ export class ModalComponent {
   private formatISODateToYMD(isoDateString: string): string {
     // Создаем объект даты из строки в формате ISO
     const date = new Date(isoDateString);
-  
+
     // Проверяем, что дата корректна
     if (isNaN(date.getTime())) {
       throw new Error("Invalid date string");
     }
-  
-    // Получаем компоненты даты
+
     const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Месяцы начинаются с 0
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
     const day = String(date.getUTCDate()).padStart(2, '0');
-  
-    // Формируем строку в формате "YYYY-MM-DD"
+
     return `${year}-${month}-${day}`;
   }
   //#endregion
