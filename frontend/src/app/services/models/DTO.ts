@@ -56,7 +56,7 @@ export interface IFloorDto {
     square?: number;
     occupiedWorkspaces: number;
     reservedWorkspaces: number;
-    rooms: IRoom[];
+    rooms?: IRoom[];
 }
 
 export interface IWorkspaceDto {
