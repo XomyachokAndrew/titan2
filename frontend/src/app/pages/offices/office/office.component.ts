@@ -1,9 +1,7 @@
+//#region IMPORTS
 import {
   Component,
   OnInit,
-  AfterViewInit,
-  ElementRef,
-  Renderer2,
   DestroyRef,
   inject
 } from '@angular/core';
@@ -19,32 +17,38 @@ import { FloorSchemaComponent } from '../../../components/floor-schema/floor-sch
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TuiButton } from '@taiga-ui/core';
+//#endregion
 
 @Component({
   selector: 'office',
   templateUrl: './office.component.html',
   imports: [
-    LoadingComponent, 
-    TuiPagination, 
+    LoadingComponent,
+    TuiPagination,
     FloorSchemaComponent,
     TuiButton,
   ],
   styleUrls: ['./office.scss'],
 })
-export class OfficeComponent implements OnInit, AfterViewInit {
+export class OfficeComponent implements OnInit {
+  //#region Variables
   isLoading: boolean = true;
-
-  id: number = 1;
+  id!: number;
   private subscription: Subscription;
   private destroyRef = inject(DestroyRef);
-
-  dataFloors: IFloorDto[] = [];
-  dataOffice!: IOfficeDto;
+  //#region Pagination
   currentPage: number = 0;
   itemsPerPage: number = 10;
   totalFloors: number = 0;
+  //#endregion
+  //#region Interfaces
+  dataOffice!: IOfficeDto;
+  dataFloors: IFloorDto[] = [];
   currentFloor: IFloorDto | null = null;
+  //#endregion
+  //#endregion
 
+  //#region Constructor and ngOnInit
   constructor(
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
@@ -59,7 +63,9 @@ export class OfficeComponent implements OnInit, AfterViewInit {
     this.loadOffice();
     this.loadFloors();
   }
+  //#endregion
 
+  //#region load data from database 
   loadOffice() {
     this.officeService.getOfficesById(this.id)
       .pipe(
@@ -118,7 +124,9 @@ export class OfficeComponent implements OnInit, AfterViewInit {
         }
       });
   }
+  //#endregion
 
+  //#region Pgination methods
   get paginatedFloor(): IFloorDto | null {
     return this.currentFloor;
   }
@@ -129,6 +137,5 @@ export class OfficeComponent implements OnInit, AfterViewInit {
       this.loadFloor(this.dataFloors[this.currentPage].idFloor); // Загружаем этаж при изменении страницы
     }
   }
-
-  ngAfterViewInit(): void { }
+  //#endregion
 }
