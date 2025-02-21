@@ -39,10 +39,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export default class HeaderComponent implements OnInit {
     loginPage: boolean = false;
-    title: string = "Интерактивная карта офисов";
-    user: string = 'fl';
     isSearch: boolean = false;
     isAuthenticated: boolean = false;
+    title: string = "Интерактивная карта офисов";
+    user: string = '';
     private destroyRef = inject(DestroyRef);
 
     constructor(
@@ -52,34 +52,36 @@ export default class HeaderComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.setupRouterEvents();
+        this.setupAuthentication();
+    }
+
+    /**
+     * Настройка подписки на события маршрутизации.
+     * Обновляет флаг `loginPage` в зависимости от текущего URL.
+     */
+    private setupRouterEvents(): void {
         this.router.events
             .pipe(
                 filter(event => event instanceof NavigationEnd),
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((event: NavigationEnd) => {
-                switch (event.urlAfterRedirects) {
-                    case '/login':
-                        this.loginPage = true;
-                        break;
-                    case '/registration':
-                        this.loginPage = true;
-                        break;
-                    default:
-                        this.loginPage = false;
-                        break;
-                }
+                this.loginPage = ['/login', '/registration'].includes(event.urlAfterRedirects);
             });
+    }
 
+    /**
+     * Настройка подписки на состояние аутентификации.
+     * Обновляет флаг `isAuthenticated` и текст кнопки.
+     */
+    private setupAuthentication(): void {
         this.userService.isAuthenticated$
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(isAuthenticated => {
                 this.isAuthenticated = isAuthenticated;
+                this.user = isAuthenticated ? 'Выйти' : '';
             });
-
-        if(this.isAuthenticated == true){
-            this.user = 'Выйти'; 
-        }
     }
 
     goBack() {
@@ -91,7 +93,7 @@ export default class HeaderComponent implements OnInit {
             this.userService.logout();
             this.router.navigate(['/']);
         }
-        else{
+        else {
             this.router.navigate(['/login']);
         }
     }
