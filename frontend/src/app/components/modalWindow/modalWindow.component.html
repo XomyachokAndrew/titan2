@@ -1,67 +1,93 @@
+<div class="heading">
+  <span class="MP-R H3">Информация о кабинете</span>
+  <div class="heading__info">
+    <span class="MP-R H3">{{ data.name }}</span>
+    <span class="H3 MP-R">Занято 2 места из 3</span>
+  </div>
+</div>
 <div class="container">
   <div class="employes">
-    <span class="H3 MP-R workspace-edit">Редактирование кабинета {{ data.name }}</span>
-    <span class="H3 MP-R workspace-edit-employment">Занято 2 места из 3</span>
+    <span class="H3 MP-R workspace-edit">{{ isEditMode ? 'Редактирование кабинета' : '' }}</span>
     <tui-scrollbar class="box">
       <div class="content">
         @for (item of workspaces; track $index) {
-          <worker [currentWorkspace]="item"></worker>
+        <worker [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"></worker>
         }
       </div>
     </tui-scrollbar>
-    <span class="P MP-R edit-mode">Режим редактиования</span>
+    <span class="P MP-R edit-mode click" (click)="toggleEditMode()">
+      {{ isEditMode ? 'Отменить редактирование' : 'Режим редактирования' }}
+    </span>
   </div>
   <div class="workspace">
     <form [formGroup]="form" action="" method="POST">
       <div class="workspase-worker">
+        <input type="hidden" formControlName="idStatusWorkspace">
         <span class="H3 MP-R workspace-name">Рабочее место</span>
         <span class="P MP-R employes-data">Данные сотрудника</span>
-        <tui-select
-          class="P MP-R custom-select"
-          tuiTextfieldSize="m"
-          [tuiTextfieldLabelOutside]="true"
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="worker">
           Работник
-          <tui-data-list-wrapper *tuiDataList [items]="items" />
+          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+            <tui-data-list>
+              <button *cdkVirtualFor="let item of workers" tuiOption type="button"
+                [value]="item.surname + ' ' + item.name + ' ' + item.patronymic" [id]="item.idWorker">
+                {{item.surname}}
+                {{item.name}}
+                {{item.patronymic}}
+              </button>
+            </tui-data-list>
+          </cdk-virtual-scroll-viewport>
         </tui-select>
-        <tui-textfield class="P MP-R custom-input">
-          <label tuiLabel>Должность</label>
-          <input
-            value="Менеджер"
-            placeholder=""
-            tuiTextfield
-            tuiTextfieldSize="m"
-            disabled />
-        </tui-textfield>
-        <tui-textfield class="P MP-R custom-input">
-          <label tuiLabel>Организация</label>
-          <input
-            value="АХО"
-            placeholder=""
-            tuiTextfield
-            tuiTextfieldSize="m"
-            disabled />
-        </tui-textfield>
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
+          formControlName="position">
+          Должность
+          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+            <tui-data-list>
+              <button *cdkVirtualFor="let item of posts" tuiOption type="button"
+                [value]="item.name" id="{{item.idPost}}">
+                {{item.name}}
+              </button>
+            </tui-data-list>
+          </cdk-virtual-scroll-viewport>
+        </tui-select>
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
+          formControlName="organization">
+          Организация
+          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+            <tui-data-list>
+              <button *cdkVirtualFor="let item of departments" tuiOption type="button"
+                [value]="item.name" id="{{item.idDepartment}}">
+                {{item.name}}
+              </button>
+            </tui-data-list>
+          </cdk-virtual-scroll-viewport>
+        </tui-select>
         <span class="P MP-R employes-data">Данные сотрудника</span>
-        <tui-select
-          class="P MP-R custom-select"
-          tuiTextfieldSize="m"
-          [tuiTextfieldLabelOutside]="true"
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true"
           formControlName="status">
           Статус
           <tui-data-list-wrapper *tuiDataList [items]="items" />
         </tui-select>
-        <tui-input-date-range
-          class="P MP-R custom-input"
-          formControlName="dateRange">
+        <tui-input-date-range class="P MP-R custom-input" formControlName="dateRange">
           Период
         </tui-input-date-range>
-        <span class="P MP-R clear">Очистить</span>
+        <div class="button-container">
+          <span class="P MP-R save click" (click)="saveClick()">Сохранить</span>
+          <span class="P MP-R clear click" (click)="clearClick()">Очистить</span>
+        </div>
       </div>
     </form>
     <div class="workspace-history">
       <span class="H3 MP-R workspace-history-dates">История рабочего места</span>
-      <span class="P MP-R worker-date-end">Сотрудник дата/конец</span>
+      @for (item of historyWorkspace; track $index) {
+      <span class="P MP-R worker-date-end">
+        {{item.workerFullName}}
+        {{item.startDate | date:
+        'dd.MM.yyyy'}}
+        /
+        {{item.endDate | date: 'dd.MM.yyyy' }}</span>
+      }
     </div>
   </div>
 </div>
