@@ -42,8 +42,8 @@ export interface IOfficeDto {
     address: string;
     imageUrl: string;
     square?: number;
-    totalWorkspace?: number;
-    occupiedWorkspaces?: number;
+    totalWorkspace: number;
+    occupiedWorkspaces: number;
     density?: number;
 }
 
