@@ -1,0 +1,29 @@
+<div class="container">
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    <span class="H3 MP-R create-worker">Создание сотрудника</span>
+    <tui-input class="H2 MP-SB custom-input" formControlName="firstName">
+      Имя:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="lastName">
+      Фамилия:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="middleName">
+      Отчество:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="position">
+      Должность:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="organization">
+      Организация:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <div class="button-container">
+      <span class="P MP-R submit"> Создать </span>
+      <span class="P MP-R clear">Очистить </span>
+    </div>
+  </form>
+</div>
