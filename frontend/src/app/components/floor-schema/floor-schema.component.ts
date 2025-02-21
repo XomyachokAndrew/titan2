@@ -41,7 +41,6 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
 
   private readonly dialog = tuiDialog(ModalComponent, {
     dismissible: true,
-    label: 'Информация о кабинете',
     size: 'auto'
   });
 
