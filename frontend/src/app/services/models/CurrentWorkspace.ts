@@ -1,5 +1,5 @@
 export interface ICurrentWorkspace  {
-    idWorkspace?: number;
+    idWorkspace: number;
     idRoom?: number;
     workspaceName?: string;
     idWorker?: number;

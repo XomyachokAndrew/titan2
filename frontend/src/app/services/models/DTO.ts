@@ -6,11 +6,12 @@ export interface IRefreshTokenDto {
 
 export interface IStatusWorkspaceDto {
     idStatusWorkspace: number;
-    startDate?: string;
-    endDate?: string;
-    idStatus?: number;
+    startDate: string;
+    endDate?: string | null;
+    idWorkspaceStatusType: number;
     idWorker?: number;
     idUser: number;
+    idWorkspacesReservationsStatuses: number;
 }
 
 export interface IUserLoginDto {
@@ -31,7 +32,7 @@ export interface IWorkspaceInfoDto {
     statusName?: string;
     startDate?: string;
     endDate?: string;
-    workerDetails?: any;
+    workerDetails: any;
 }
 
 export interface IOfficeDto {
