@@ -1,3 +1,4 @@
+//#region IMPORTS 
 import { ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { SafeHtmlPipe } from '../../services/safe-html.pipe';
 import { NgFor } from '@angular/common';
@@ -8,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { tuiDialog } from '@taiga-ui/core/components/dialog';
 import { ModalComponent } from '../../components/modalWindow/modalWindow.component';
+//#endregion
 
 @Component({
   selector: 'app-floor-schema',
@@ -16,15 +18,17 @@ import { ModalComponent } from '../../components/modalWindow/modalWindow.compone
   styleUrls: ['./floor-schema.component.css']
 })
 export class FloorSchemaComponent implements OnInit, OnChanges {
+  //#region Variables
   @Input() floorInfo!: IFloorDto;
-  rooms: string[] = [];
   roomData!: IRoom;
-  widthSvg: any = 0;
-  heightSvg: any = 0;
+  rooms: string[] = [];
+  widthSvg: string | null = null;
+  heightSvg: string | null = null;
   showModal = false;
   modalTitle = '';
   modalMessage = '';
   private destroyRef = inject(DestroyRef);
+  //#endregion
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -32,31 +36,36 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    if (this.floorInfo && this.floorInfo.schemeContent) {
-      this.processSvg(this.floorInfo.schemeContent);
-    } else {
-      console.warn("floorInfo или schemeContent не определены в ngOnInit");
+    this.processFloorInfo();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['floorInfo']) {
+      const newFloorInfo = changes['floorInfo'].currentValue;
+      const oldFloorInfo = changes['floorInfo'].previousValue;
+
+      if (newFloorInfo && newFloorInfo.schemeContent !== (oldFloorInfo?.schemeContent)) {
+        this.processFloorInfo();
+      }
     }
   }
 
+  //#region Methods
   private readonly dialog = tuiDialog(ModalComponent, {
     dismissible: true,
     size: 'auto'
   });
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['floorInfo']) {
-      const newFloorInfo = changes['floorInfo'].currentValue;
-      if (newFloorInfo && newFloorInfo.schemeContent) {
-        this.processSvg(newFloorInfo.schemeContent);
-        this.cdr.detectChanges(); // Вручную запускаем обновление
-      } else {
-        console.warn("Новое значение floorInfo или schemeContent не определены в ngOnChanges");
-      }
+  private processFloorInfo(): void {
+    if (this.floorInfo && this.floorInfo.schemeContent) {
+      this.processSvg(this.floorInfo.schemeContent);
+      this.cdr.detectChanges(); // Вручную запускаем обновление
+    } else {
+      console.warn("floorInfo или schemeContent не определены");
     }
   }
 
-  processSvg(svgText: string): void {
+  private processSvg(svgText: string): void {
     this.rooms = [];
     const parser = new DOMParser();
     const doc = parser.parseFromString(svgText, 'image/svg+xml');
@@ -68,9 +77,10 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
       this.heightSvg = svgElement.getAttribute('height');
     } else {
       console.warn('SVG element not found in the provided text.');
+      return;
     }
 
-    const linkElements = doc.querySelectorAll('a');
+    const linkElements = Array.from(doc.querySelectorAll('a'));
     linkElements.forEach(link => {
       const linkContent = link.innerHTML;
       const tempDiv = document.createElement('div');
@@ -81,15 +91,20 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
   }
 
   async onRoomClick(room: IRoom) {
-    await this.loadRoom(room.idRoom);
-    this.dialog(this.roomData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (data) => {
-        console.info(`Dialog emitted data = ${data}`);
-      },
-      complete: () => {
-        console.info('Dialog closed');
-      },
-    });
+    try {
+      await this.loadRoom(room.idRoom);
+      this.dialog(this.roomData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        next: (data) => {
+          console.info(`Dialog emitted data = ${data}`);
+        },
+        complete: () => {
+          console.info('Dialog closed');
+        },
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке данных комнаты: ', error);
+      this.showErrorModal('Ошибка', 'Не удалось загрузить данные комнаты.');
+    }
   }
 
   loadRoom(id: number): Promise<void> {
@@ -99,6 +114,7 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
           takeUntilDestroyed(this.destroyRef),
           catchError(error => {
             console.error('Ошибка при обработке данных о комнате: ', error);
+            this.showErrorModal('Ошибка', 'Не удалось загрузить данные о комнате.');
             return of(null);
           })
         )
@@ -108,15 +124,26 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
               this.roomData = data;
               resolve();
             } else {
+              this.showErrorModal('Ошибка', 'Данные комнаты не найдены.');
               reject('Данные комнаты не найдены');
             }
           },
-          error: (err) => reject(err)
+          error: (err) => {
+            this.showErrorModal('Ошибка', 'Произошла ошибка при загрузке данных.');
+            reject(err);
+          }
         });
     });
+  }
+
+  private showErrorModal(title: string, message: string): void {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.showModal = true;
   }
 
   closeModal(): void {
     this.showModal = false;
   }
+  //#endregion
 }
