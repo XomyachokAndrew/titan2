@@ -1,6 +1,19 @@
-<div class="P employe">
+<div class="P employe" (click)="onClick()">
   <img class="circle" src="public/dot.svg" />
   <span>{{currentWorkspace.workspaceName}} {{currentWorkspace.fullWorkerName}}</span>
-  <span>Занято</span>
+  <span>
+    @switch (currentWorkspace.fullWorkerName) {
+    @case ("") {
+    Свободно
+    }
+    @default {
+    Занято
+    }
+    }
+  </span>
+  @if (isEdit) {
   <img class="delete" alt="" [src]="'@tui.trash' | tuiIcon" />
+  }
+  @else {
+  }
 </div>

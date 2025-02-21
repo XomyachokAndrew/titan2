@@ -8,6 +8,11 @@
   background: #e6e6e6;
   padding-left: 30px;
   font-family: 'MyriadPro-r';
+  transition: 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
 .circle {
@@ -20,4 +25,12 @@
   height: 18px;
   padding-bottom: 10px;
   padding-left: 330px;
+}
+
+.circle-free {
+  background-color: green;
+}
+
+.circle-occupied {
+  background-color: red; /* или любой другой цвет, который вы предпочитаете для занятого состояния */
 }
