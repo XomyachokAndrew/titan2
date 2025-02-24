@@ -164,7 +164,7 @@ namespace backend.Controllers
                 await AddOfficeInfoRowAsync(sheet, office, rentalPrice, officeInfoStyle);
                 AddHeaderRow(sheet, headerStyle);
                 FillDepartmentData(sheet, departmentCosts, departmentInfoStyle);
-                await AddFreeWorkspacesInfoAsync(sheet, departmentCosts, totalWorkspacesCount, priceWorkspace, roomIds, freeInfoStyle);
+                await AddFreeWorkspacesInfoAsync(sheet, office.FreeWorkspaces, totalWorkspacesCount, priceWorkspace, freeInfoStyle);
                 int reservedWorkspacesCount = reservedWorkspaces.Count;
                 await AddReservedWorkspacesCountAsync(sheet, reservedWorkspacesCount, priceWorkspace, reservedInfoStyle);
                 CreatePieChart(sheet, departmentCosts, sheet.LastRowNum + 3);
@@ -249,23 +249,16 @@ namespace backend.Controllers
             }
         }
 
-        private async Task AddFreeWorkspacesInfoAsync(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<int> roomIds, ICellStyle style)
+        private async Task AddFreeWorkspacesInfoAsync(ISheet sheet, int freeWorkspaces, int totalWorkspacesCount, decimal priceWorkspace, ICellStyle style)
         {
-            var occupiedWorkspacesCount = departmentCosts.Sum(dc => dc.Value.WorkspaceCount);
-            var reservedWorkspacesCount = await _context.StatusesWorkspaces
-                .Include(ws => ws.IdWorkspaceNavigation)
-                .CountAsync(ws => ws.IdWorkspaceReservationsStatuses != null &&
-                                  roomIds.Contains(ws.IdWorkspaceNavigation.IdRoom));
-
-            var freeWorkspacesCount = totalWorkspacesCount - occupiedWorkspacesCount - reservedWorkspacesCount;
-            var freeWorkspacesCost = freeWorkspacesCount * priceWorkspace;
+            var freeWorkspacesCost = freeWorkspaces * priceWorkspace;
 
             var freeRow = sheet.CreateRow(sheet.LastRowNum + 1);
             freeRow.CreateCell(0).SetCellValue("Свободные рабочие места");
             freeRow.GetCell(0).CellStyle = style;
             freeRow.CreateCell(1).SetCellValue((double)freeWorkspacesCost);
             freeRow.GetCell(1).CellStyle = style;
-            freeRow.CreateCell(2).SetCellValue(freeWorkspacesCount);
+            freeRow.CreateCell(2).SetCellValue(freeWorkspaces);
             freeRow.GetCell(2).CellStyle = style;
         }
 
