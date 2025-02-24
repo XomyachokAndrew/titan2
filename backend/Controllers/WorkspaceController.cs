@@ -37,7 +37,7 @@ namespace backend.Controllers
         }
 
         // Получение информации о рабочем пространстве по ID
-        [HttpGet("{id}")]
+        [HttpGet("info/{id}")]
         public async Task<ActionResult<WorkspaceInfoDto>> GetWorkspaceInfo(int id)
         {
             // Запрос информации о рабочем пространстве
@@ -77,8 +77,8 @@ namespace backend.Controllers
 
         // Получение истории статусов рабочего пространства
         // GET: api/workspaces/{id}/history
-        [HttpGet("{id}/history")]
-        public async Task<ActionResult<IEnumerable<StatusWorkspaceDto>>> GetWorkspaceHistory(int id)
+        [HttpGet("WorkspaceHistory/{id}")]
+        public async Task<ActionResult<IEnumerable<HistoryWorkspaceStatus>>> GetWorkspaceHistory(int id)
         {
             // Запрос истории статусов рабочего пространства
             var history = await _context.HistoryWorkspaceStatuses
@@ -95,7 +95,7 @@ namespace backend.Controllers
         }
 
         // Метод для добавления статуса рабочего пространства
-        [HttpPost("Create/Status")]
+        [HttpPost("AddStatus")]
         public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
         {
             // Проверка на валидность входных данных
@@ -139,24 +139,22 @@ namespace backend.Controllers
         }
 
         // Метод для обновления даты окончания статуса рабочего пространства
-        [HttpPut("{id}/end-date")]
+        [HttpPut("UpdateEndDate/{id}")]
         public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
         {
             // Поиск статуса рабочего пространства по ID
             var statusWorkspace = await _context.StatusesWorkspaces.FindAsync(id);
             if (statusWorkspace == null)
             {
-                return NotFound(); // Возврат 404, если статус не найден
+                return;
             }
 
             // Обновление даты окончания статуса, если она не указана, устанавливается текущая дата
             statusWorkspace.EndDate = endDate ?? DateOnly.FromDateTime(DateTime.Now);
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
-
-            return NoContent(); // Возврат 204 No Content
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateStatus/{id}")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusWorkspaceDto updatedStatusDto)
         {
             // Проверка на валидность входных данных
@@ -209,7 +207,6 @@ namespace backend.Controllers
             currentStatus.EndDate = updatedStatusDto.EndDate ?? currentStatus.EndDate;
             currentStatus.IdWorkspaceStatusType = updatedStatusDto.IdStatus ?? currentStatus.IdWorkspaceStatusType;
             currentStatus.IdWorker = updatedStatusDto.IdWorker ?? currentStatus.IdWorker;
-
             currentStatus.IdUser = updatedStatusDto.IdUser;
             currentStatus.IdWorkspaceReservationsStatuses = updatedStatusDto.IdWorkspacesReservationsStatuses ?? currentStatus.IdWorkspaceReservationsStatuses; // Обновляем статус бронирования
 
@@ -219,8 +216,8 @@ namespace backend.Controllers
         }
 
         // POST: api/workspaces/create
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateWorkspace([FromBody] WorkspaceDto workspaceDto)
+        [HttpPost("AddWorkspace")]
+        public async Task<IActionResult> AddWorkspace([FromBody] WorkspaceDto workspaceDto)
         {
             if (!ModelState.IsValid)
             {
@@ -242,7 +239,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/workspaces/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteWorkspace/{id}")]
         public IActionResult DeleteWorkspace(int id)
         {
             // Находим рабочее место по ID
@@ -260,6 +257,7 @@ namespace backend.Controllers
 
             return NoContent(); // Возвращаем 204 No Content
         }
+
     }
 }
 
