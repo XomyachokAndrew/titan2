@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ICurrentWorkspace } from '../models/CurrentWorkspace';
 import { IWorkspaceInfoDto, IStatusWorkspaceDto, IWorkspaceDto } from '../models/DTO';
@@ -11,69 +11,75 @@ import { IHistoryWorkspaceStatus } from '../models/HistoryWorkspaceStatus';
   providedIn: 'root'
 })
 export class WorkspaceService {
-  private baseUrl = `${environment.apiUrl}/workspace`;
+  private url = `${environment.apiUrl}/workspace`;
 
   constructor(private http: HttpClient) { }
 
+  // GET: api/workspaces/room/{roomId}
   getWorkspacesByRoom(roomId: number): Observable<ICurrentWorkspace[]> {
-    return this.http.get<ICurrentWorkspace[]>(`${this.baseUrl}/room/${roomId}`)
-      .pipe(
-        catchError(this.handleError<ICurrentWorkspace[]>('getWorkspacesByRoom', []))
-      );
+    const url = `${this.url}/room/${roomId}`;
+    return this.http.get<ICurrentWorkspace[]>(url)
+      .pipe(catchError(this.handleError));
   }
 
+  // GET: api/workspaces/info/{id}
   getWorkspaceInfo(id: number): Observable<IWorkspaceInfoDto> {
-    return this.http.get<IWorkspaceInfoDto>(`${this.baseUrl}/${id}`)
-      .pipe(
-        catchError(this.handleError<IWorkspaceInfoDto>('getWorkspaceInfo'))
-      );
+    const url = `${this.url}/info/${id}`;
+    return this.http.get<IWorkspaceInfoDto>(url)
+      .pipe(catchError(this.handleError));
   }
 
+  // GET: api/workspaces/history/{id}
   getWorkspaceHistory(id: number): Observable<IHistoryWorkspaceStatus[]> {
-    return this.http.get<IHistoryWorkspaceStatus[]>(`${this.baseUrl}/${id}/history`)
-      .pipe(
-        catchError(this.handleError<IHistoryWorkspaceStatus[]>('getWorkspaceHistory', []))
-      );
+    const url = `${this.url}/history/${id}`;
+    return this.http.get<IHistoryWorkspaceStatus[]>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  addStatusWorkspace(statusWorkspaceDto: IStatusWorkspaceDto): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/Create/Status`, statusWorkspaceDto)
-      .pipe(
-        catchError(this.handleError<void>('addStatusWorkspace'))
-      );
+  // POST: api/workspaces/status/add
+  addStatusWorkspace(statusWorkspaceDto: IStatusWorkspaceDto): Observable<any> {
+    const url = `${this.url}/status/add`;
+    return this.http.post(url, statusWorkspaceDto)
+      .pipe(catchError(this.handleError));
   }
 
-  updateEndDate(id: number, endDate?: Date): Observable<void> {
-    const url = `${this.baseUrl}/${id}/end-date`;
-    const body = endDate ? { endDate } : {};
-    return this.http
-      .put<void>(url, body)
-      .pipe(catchError(this.handleError<void>('updateEndDate')));
+  // PUT: api/workspaces/update-end-date/{id}
+  updateEndDate(id: number, endDate?: string): Observable<any> {
+    const url = `${this.url}/update-end-date/${id}`;
+    return this.http.put(url, { endDate })
+      .pipe(catchError(this.handleError));
   }
 
-  updateStatus(id: number, updatedStatusDto: IStatusWorkspaceDto): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}`, updatedStatusDto)
-      .pipe(
-        catchError(this.handleError<void>('updateStatus'))
-      );
+  // PUT: api/workspaces/UpdateStatus/{id}
+  updateStatus(id: number, updatedStatusDto: IStatusWorkspaceDto): Observable<any> {
+    const url = `${this.url}/UpdateStatus/${id}`;
+    return this.http.put(url, updatedStatusDto)
+      .pipe(catchError(this.handleError));
   }
 
-  createWorkspace(workspaceDto: IWorkspaceDto): Observable<void> {
-    return this.http
-      .post<void>(`${this.baseUrl}/create`, workspaceDto)
-      .pipe(catchError(this.handleError<void>('createWorkspace')));
+  // POST: api/workspaces/add
+  addWorkspace(workspaceDto: IWorkspaceDto): Observable<any> {
+    const url = `${this.url}/add`;
+    return this.http.post(url, workspaceDto)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteWorkspace(id: number): Observable<void> {
-    return this.http
-      .delete<void>(`${this.baseUrl}/${id}`)
-      .pipe(catchError(this.handleError<void>('deleteWorkspace')));
+  // DELETE: api/workspaces/delete/{id}
+  deleteWorkspace(id: number): Observable<any> {
+    const url = `${this.url}/delete/${id}`;
+    return this.http.delete(url)
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -1,12 +1,14 @@
-export interface ICurrentWorkspace  {
-    idWorkspace: number;
+export interface ICurrentWorkspace {
+    idWorkspace?: number;
     idRoom?: number;
     workspaceName?: string;
     idWorker?: number;
     fullWorkerName?: string;
     idStatusWorkspace?: number;
-    idStatus?: number;
-    startDate?: string; 
-    endDate?: string;   
-    statusName?: string;
+    idWorkspaceStatusType?: number;
+    workspaceStatusTypeName?: string;
+    idWorkspaceReservationsStatuses?: number;
+    reservationStatuseName?: string;
+    startDate?: string;
+    endDate?: string;
 }

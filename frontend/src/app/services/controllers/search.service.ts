@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -8,23 +8,26 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class SearchService {
-  private apiUrl = `${environment.apiUrl}/search`;
+  private url = `${environment.apiUrl}/search`;
 
   constructor(private http: HttpClient) { }
 
+  // GET: api/search
   searchOffices(query: string): Observable<any> {
     const params = new HttpParams().set('query', query);
-
-    return this.http.get<any>(this.apiUrl, { params })
-      .pipe(
-        catchError(this.handleError<any>('searchOffices'))
-      );
+    return this.http.get<any>(this.url, { params })
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

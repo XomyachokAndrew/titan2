@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IPost } from '../models/Post';
 import { environment } from '../../../environments/environment';
@@ -13,56 +13,48 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
+  // GET: api/posts
   getPosts(): Observable<IPost[]> {
     return this.http.get<IPost[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError<IPost[]>('getPosts', []))
-      );
+      .pipe(catchError(this.handleError));
   }
 
+  // GET: api/posts/{id}
   getPost(id: number): Observable<IPost> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<IPost>(url)
-      .pipe(
-        catchError(this.handleError<IPost>(`getPost id=${id}`))
-      );
+      .pipe(catchError(this.handleError));
   }
 
-  updatePost(post: IPost): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.put(this.apiUrl, post, httpOptions)
-      .pipe(
-        catchError(this.handleError<any>('updatePost'))
-      );
-  }
-
-  addPost(post: IPost): Observable<IPost> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.post<IPost>(this.apiUrl, post, httpOptions)
-      .pipe(
-        catchError(this.handleError<IPost>('addPost'))
-      );
-  }
-
-  deletePost(id: number): Observable<IPost> {
+  // PUT: api/posts/{id}
+  updatePost(id: number, post: IPost): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.delete<IPost>(url, httpOptions)
-      .pipe(
-        catchError(this.handleError<IPost>('deletePost'))
-      );
+    return this.http.put(url, post)
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  // POST: api/posts
+  createPost(post: IPost): Observable<IPost> {
+    return this.http.post<IPost>(this.apiUrl, post)
+      .pipe(catchError(this.handleError));
+  }
+
+  // DELETE: api/posts/{id}
+  deletePost(id: number): Observable<any> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

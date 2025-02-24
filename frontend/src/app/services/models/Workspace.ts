@@ -1,8 +1,9 @@
 import { IStatusesWorkspace } from "./StatusesWorkspace";
 
-export interface IWorkspaceStatusesType {
-    idWorkspaceStatusType: number;
+export interface IWorkspace {
+    idWorkspace: number;
     name: string;
-    descriptions?: string;
+    idRoom: number;
+    isDeleted: boolean;
     statusesWorkspaces?: IStatusesWorkspace[];
 }

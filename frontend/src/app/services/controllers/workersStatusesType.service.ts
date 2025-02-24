@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IWorkersStatusesType } from '../models/WorkersStatusesType';
 import { environment } from '../../../environments/environment';
@@ -13,56 +13,48 @@ export class WorkersStatusesTypeService {
 
   constructor(private http: HttpClient) { }
 
+  // GET: api/workersstatestypes
   getWorkersStatusesTypes(): Observable<IWorkersStatusesType[]> {
     return this.http.get<IWorkersStatusesType[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError<IWorkersStatusesType[]>('getWorkersStatusesTypes', []))
-      );
+      .pipe(catchError(this.handleError));
   }
 
+  // GET: api/workersstatestypes/{id}
   getWorkersStatusesType(id: number): Observable<IWorkersStatusesType> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<IWorkersStatusesType>(url)
-      .pipe(
-        catchError(this.handleError<IWorkersStatusesType>(`getWorkersStatusesType id=${id}`))
-      );
+      .pipe(catchError(this.handleError));
   }
 
-  updateWorkersStatusesType(workersStatusesType: IWorkersStatusesType): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.put(this.apiUrl, workersStatusesType, httpOptions)
-      .pipe(
-        catchError(this.handleError<any>('updateWorkersStatusesType'))
-      );
-  }
-
-  addWorkersStatusesType(workersStatusesType: IWorkersStatusesType): Observable<IWorkersStatusesType> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.post<IWorkersStatusesType>(this.apiUrl, workersStatusesType, httpOptions)
-      .pipe(
-        catchError(this.handleError<IWorkersStatusesType>('addWorkersStatusesType'))
-      );
-  }
-
-  deleteWorkersStatusesType(id: number): Observable<IWorkersStatusesType> {
+  // PUT: api/workersstatestypes/{id}
+  updateWorkersStatusesType(id: number, workersStatusesType: IWorkersStatusesType): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.delete<IWorkersStatusesType>(url, httpOptions)
-      .pipe(
-        catchError(this.handleError<IWorkersStatusesType>('deleteWorkersStatusesType'))
-      );
+    return this.http.put(url, workersStatusesType)
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  // POST: api/workersstatestypes
+  createWorkersStatusesType(workersStatusesType: IWorkersStatusesType): Observable<IWorkersStatusesType> {
+    return this.http.post<IWorkersStatusesType>(this.apiUrl, workersStatusesType)
+      .pipe(catchError(this.handleError));
+  }
+
+  // DELETE: api/workersstatestypes/{id}
+  deleteWorkersStatusesType(id: number): Observable<any> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

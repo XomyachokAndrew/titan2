@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = `${environment.apiUrl}/user`;
+  private url = `${environment.apiUrl}/user`;
   private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
@@ -21,7 +21,7 @@ export class UserService {
   }
 
   login(loginDto: IUserLoginDto): Observable<any> {
-    return this.http.post<ILoginResponse>(`${this.apiUrl}/login`, loginDto)
+    return this.http.post<ILoginResponse>(`${this.url}/login`, loginDto)
       .pipe(
         tap(response => {
           console.log(response.token);
@@ -44,14 +44,14 @@ export class UserService {
   }
 
   register(registrationDto: IUserRegistrationDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, registrationDto)
+    return this.http.post(`${this.url}/register`, registrationDto)
       .pipe(
         catchError(this.handleError<any>('register'))
       );
   }
 
   refreshToken(refreshTokenDto: IRefreshTokenDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/refresh-token`, refreshTokenDto)
+    return this.http.post(`${this.url}/refresh-token`, refreshTokenDto)
       .pipe(
         catchError(this.handleError<any>('refreshToken'))
       );

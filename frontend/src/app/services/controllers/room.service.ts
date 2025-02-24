@@ -1,76 +1,68 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IRoom } from '../models/Room';
 import { environment } from '../../../environments/environment';
+import { IRoomDto } from '../models/DTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoomService {
-  private apiUrl = `${environment.apiUrl}/rooms`;
+  private url = `${environment.apiUrl}/rooms`;
 
   constructor(private http: HttpClient) { }
 
-   getRoomsByFloorId(id: number): Observable<IRoom[]> {
-    const url = `${this.apiUrl}/floor/${id}`;
+  // GET: api/rooms/floor/{id}
+  getRoomsByFloorId(id: number): Observable<IRoom[]> {
+    const url = `${this.url}/floor/${id}`;
     return this.http.get<IRoom[]>(url)
-      .pipe(
-        catchError(this.handleError<IRoom[]>('getRoomsByFloorId', []))
-      );
+      .pipe(catchError(this.handleError));
   }
 
+  // GET: api/rooms
   getRooms(): Observable<IRoom[]> {
-    return this.http.get<IRoom[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError<IRoom[]>('getRooms', []))
-      );
+    return this.http.get<IRoom[]>(this.url)
+      .pipe(catchError(this.handleError));
   }
 
-  getRoom(id: number): Observable<IRoom> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<IRoom>(url)
-      .pipe(
-        catchError(this.handleError<IRoom>(`getRoom id=${id}`))
-      );
+  // GET: api/rooms/{id}
+  getRoom(id: number): Observable<IRoomDto> {
+    const url = `${this.url}/${id}`;
+    return this.http.get<IRoomDto>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  updateRoom(room: IRoom): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.put(this.apiUrl, room, httpOptions)
-      .pipe(
-        catchError(this.handleError<any>('updateRoom'))
-      );
+  // PUT: api/rooms/{id}
+  updateRoom(id: number, room: IRoom): Observable<any> {
+    const url = `${this.url}/${id}`;
+    return this.http.put(url, room)
+      .pipe(catchError(this.handleError));
   }
 
-  addRoom(room: IRoom): Observable<IRoom> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.post<IRoom>(this.apiUrl, room, httpOptions)
-      .pipe(
-        catchError(this.handleError<IRoom>('addRoom'))
-      );
+  // POST: api/rooms
+  createRoom(room: IRoom): Observable<IRoom> {
+    return this.http.post<IRoom>(this.url, room)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteRoom(id: number): Observable<IRoom> {
-    const url = `${this.apiUrl}/${id}`;
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.delete<IRoom>(url, httpOptions)
-      .pipe(
-        catchError(this.handleError<IRoom>('deleteRoom'))
-      );
+  // DELETE: api/rooms/{id}
+  deleteRoom(id: number): Observable<any> {
+    const url = `${this.url}/${id}`;
+    return this.http.delete(url)
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

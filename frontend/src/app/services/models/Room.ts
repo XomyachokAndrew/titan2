@@ -1,3 +1,5 @@
+import { IWorkspace } from "./Workspace";
+
 export interface IRoom {
     idRoom: number;
     name: string;
@@ -5,4 +7,5 @@ export interface IRoom {
     idFloor: number;
     square?: number;
     idRoomStatus?: number;
+    workspaces?: IWorkspace[];
 }

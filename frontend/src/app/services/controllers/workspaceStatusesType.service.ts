@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IWorkspaceStatusesType } from '../models/WorkspaceStatusesType';
 import { environment } from '../../../environments/environment';
@@ -9,49 +9,52 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class WorkspaceStatusesTypeService {
-  private baseUrl = `${environment.apiUrl}/WorkspaceStatusesTypes`;
+  private url = `${environment.apiUrl}/WorkspaceStatusesTypes`;
 
   constructor(private http: HttpClient) { }
 
+  // GET: api/workspacestatusestypes
   getWorkspaceStatusesTypes(): Observable<IWorkspaceStatusesType[]> {
-    return this.http.get<IWorkspaceStatusesType[]>(this.baseUrl)
-      .pipe(
-        catchError(this.handleError<IWorkspaceStatusesType[]>('getWorkspaceStatusesTypes', []))
-      );
+    return this.http.get<IWorkspaceStatusesType[]>(this.url)
+      .pipe(catchError(this.handleError));
   }
 
+  // GET: api/workspacestatusestypes/{id}
   getWorkspaceStatusesType(id: number): Observable<IWorkspaceStatusesType> {
-    return this.http.get<IWorkspaceStatusesType>(`${this.baseUrl}/${id}`)
-      .pipe(
-        catchError(this.handleError<IWorkspaceStatusesType>('getWorkspaceStatusesType'))
-      );
+    const url = `${this.url}/${id}`;
+    return this.http.get<IWorkspaceStatusesType>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  updateWorkspaceStatusesType(id: number, workspaceStatusesType: IWorkspaceStatusesType): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}`, workspaceStatusesType)
-      .pipe(
-        catchError(this.handleError<void>('updateWorkspaceStatusesType'))
-      );
+  // PUT: api/workspacestatusestypes/{id}
+  updateWorkspaceStatusesType(id: number, workspaceStatusesType: IWorkspaceStatusesType): Observable<any> {
+    const url = `${this.url}/${id}`;
+    return this.http.put(url, workspaceStatusesType)
+      .pipe(catchError(this.handleError));
   }
 
-  addWorkspaceStatusesType(workspaceStatusesType: IWorkspaceStatusesType): Observable<IWorkspaceStatusesType> {
-    return this.http.post<IWorkspaceStatusesType>(this.baseUrl, workspaceStatusesType)
-      .pipe(
-        catchError(this.handleError<IWorkspaceStatusesType>('addWorkspaceStatusesType'))
-      );
+  // POST: api/workspacestatusestypes
+  createWorkspaceStatusesType(workspaceStatusesType: IWorkspaceStatusesType): Observable<IWorkspaceStatusesType> {
+    return this.http.post<IWorkspaceStatusesType>(this.url, workspaceStatusesType)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteWorkspaceStatusesType(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`)
-      .pipe(
-        catchError(this.handleError<void>('deleteWorkspaceStatusesType'))
-      );
+  // DELETE: api/workspacestatusestypes/{id}
+  deleteWorkspaceStatusesType(id: number): Observable<any> {
+    const url = `${this.url}/${id}`;
+    return this.http.delete(url)
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { IFloorDto } from '../models/DTO';
@@ -9,26 +9,33 @@ import { IFloorDto } from '../models/DTO';
   providedIn: 'root'
 })
 export class FloorService {
-  private apiUrl = `${environment.apiUrl}/floors`;
+  private url = `${environment.apiUrl}/floors`;
 
   constructor(private http: HttpClient) { }
 
+  // GET: api/floors/office/{id}
   getFloorsByOfficeId(id: number): Observable<IFloorDto[]> {
-    const url = `${this.apiUrl}/office/${id}`;
+    const url = `${this.url}/office/${id}`;
     return this.http.get<IFloorDto[]>(url)
-      .pipe(
-        catchError(this.handleError<IFloorDto[]>('getFloorsByOfficeId', []))
-      );
+      .pipe(catchError(this.handleError));
   }
 
-  getFloorById(id: number): Observable<IFloorDto> {
-    return this.http.get<IFloorDto>(`${this.apiUrl}/${id}`);
+  // GET: api/floors/{id}
+  getFloor(id: number): Observable<IFloorDto> {
+    const url = `${this.url}/${id}`;
+    return this.http.get<IFloorDto>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

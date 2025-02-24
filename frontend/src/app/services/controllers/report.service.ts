@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -12,24 +12,22 @@ export class ReportService {
 
   constructor(private http: HttpClient) { }
 
-  getRentalCost(officeId: number, reportTypeId: number, idUser: number): Observable<Blob> {
-    const params = new HttpParams()
-      .set('officeId', officeId.toString())
-      .set('reportTypeId', reportTypeId.toString())
-      .set('idUser', idUser.toString());
-
-    const headers = new HttpHeaders().set('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-    return this.http.get<Blob>(`${this.apiUrl}/${reportTypeId}/${officeId}`, { params, headers, responseType: 'blob' as 'json' })
-      .pipe(
-        catchError(this.handleError<Blob>('getRentalCost'))
-      );
+  // GET: api/report/{reportTypeId}/{officeId}
+  getRentalCost(reportTypeId: number, officeId: number, idUser: number): Observable<Blob> {
+    const url = `${this.apiUrl}/${reportTypeId}/${officeId}?idUser=${idUser}`;
+    return this.http.get(url, { responseType: 'blob' })
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }
