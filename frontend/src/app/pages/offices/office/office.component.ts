@@ -6,7 +6,7 @@ import {
   inject
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Subscription } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FloorService } from '../../../services/controllers/floor.service';
 import { OfficeService } from '../../../services/controllers/office.service';
@@ -34,7 +34,6 @@ export class OfficeComponent implements OnInit {
   //#region Variables
   isLoading: boolean = true;
   id!: number;
-  private subscription: Subscription;
   private destroyRef = inject(DestroyRef);
   //#region Pagination
   currentPage: number = 0;
@@ -53,11 +52,7 @@ export class OfficeComponent implements OnInit {
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
     private officeService: OfficeService,
-  ) {
-    this.subscription = activateRoute.params
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(params => this.id = params["id"]);
-  }
+  ) { }
 
   ngOnInit() {
     this.id = this.activateRoute.snapshot.params['id'];
@@ -82,19 +77,19 @@ export class OfficeComponent implements OnInit {
         })
       ),
     }).pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe({
-      next: ({office, floors}) => {
-        if (office) {
-          this.dataOffice = office;
+      .subscribe({
+        next: ({ office, floors }) => {
+          if (office) {
+            this.dataOffice = office;
+          }
+          this.dataFloors = floors;
+          this.totalFloors = floors.length
+          if (this.totalFloors > 0) {
+            this.loadFloor(floors[this.currentPage].idFloor);
+          }
+          this.isLoading = false;
         }
-        this.dataFloors = floors;
-        this.totalFloors = floors.length
-        if (this.totalFloors > 0) {
-          this.loadFloor(floors[this.currentPage].idFloor);
-        }
-        this.isLoading = false;
-      }
-    })
+      })
   }
 
   loadFloor(id: number) {
