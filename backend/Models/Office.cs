@@ -17,11 +17,11 @@ public partial class Office
 
     public string? Image { get; set; }
 
-    public int? TotalWorkspace { get; set; }
+    public int TotalWorkspace { get; set; }
 
     public string City { get; set; } = null!;
 
-    public int? FreeWorkspaces { get; set; }
+    public int FreeWorkspaces { get; set; }
 
     public virtual ICollection<Floor> Floors { get; set; } = new List<Floor>();
 
