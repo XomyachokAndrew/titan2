@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,10 +41,6 @@
     <None Include="wwwroot\resources\offices\office1.jpg" />
     <None Include="wwwroot\resources\offices\office2.jpeg" />
     <None Include="wwwroot\resources\offices\office3.jpg" />
-    <None Include="wwwroot\resources\reports\Отчет_Бизнес-центр_Сити_20250206_12_08.xlsx" />
-    <None Include="wwwroot\resources\reports\Отчет_Бизнес-центр_Сити_20250206_12_09.xlsx" />
-    <None Include="wwwroot\resources\reports\Отчет_Бизнес-центр_Сити_20250207_1141.xlsx" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
