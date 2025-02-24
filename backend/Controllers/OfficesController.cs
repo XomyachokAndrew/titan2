@@ -2,9 +2,6 @@
 using backend.ModelsDto;
 using MathNet.Numerics.Statistics.Mcmc;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
@@ -50,40 +47,6 @@ namespace backend.Controllers
             }).ToList();
 
             return Ok(offices);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OfficeDto>> GetOffice(int id)
-        {
-            var baseImageUrl = $"{Request.Scheme}://{Request.Host}/resources/offices/";
-
-            var office = await _context.Offices
-                .Select(o => new OfficeDto
-                {
-                    IdOffice = o.IdOffice,
-                    OfficeName = o.OfficeName,
-                    Address = o.Address,
-                    OccupiedWorkspaces = _context.CurrentWorkspaces
-                    .Where(w => w.IdWorker != null
-                        && w.IdRoom != null)
-                    .Count(w => o.Floors
-                        .SelectMany(f => f.Rooms)
-                        .Select(r => r.IdRoom)
-                        .Contains(w.IdRoom.Value)
-                    ),
-                    ImageUrl = $"{baseImageUrl}{o.Image}",
-                    Square = o.Square,
-                    TotalWorkspace = o.TotalWorkspace,
-                    Density = o.TotalWorkspace != 0 ? Math.Round((decimal)o.Square / (decimal)o.TotalWorkspace, 2) : 0
-                })
-                .FirstOrDefaultAsync(o => o.IdOffice == id);
-
-            if (office == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(office);
         }
     }
 }
