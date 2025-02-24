@@ -1,7 +1,10 @@
 ﻿using backend.Data;
+using backend.Models;
 using backend.ModelsDto;
 using MathNet.Numerics.Statistics.Mcmc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
@@ -14,6 +17,19 @@ namespace backend.Controllers
         public OfficesController(Context context, HttpClient httpClient)
         {
             _context = context;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Office>> GetOfficeById(int id)
+        {
+            var office = await _context.Offices.FirstOrDefaultAsync(o => o.IdOffice == id);
+
+            if (office == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(office);
         }
 
         [HttpGet]
