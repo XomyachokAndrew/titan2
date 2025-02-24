@@ -330,7 +330,6 @@ export class ModalComponent {
         );
         if (selectedWorker) {
           this.selectedWorkerId = selectedWorker.idWorker
-          console.log('Worker ', this.selectedWorkerId);
         }
       }
     });
@@ -340,7 +339,6 @@ export class ModalComponent {
         const selectedPost = this.posts.find(post => post.name === selectedValue);
         if (selectedPost) {
           this.selectedPostId = selectedPost.idPost;
-          // console.log('Post ', this.selectedPostId);
         }
       }
     });
@@ -350,7 +348,6 @@ export class ModalComponent {
         const selectedDepartment = this.departments.find(department => department.name === selectedValue);
         if (selectedDepartment) {
           this.selectedDepartmentId = selectedDepartment.idDepartment;
-          // console.log('Department ', this.selectedDepartmentId);
         }
       }
     });
