@@ -24,6 +24,10 @@ export class OfficesComponent implements OnInit {
   constructor(private officeService: OfficeService) { }
 
   ngOnInit(): void {
+    this.loadOffices()
+  }
+
+  loadOffices() {
     this.officeService.getOffices()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
