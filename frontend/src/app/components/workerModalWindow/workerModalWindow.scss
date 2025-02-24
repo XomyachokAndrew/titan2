@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.5005rem;
+  background: #d9d9d9;
+  box-shadow: 0px 3.201px 3.201px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12.003968238830566px);
+  height: 25rem;
+  padding: 2.25rem 1.25rem;
+  gap: 15px;
+}
+
+.custom-input {
+  width: 35rem;
+  padding-top: 15px;
+  --tui-font-text-m: normal 1rem / 0.5rem 'MyriadPro-r';
+  --tui-radius-m: 0.75rem;
+  --tui-text-secondary: black;
+  --tui-background-accent-1: black;
+  --tui-background-base: white;
+  --tui-padding-l: 2rem;
+}
+
+.worker-info {
+    padding-bottom: 20px;
+    gap: 10px;
+    padding-left: 140px;
+}
+
+.submit {
+  color: #419c41;
+}
+
+.clear {
+  color: #9c4141;
+}
+
+.button-container {
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
