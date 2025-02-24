@@ -10,7 +10,7 @@ namespace backend.ModelsDto
         public string? SchemeContent { get; set; }
         public int IdOffice { get; set; }
         public int? Square { get; set; }
-        public int OccupiedWorkspaces { get; set; }
+        public int FreeWorkspaces { get; set; }
         public int ReservedWorkspaces { get; set; }
         public ICollection<RoomDto> Rooms { get; set; } = new List<RoomDto>();
     }

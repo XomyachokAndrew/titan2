@@ -30,14 +30,13 @@ namespace backend.Controllers
                 IdOffice = o.IdOffice,
                 OfficeName = o.OfficeName,
                 Address = o.Address,
-                // Количество занятых рабочих мест
-                OccupiedWorkspaces = _context.CurrentWorkspaces
-                    .Where(w => w.IdWorker != null)
-                    .Count(w => o.Floors
-                        .SelectMany(f => f.Rooms)
-                        .Select(r => r.IdRoom)
-                        .Contains(w.IdRoom.Value)
-                    ),
+                City = o.City,
+                // Формируем полный URL для изображения
+                ImageUrl = $"{baseImageUrl}{o.Image}",
+                Square = o.Square,
+                TotalWorkspace = o.TotalWorkspace,
+                // Количество свободных рабочих мест
+                FreeWorkspaces = o.FreeWorkspaces,
                 // Количество зарезервированных рабочих мест
                 ReservedWorkspaces = _context.CurrentWorkspaces
                     .Where(w => w.IdWorker == null && w.StartDate <= DateOnly.FromDateTime(DateTime.Now)
@@ -47,10 +46,6 @@ namespace backend.Controllers
                         .Select(r => r.IdRoom)
                         .Contains(w.IdRoom.Value)
                     ),
-                // Формируем полный URL для изображения
-                ImageUrl = $"{baseImageUrl}{o.Image}",
-                Square = o.Square,
-                TotalWorkspace = o.TotalWorkspace,
                 Density = o.TotalWorkspace != 0 ? Math.Round((decimal)o.Square / (decimal)o.TotalWorkspace, 2) : 0
             }).ToList();
 

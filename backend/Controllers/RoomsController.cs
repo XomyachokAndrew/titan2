@@ -1,5 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.ModelsDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,17 +42,36 @@ namespace backend.Controllers
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        public async Task<ActionResult<RoomDto>> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var currentDate = DateOnly.FromDateTime(DateTime.Now);
 
-            if (room == null)
+            // Используем проекцию для получения необходимых данных
+            var roomDto = await _context.Rooms
+                .Where(r => r.IdRoom == id)
+                .Select(r => new RoomDto
+                {
+                    IdRoom = r.IdRoom,
+                    Name = r.Name,
+                    TotalWorkspace = r.TotalWorkspace,
+                    Square = r.Square,
+                    FreeWorkspace = r.Workspaces.Count(ws => !ws.StatusesWorkspaces.Any(s =>
+                        (s.StartDate <= currentDate) &&
+                        (s.EndDate > currentDate || s.EndDate == null) &&
+                        (s.IdWorker != null ||
+                         s.IdWorkspaceStatusType != null ||
+                         s.IdWorkspaceReservationsStatuses != null)))
+                })
+                .FirstOrDefaultAsync();
+
+            if (roomDto == null)
             {
                 return NotFound();
             }
 
-            return room;
+            return roomDto;
         }
+
 
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
