@@ -1,5 +1,6 @@
 ﻿using backend.Data;
 using backend.Models;
+using backend.ModelsDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,10 @@ namespace backend.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Получает список всех работников.
+        /// </summary>
+        /// <returns>Список объектов <see cref="WorkerDetail"/>.</returns>
         // GET: api/Workers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkerDetail>>> GetWorkers()
@@ -24,6 +29,11 @@ namespace backend.Controllers
             return await _context.WorkerDetails.ToListAsync();
         }
 
+        /// <summary>
+        /// Получает конкретного работника по ID.
+        /// </summary>
+        /// <param name="id">ID работника для получения.</param>
+        /// <returns>Объект <see cref="WorkerDetail"/>, если найден; иначе 404 Not Found.</returns>
         // GET: api/Workers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<WorkerDetail>> GetWorker(int id)
@@ -39,8 +49,14 @@ namespace backend.Controllers
             return Ok(workerDetail); // Возвращаем 200 и детали рабочего
         }
 
+        /// <summary>
+        /// Обновляет данные конкретного работника.
+        /// </summary>
+        /// <param name="id">ID работника для обновления.</param>
+        /// <param name="workerDto">Обновленные данные работника.</param>
+        /// <returns>204 No Content, если успешно; иначе 400 Bad Request или 404 Not Found.</returns>
         // Метод для обновления данных работника
-        [HttpPut("UpdateWorker/{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateWorker(int id, [FromBody] WorkerDto workerDto)
         {
             // Проверка на валидность входных данных
@@ -70,11 +86,16 @@ namespace backend.Controllers
             // Обновление отчества, если оно передано (может быть null)
             worker.Patronymic = workerDto.Patronymic; // Устанавливаем значение, даже если оно null
 
-            await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
+            await _context.SaveChangesAsync();
 
-            return NoContent(); // Возврат 204 No Content
+            return NoContent();
         }
 
+        /// <summary>
+        /// Добавляет статус для конкретного работника.
+        /// </summary>
+        /// <param name="statusWorkerDto">Данные статуса для добавления.</param>
+        /// <returns>200 OK, если успешно; иначе 400 Bad Request.</returns>
         // Метод для добавления статуса рабочего
         [HttpPost("status/add")]
         public async Task<IActionResult> AddStatusWorker(StatusWorkerDto statusWorkerDto)
@@ -88,12 +109,7 @@ namespace backend.Controllers
             // Проверка на корректность дат
             if (statusWorkerDto.EndDate <= statusWorkerDto.StartDate)
             {
-                return BadRequest("End date must be greater than start date.");
-            }
-
-            if (statusWorkerDto.IdPost != null && statusWorkerDto.IdDepartment != null)
-            {
-
+                return BadRequest("Дата окончания должна быть больше даты начала.");
             }
 
             // Создание нового статуса рабочего
@@ -108,8 +124,8 @@ namespace backend.Controllers
                 IdStatus = statusWorkerDto.IdStatus // Добавляем статус
             };
 
-            _context.StatusesWorkers.Add(statusWorker); // Добавление статуса в контекст
-            await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
+            _context.StatusesWorkers.Add(statusWorker);
+            await _context.SaveChangesAsync();
 
             // Проверка на существование статуса рабочего
             var status = await _context.StatusesWorkers.FindAsync(statusWorkerDto.IdStatusWorker);
@@ -119,9 +135,15 @@ namespace backend.Controllers
                 await UpdateEndDate(statusWorkerDto.IdStatusWorker, statusWorker.StartDate);
             }
 
-            return Ok(); // Возврат успешного ответа
+            return Ok();
         }
 
+        /// <summary>
+        /// Обновляет дату окончания статуса конкретного работника.
+        /// </summary>
+        /// <param name="id">ID статуса для обновления.</param>
+        /// <param name="endDate">Новая дата окончания; если null, будет использована текущая дата.</param>
+        /// <returns>204 No Content, если успешно; иначе 404 Not Found.</returns>
         // Метод для обновления даты окончания статуса рабочего
         [HttpPut("update-end-date/{id}")]
         public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
@@ -130,16 +152,22 @@ namespace backend.Controllers
             var statusWorker = await _context.StatusesWorkers.FindAsync(id);
             if (statusWorker == null)
             {
-                return NotFound(); // Возврат 404, если статус не найден
+                return NotFound();
             }
 
             // Обновление даты окончания статуса, если она не указана, устанавливается текущая дата
             statusWorker.EndDate = endDate ?? DateOnly.FromDateTime(DateTime.Now);
-            await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
+            await _context.SaveChangesAsync();
 
-            return NoContent(); // Возврат 204 No Content
+            return NoContent();
         }
 
+        /// <summary>
+        /// Обновляет статус конкретного работника.
+        /// </summary>
+        /// <param name="id">ID статуса для обновления.</param>
+        /// <param name="updatedStatusDto">Обновленные данные статуса.</param>
+        /// <returns>204 No Content, если успешно; иначе 400 Bad Request или 404 Not Found.</returns>
         // Метод для обновления статуса рабочего
         [HttpPut("status/update/{id}")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusWorkerDto updatedStatusDto)
@@ -160,7 +188,7 @@ namespace backend.Controllers
             // Проверка на корректность дат
             if (updatedStatusDto.EndDate <= updatedStatusDto.StartDate)
             {
-                return BadRequest("End date must be greater than start date.");
+                return BadRequest("Дата окончания должна быть больше даты начала.");
             }
 
             // Обновление даты окончания предыдущего статуса, если дата начала нового статуса отличается
@@ -202,10 +230,16 @@ namespace backend.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Добавляет нового работника.
+        /// </summary>
+        /// <param name="workerDto">Данные работника для добавления.</param>
+        /// <returns>200 OK, если успешно; иначе 400 Bad Request.</returns>
         // Метод для добавления рабочего
         [HttpPost("add")]
         public async Task<IActionResult> AddWorker([FromBody] WorkerDto workerDto)
         {
+            // Проверка на валидность модели
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -222,9 +256,14 @@ namespace backend.Controllers
             await _context.Workers.AddAsync(worker);
             await _context.SaveChangesAsync();
 
-            return Ok(); // Возврат успешного ответа
+            return Ok(); // Возвращаем 200 OK после успешного добавления
         }
 
+        /// <summary>
+        /// Удаляет конкретного работника по ID (мягкое удаление).
+        /// </summary>
+        /// <param name="id">ID работника для удаления.</param>
+        /// <returns>204 No Content, если успешно; иначе 404 Not Found.</returns>
         // DELETE: api/Workers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorker(int id)
@@ -232,38 +271,14 @@ namespace backend.Controllers
             var worker = await _context.Workers.FindAsync(id);
             if (worker == null)
             {
-                return NotFound();
+                return NotFound(); // Возвращаем 404, если работник не найден
             }
 
-            // Устанавливаем статус IsDeleted на true   
+            // Устанавливаем статус IsDeleted на true для мягкого удаления
             worker.IsDeleted = true;
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool WorkerExists(int id)
-        {
-            return _context.Workers.Any(e => e.IdWorker == id);
-        }
-
-        public class StatusWorkerDto
-        {
-            public int IdStatusWorker { get; set; }
-            public int IdWorker { get; set; }
-            public DateOnly? StartDate { get; set; }
-            public DateOnly? EndDate { get; set; }
-            public int IdPost { get; set; }
-            public int IdDepartment { get; set; }
-            public int IdUser { get; set; }
-            public int? IdStatus { get; set; }
-        }
-
-        public class WorkerDto
-        {
-            public string Name { get; set; }
-            public string Surname { get; set; }
-            public string? Patronymic { get; set; }
+            return NoContent(); // Возвращаем 204 No Content после успешного удаления
         }
     }
 }
