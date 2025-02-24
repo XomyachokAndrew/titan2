@@ -1,7 +1,9 @@
 ﻿using backend.Data;
+using backend.Models;
 using backend.ModelsDto;
 using MathNet.Numerics.Statistics.Mcmc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
@@ -14,6 +16,13 @@ namespace backend.Controllers
         public OfficesController(Context context, HttpClient httpClient)
         {
             _context = context;
+        }
+
+        [HttpGet("{id}")]
+        public Office GetOfficeById(int idOffice)
+        {
+            return _context.Offices
+                .FirstOrDefault(o => o.IdOffice == idOffice);
         }
 
         [HttpGet]
