@@ -16,16 +16,43 @@
   --tui-padding-l: 2rem;
 }
 
+.custom-select {
+  width: 30rem;
+  padding-top: 15px;
+  --tui-font-text-m: normal 1rem / 0.5rem 'MyriadPro-r';
+  --tui-radius-m: 0.75rem;
+  --tui-text-secondary: black;
+  --tui-background-accent-1: black;
+  --tui-background-base: white;
+  --tui-padding-l: 2rem;
+}
+
+.scroll {
+  block-size: 8.5rem;
+}
+
 .create-worker {
   padding-bottom: 15px;
 }
 
 .submit {
   color: #419c41;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    color: #337533;
+  }
 }
 
 .clear {
   color: #9c4141;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+  color: #6e2c2c;
+  }
 }
 
 .button-container {

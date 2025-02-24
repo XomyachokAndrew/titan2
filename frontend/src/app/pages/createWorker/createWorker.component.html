@@ -13,17 +13,33 @@
       Отчество:
       <input tuiTextfieldLegacy />
     </tui-input>
-    <tui-input class="H2 MP-SB custom-input" formControlName="position">
-      Должность:
-      <input tuiTextfieldLegacy />
-    </tui-input>
-    <tui-input class="H2 MP-SB custom-input" formControlName="organization">
-      Организация:
-      <input tuiTextfieldLegacy />
-    </tui-input>
+    <tui-select class="P MP-R custom-select" tuiTextfieldSize="l"
+      formControlName="position">
+      Должность
+      <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+        <tui-data-list>
+          <button *cdkVirtualFor="let item of departments" tuiOption type="button" [value]="item.name"
+            id="{{item.idDepartment}}">
+            {{item.name}}
+          </button>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-select>
+    <tui-select class="P MP-R custom-select" tuiTextfieldSize="l"
+      formControlName="organization">
+      Организация
+      <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+        <tui-data-list>
+          <button *cdkVirtualFor="let item of departments" tuiOption type="button" [value]="item.name"
+            id="{{item.idDepartment}}">
+            {{item.name}}
+          </button>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-select>
     <div class="button-container">
-      <span class="P MP-R submit"> Создать </span>
-      <span class="P MP-R clear">Очистить </span>
+      <span class="P MP-R submit">Создать</span>
+      <span class="P MP-R clear">Очистить</span>
     </div>
   </form>
 </div>
