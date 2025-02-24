@@ -3,6 +3,7 @@ using backend.Models;
 using backend.ModelsDto;
 using MathNet.Numerics.Statistics.Mcmc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
@@ -19,10 +20,16 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id}")]
-        public Office GetOfficeById(int idOffice)
+        public async Task<ActionResult<Office>> GetOfficeById(int id)
         {
-            return _context.Offices
-                .FirstOrDefault(o => o.IdOffice == idOffice);
+            var office = await _context.Offices.FirstOrDefaultAsync(o => o.IdOffice == id);
+
+            if (office == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(office);
         }
 
         [HttpGet]
