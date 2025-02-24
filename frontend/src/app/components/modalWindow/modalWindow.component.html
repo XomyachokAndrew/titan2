@@ -22,6 +22,7 @@
   <div class="workspace">
     <form [formGroup]="form" action="" method="POST">
       <div class="workspase-worker">
+        <input type="hidden" formControlName="idWorkspace">
         <input type="hidden" formControlName="idStatusWorkspace">
         <span class="H3 MP-R workspace-name">Рабочее место</span>
         <span class="P MP-R employes-data">Данные сотрудника</span>
@@ -32,10 +33,8 @@
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
               <button *cdkVirtualFor="let item of workers" tuiOption type="button"
-                [value]="item.surname + ' ' + item.name + ' ' + item.patronymic" [id]="item.idWorker">
-                {{item.surname}}
-                {{item.name}}
-                {{item.patronymic}}
+                [value]="item.fullWorkerName" [id]="item.idWorker">
+                {{item.fullWorkerName}}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>

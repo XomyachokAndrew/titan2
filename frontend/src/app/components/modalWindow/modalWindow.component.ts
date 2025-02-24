@@ -32,7 +32,7 @@ import { WorkspaceService } from '../../services/controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
-import { IStatusWorkspaceDto } from '../../services/models/DTO';
+import { IRoomDto, IStatusWorkspaceDto } from '../../services/models/DTO';
 import { IHistoryWorkspaceStatus } from '../../services/models/HistoryWorkspaceStatus';
 import { DatePipe } from '@angular/common';
 import {
@@ -48,6 +48,7 @@ import { DepartmentService } from '../../services/controllers/department.service
 import { IDepartment } from '../../services/models/Department';
 import { WorkersStatusesTypeService } from '../../services/controllers/workersStatusesType.service';
 import { IWorkersStatusesType } from '../../services/models/WorkersStatusesType';
+import { IWorkerDetail } from '../../services/models/WorkerDetail';
 //#endregion
 @Component({
   standalone: true,
@@ -85,9 +86,9 @@ export class ModalComponent {
   selectedDepartmentId: number = 0;
   selectedStatusId: number = 0;
   //#region Use Interfaces
-  protected value: IRoom | null = null;
+  protected value: IRoomDto | null = null;
   protected workspaces!: ICurrentWorkspace[];
-  protected workers!: IWorker[];
+  protected workers!: IWorkerDetail[];
   protected posts!: IPost[];
   protected departments!: IDepartment[];
   protected historyWorkspace!: IHistoryWorkspaceStatus[];
@@ -106,6 +107,7 @@ export class ModalComponent {
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
+      idWorkspace: [{ value: 0 }],
       idStatusWorkspace: [{ value: 0 }],
       worker: [{ value: '', disabled: true }, Validators.required], // Для работника
       position: [{ value: '', disabled: true }], // Для менеджера
@@ -128,9 +130,9 @@ export class ModalComponent {
   //#endregion
 
   //#region DialogData
-  public readonly context = injectContext<TuiDialogContext<IRoom, IRoom>>();
+  public readonly context = injectContext<TuiDialogContext<IRoomDto, IRoomDto>>();
 
-  protected get data(): IRoom {
+  protected get data(): IRoomDto {
     return this.context.data;
   }
 
@@ -234,11 +236,12 @@ export class ModalComponent {
             const startDate = this.parseDateString(workspace.startDate);
             const endDate = workspace.endDate ? this.parseDateString(workspace.endDate) : startDate;
             this.form.patchValue({
+              idWorkspace: id,
               idStatusWorkspace: workspace.idStatusWorkspace,
               idWorker: workspace.idWorker,
-              worker: data.workerDetails.fullWorkerName,
-              position: data.workerDetails.postName,
-              organization: data.workerDetails.departmentName,
+              worker: data.workerDetails?.fullWorkerName,
+              position: data.workerDetails?.postName,
+              organization: data.workerDetails?.departmentName,
               status: data.statusName,
               dateRange: new TuiDayRange(
                 startDate,
@@ -326,7 +329,7 @@ export class ModalComponent {
     this.form.get('worker')?.valueChanges.subscribe({
       next: (selectedValue) => {
         const selectedWorker = this.workers.find(worker =>
-          `${worker.surname} ${worker.name} ${worker.patronymic}` === selectedValue
+          `${worker.fullWorkerName}` === selectedValue
         );
         if (selectedWorker) {
           this.selectedWorkerId = selectedWorker.idWorker
@@ -371,10 +374,11 @@ export class ModalComponent {
     const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
     let endDate: string | null = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
     if (startDate === endDate) {
-      endDate = null;
+      endDate = '';
     }
 
     const workspaceData: IStatusWorkspaceDto = {
+      idWorkspace: formData.idWorkspace,
       startDate: startDate,
       endDate: endDate,
       idStatusWorkspace: formData.idStatusWorkspace,

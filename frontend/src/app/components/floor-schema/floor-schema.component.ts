@@ -2,8 +2,7 @@
 import { ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { SafeHtmlPipe } from '../../services/safe-html.pipe';
 import { NgFor } from '@angular/common';
-import { IFloorDto } from '../../services/models/DTO';
-import { IRoom } from '../../services/models/Room';
+import { IFloorDto, IRoomDto } from '../../services/models/DTO';
 import { RoomService } from '../../services/controllers/room.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
@@ -20,7 +19,7 @@ import { ModalComponent } from '../../components/modalWindow/modalWindow.compone
 export class FloorSchemaComponent implements OnInit, OnChanges {
   //#region Variables
   @Input() floorInfo!: IFloorDto;
-  roomData!: IRoom;
+  roomData!: IRoomDto;
   rooms: string[] = [];
   widthSvg: string | null = null;
   heightSvg: string | null = null;
@@ -90,7 +89,7 @@ export class FloorSchemaComponent implements OnInit, OnChanges {
     });
   }
 
-  async onRoomClick(room: IRoom) {
+  async onRoomClick(room: IRoomDto) {
     try {
       await this.loadRoom(room.idRoom);
       this.dialog(this.roomData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({

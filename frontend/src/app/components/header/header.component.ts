@@ -1,12 +1,9 @@
-import { NgClass } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router, NavigationEnd } from '@angular/router';
 import {
     TuiDataList,
     TuiDropdown,
-    TuiDropdownService,
     TuiIcon,
     TuiTextfield,
 } from '@taiga-ui/core';

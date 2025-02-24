@@ -10,15 +10,16 @@ import { forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FloorService } from '../../../services/controllers/floor.service';
 import { OfficeService } from '../../../services/controllers/office.service';
-import { IFloorDto, IOfficeDto } from '../../../services/models/DTO';
+import { IFloorDto } from '../../../services/models/DTO';
 import LoadingComponent from '../../../components/loading/loading.component';
 import { TuiPagination } from '@taiga-ui/kit';
 import { FloorSchemaComponent } from '../../../components/floor-schema/floor-schema.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TuiButton } from '@taiga-ui/core';
-import { Location } from '@angular/common'; // <-- Добавлено
+import { Location } from '@angular/common';
 import { UserService } from '../../../services/controllers/user.service';
+import { IOffice } from '../../../services/models/Office';
 //#endregion
 
 @Component({
@@ -44,7 +45,7 @@ export class OfficeComponent implements OnInit {
   totalFloors: number = 0;
   //#endregion
   //#region Interfaces
-  dataOffice!: IOfficeDto;
+  dataOffice!: IOffice;
   dataFloors!: IFloorDto[];
   currentFloor: IFloorDto | null = null;
   //#endregion
@@ -72,7 +73,7 @@ export class OfficeComponent implements OnInit {
   //#region load data from database 
   loadData() {
     forkJoin({
-      office: this.officeService.getOfficesById(this.id).pipe(
+      office: this.officeService.getOfficeById(this.id).pipe(
         catchError((error) => {
           console.error('Ошибка при обработке данных офиса: ', error);
           this.isLoading = false;
@@ -102,7 +103,7 @@ export class OfficeComponent implements OnInit {
   }
 
   loadFloor(id: number) {
-    this.floorService.getFloorById(id)
+    this.floorService.getFloor(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {

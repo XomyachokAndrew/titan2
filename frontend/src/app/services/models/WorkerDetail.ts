@@ -1,10 +1,10 @@
 export interface IWorkerDetail {
-    idWorker?: number;
-    fullWorkerName?: string;
+    idWorker: number;
+    fullWorkerName: string;
     idPost?: number;
-    postName?: string;
+    postName: string;
     idDepartment?: number;
-    departmentName?: string;
+    departmentName: string;
     idStatus?: number;
     statusName?: string;
 }
