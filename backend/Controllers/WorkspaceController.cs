@@ -19,7 +19,7 @@ namespace backend.Controllers
         }
 
         // Получение рабочих пространств по ID комнаты
-        [HttpGet("WorkspacesByRoom/{roomId}")]
+        [HttpGet("room/{roomId}")]
         public async Task<ActionResult<IEnumerable<CurrentWorkspace>>> GetWorkspacesByRoom(int roomId)
         {
             // Запрос рабочих пространств, связанных с указанной комнатой
