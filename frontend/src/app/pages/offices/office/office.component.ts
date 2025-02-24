@@ -6,7 +6,7 @@ import {
   inject
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FloorService } from '../../../services/controllers/floor.service';
 import { OfficeService } from '../../../services/controllers/office.service';
@@ -43,7 +43,7 @@ export class OfficeComponent implements OnInit {
   //#endregion
   //#region Interfaces
   dataOffice!: IOfficeDto;
-  dataFloors: IFloorDto[] = [];
+  dataFloors!: IFloorDto[];
   currentFloor: IFloorDto | null = null;
   //#endregion
   //#endregion
@@ -52,7 +52,7 @@ export class OfficeComponent implements OnInit {
   constructor(
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
-    private officeService: OfficeService
+    private officeService: OfficeService,
   ) {
     this.subscription = activateRoute.params
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -60,51 +60,41 @@ export class OfficeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadOffice();
-    this.loadFloors();
+    this.id = this.activateRoute.snapshot.params['id'];
+    this.loadData();
   }
   //#endregion
 
   //#region load data from database 
-  loadOffice() {
-    this.officeService.getOfficesById(this.id)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(error => {
+  loadData() {
+    forkJoin({
+      office: this.officeService.getOfficesById(this.id).pipe(
+        catchError((error) => {
           console.error('Ошибка при обработке данных офиса: ', error);
           this.isLoading = false;
           return of(null);
         })
-      )
-      .subscribe({
-        next: (data) => {
-          if (data) {
-            this.dataOffice = data;
-          }
-          this.isLoading = false;
-        }
-      });
-  }
-
-  loadFloors() {
-    this.floorService.getFloorsByOfficeId(this.id)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
+      ),
+      floors: this.floorService.getFloorsByOfficeId(this.id).pipe(
         catchError(error => {
           console.error('Ошибка при обработке данных этажей: ', error);
           return of([]);
         })
-      )
-      .subscribe({
-        next: (data) => {
-          this.dataFloors = data;
-          this.totalFloors = this.dataFloors.length;
-          this.currentPage = 0;
-          if (this.dataFloors.length > 0) {
-            this.loadFloor(this.dataFloors[this.currentPage].idFloor); // Загружаем первый этаж
-          }
+      ),
+    }).pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: ({office, floors}) => {
+        if (office) {
+          this.dataOffice = office;
         }
-      });
+        this.dataFloors = floors;
+        this.totalFloors = floors.length
+        if (this.totalFloors > 0) {
+          this.loadFloor(floors[this.currentPage].idFloor);
+        }
+        this.isLoading = false;
+      }
+    })
   }
 
   loadFloor(id: number) {
