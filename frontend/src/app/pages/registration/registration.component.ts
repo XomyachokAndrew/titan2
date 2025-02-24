@@ -4,6 +4,8 @@ import {
   Renderer2,
   Inject,
   OnInit,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -14,6 +16,10 @@ import {
 } from '@angular/forms';
 import { TuiInputModule, TuiSelectModule } from '@taiga-ui/legacy';
 import { TuiButton } from '@taiga-ui/core';
+import { UserService } from '../../services/controllers/user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, of } from 'rxjs';
+import { Location } from '@angular/common'; // <-- Добавлено
 
 @Component({
   selector: 'registration',
@@ -25,13 +31,20 @@ import { TuiButton } from '@taiga-ui/core';
 })
 export class RegistrationComponent implements OnInit {
   form: FormGroup;
+  private isAuth: boolean = false;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authService: UserService,
+    private location: Location
   ) {
     this.form = this.fb.group({
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
+      patronymic: ['', Validators.required],
       login: ['', Validators.required],
       password: ['', Validators.required],
       role: ['', Validators.required]
@@ -48,11 +61,19 @@ export class RegistrationComponent implements OnInit {
   protected items = ['Администратор', 'Гость'];
 
   ngOnInit(): void {
+    this.isAuth = this.authService.isAuthenticated()
+    if (!this.isAuth) {
+      this.location.back();
+    }
+    
     this.initializeForm();
   }
 
   initializeForm(): void {
     this.form.patchValue({
+      name: '',
+      surname: '',
+      patronymic: '',
       login: '',
       password: '',
       role: '',
@@ -60,8 +81,25 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log(this.form.value);
+
     if (this.form.valid) {
-      console.log('Form Submitted', this.form.value);
+      const registerDto = this.form.value;
+      this.authService
+        .register(registerDto)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          catchError(error => {
+            console.error(error);
+            return of(null);
+          })
+        )
+        .subscribe({
+          next: (data) => {
+            console.log(data);
+            this.location.back();
+          }
+        })
     }
   }
 }

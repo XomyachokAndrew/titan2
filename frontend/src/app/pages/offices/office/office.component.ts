@@ -17,6 +17,8 @@ import { FloorSchemaComponent } from '../../../components/floor-schema/floor-sch
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TuiButton } from '@taiga-ui/core';
+import { Location } from '@angular/common'; // <-- Добавлено
+import { UserService } from '../../../services/controllers/user.service';
 //#endregion
 
 @Component({
@@ -33,6 +35,7 @@ import { TuiButton } from '@taiga-ui/core';
 export class OfficeComponent implements OnInit {
   //#region Variables
   isLoading: boolean = true;
+  isAuth: boolean = false;
   id!: number;
   private destroyRef = inject(DestroyRef);
   //#region Pagination
@@ -52,9 +55,15 @@ export class OfficeComponent implements OnInit {
     private activateRoute: ActivatedRoute,
     private floorService: FloorService,
     private officeService: OfficeService,
+    private location: Location,
+    private authService: UserService
   ) { }
 
   ngOnInit() {
+    this.isAuth = this.authService.isAuthenticated()
+    if (!this.isAuth) {
+      this.location.back();
+    }
     this.id = this.activateRoute.snapshot.params['id'];
     this.loadData();
   }
