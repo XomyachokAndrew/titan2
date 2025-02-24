@@ -107,10 +107,10 @@ export class ModalComponent {
   ) {
     this.form = this.fb.group({
       idStatusWorkspace: [{ value: 0 }],
-      worker: [{ value: "Работник", disabled: true }, Validators.required], // Для работника
-      position: [{ value: 'Должность', disabled: true }], // Для менеджера
-      organization: [{ value: 'Организация', disabled: true }], // Для организации
-      status: [{ value: "Статус", disabled: true }, Validators.required], // Для статуса
+      worker: [{ value: '', disabled: true }, Validators.required], // Для работника
+      position: [{ value: '', disabled: true }], // Для менеджера
+      organization: [{ value: '', disabled: true }], // Для организации
+      status: [{ value: '', disabled: true }, Validators.required], // Для статуса
       dateRange: [{
         value: null,
         disabled: true
