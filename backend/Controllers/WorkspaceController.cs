@@ -19,7 +19,7 @@ namespace backend.Controllers
         }
 
         // Получение рабочих пространств по ID комнаты
-        [HttpGet("room/{roomId}")]
+        [HttpGet("WorkspacesByRoom/{roomId}")]
         public async Task<ActionResult<IEnumerable<CurrentWorkspace>>> GetWorkspacesByRoom(int roomId)
         {
             // Запрос рабочих пространств, связанных с указанной комнатой
@@ -104,13 +104,6 @@ namespace backend.Controllers
                 return BadRequest("Недопустимые данные.");
             }
 
-            // Проверка на существование статуса рабочего пространства
-            var status = await _context.StatusesWorkspaces.FindAsync(statusWorkspaceDto.IdStatusWorkspace);
-            if (status == null)
-            {
-                return NotFound("Статус рабочего пространства не найден.");
-            }
-
             // Проверка на корректность дат
             if (statusWorkspaceDto.EndDate <= statusWorkspaceDto.StartDate)
             {
@@ -122,8 +115,8 @@ namespace backend.Controllers
             {
                 StartDate = statusWorkspaceDto.StartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 EndDate = statusWorkspaceDto.EndDate,
-                IdWorkspace = status.IdWorkspace,
-                IdStatusWorkspace = statusWorkspaceDto.IdStatusWorkspace,
+                IdWorkspace = statusWorkspaceDto.IdWorkspace,
+                IdWorkspaceStatusType = statusWorkspaceDto.IdWorkspaceStatusType,
                 IdWorker = statusWorkspaceDto.IdWorker,
                 IdUser = statusWorkspaceDto.IdUser,
                 IdWorkspaceReservationsStatuses = statusWorkspaceDto.IdWorkspacesReservationsStatuses // Добавляем статус бронирования
@@ -132,8 +125,13 @@ namespace backend.Controllers
             _context.StatusesWorkspaces.Add(statusWorkspace); // Добавление статуса в контекст
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
 
-            // Обновление даты окончания предыдущего статуса
-            await UpdateEndDate(statusWorkspaceDto.IdStatusWorkspace, statusWorkspace.StartDate);
+            // Проверка на существование статуса рабочего пространства
+            var status = await _context.StatusesWorkspaces.FindAsync(statusWorkspaceDto.IdStatusWorkspace);
+            if (status != null)
+            {
+                // Обновление даты окончания предыдущего статуса
+                await UpdateEndDate(statusWorkspaceDto.IdStatusWorkspace, statusWorkspace.StartDate);
+            }
 
             return Ok(); // Возврат успешного ответа
         }
@@ -207,7 +205,7 @@ namespace backend.Controllers
             // Обновление текущего статуса новыми значениями или оставление существующих
             currentStatus.StartDate = updatedStatusDto.StartDate ?? currentStatus.StartDate;
             currentStatus.EndDate = updatedStatusDto.EndDate ?? currentStatus.EndDate;
-            currentStatus.IdWorkspaceStatusType = updatedStatusDto.IdStatus ?? currentStatus.IdWorkspaceStatusType;
+            currentStatus.IdWorkspaceStatusType = updatedStatusDto.IdWorkspaceStatusType ?? currentStatus.IdWorkspaceStatusType;
             currentStatus.IdWorker = updatedStatusDto.IdWorker ?? currentStatus.IdWorker;
             currentStatus.IdUser = updatedStatusDto.IdUser;
             currentStatus.IdWorkspaceReservationsStatuses = updatedStatusDto.IdWorkspacesReservationsStatuses ?? currentStatus.IdWorkspaceReservationsStatuses; // Обновляем статус бронирования
