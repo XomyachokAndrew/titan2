@@ -50,6 +50,7 @@ import { WorkersStatusesTypeService } from '../../services/controllers/workersSt
 import { IWorkersStatusesType } from '../../services/models/WorkersStatusesType';
 import { IWorkerDetail } from '../../services/models/WorkerDetail';
 //#endregion
+
 @Component({
   standalone: true,
   imports: [
@@ -107,8 +108,8 @@ export class ModalComponent {
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
-      idWorkspace: [{ value: 0 }],
-      idStatusWorkspace: [{ value: 0 }],
+      idWorkspace: [{ value: 0, disabled: false }],
+      idStatusWorkspace: [{ value: 0, disabled: false }],
       worker: [{ value: '', disabled: true }, Validators.required], // Для работника
       position: [{ value: '', disabled: true }], // Для менеджера
       organization: [{ value: '', disabled: true }], // Для организации
@@ -330,7 +331,9 @@ export class ModalComponent {
       .subscribe({
         next: (data) => {
           if (data) {
-            this.loadWorkspaces(this.data.idRoom);
+            if (this.value) {
+              this.loadWorkspaces(this.data.idRoom);
+            }
             this.loadWorkers();
             this.loadPost();
             this.loadDepartment();
@@ -394,27 +397,38 @@ export class ModalComponent {
     }
 
     const formData = this.form.value;
-    console.log(formData);
+    // console.log(formData);
 
-    const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
-    let endDate: string | null = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
-    if (startDate === endDate) {
-      endDate = '';
+    if (formData.dateRange && formData.dateRange.from && formData.dateRange.to) {
+      const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
+      let endDate: string | null = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
+
+      if (startDate === endDate) {
+        endDate = '';
+      }
+
+      const idStatusWorkspace = (formData.idStatusWorkspace === undefined || formData.idStatusWorkspace === null) ? 0 : formData.idStatusWorkspace;
+
+      if (formData.idWorkspace !== undefined && this.selectedWorkerId !== undefined) {
+        const workspaceData: IStatusWorkspaceDto = {
+          idWorkspace: formData.idWorkspace,
+          startDate: startDate,
+          endDate: endDate,
+          idStatusWorkspace: idStatusWorkspace,
+          idWorker: this.selectedWorkerId,
+          idWorkspaceStatusType: 1,
+          idUser: 1,
+          idWorkspacesReservationsStatuses: 1,
+        };
+        // console.log(workspaceData);
+
+        this.postStatusWorkspace(workspaceData);
+      } else {
+        console.error('Некоторые обязательные поля формы не заполнены.');
+      }
+    } else {
+      console.error('Диапазон дат не заполнен.');
     }
-
-    const workspaceData: IStatusWorkspaceDto = {
-      idWorkspace: formData.idWorkspace,
-      startDate: startDate,
-      endDate: endDate,
-      idStatusWorkspace: formData.idStatusWorkspace,
-      idWorker: this.selectedWorkerId,
-      idWorkspaceStatusType: 1,
-      idUser: 1,
-      idWorkspacesReservationsStatuses: 1,
-    }
-    console.log(workspaceData);
-
-    // this.postStatusWorkspace(workspaceData);
   }
 
   toggleEditMode() {
@@ -449,7 +463,11 @@ export class ModalComponent {
     this.form.reset(initialValue) // Сбрасываем форму до исходных значений
     this.form.disable();
     if (this.isEditMode) {
-      this.form.enable();
+      this.form.get('idWorkspace')?.enable();
+      this.form.get('idStatusWorkspace')?.enable();
+      this.form.get('worker')?.enable();
+      this.form.get('status')?.enable();
+      this.form.get('dateRange')?.enable();
     }
   }
 

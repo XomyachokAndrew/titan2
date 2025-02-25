@@ -27,39 +27,36 @@
         <span class="H3 MP-R workspace-name">Рабочее место</span>
         <span class="P MP-R employes-data">Данные сотрудника</span>
         <!-- Работник -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" 
-          formControlName="worker">
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="worker">
           Работник
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of workers" tuiOption type="button"
-                [value]="item.fullWorkerName" [id]="item.idWorker">
+              <button *cdkVirtualFor="let item of workers" tuiOption type="button" [value]="item.fullWorkerName"
+                [id]="item.idWorker">
                 {{item.fullWorkerName}}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Должность -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" 
-          formControlName="position">
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="position">
           Должность
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of posts" tuiOption type="button"
-                [value]="item.name" id="{{item.idPost}}">
+              <button *cdkVirtualFor="let item of posts" tuiOption type="button" [value]="item.name"
+                id="{{item.idPost}}">
                 {{item.name}}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Организация -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" 
-          formControlName="organization">
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="organization">
           Организация
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of departments" tuiOption type="button"
-                [value]="item.name" id="{{item.idDepartment}}">
+              <button *cdkVirtualFor="let item of departments" tuiOption type="button" [value]="item.name"
+                id="{{item.idDepartment}}">
                 {{item.name}}
               </button>
             </tui-data-list>
@@ -67,13 +64,12 @@
         </tui-select>
         <span class="P MP-R employes-data">Данные сотрудника</span>
         <!-- Статус -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" 
-          formControlName="status">
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="status">
           Статус
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of workersStatuseTypes" tuiOption type="button"
-                [value]="item.name" id="{{item.idStatus}}">
+              <button *cdkVirtualFor="let item of workersStatuseTypes" tuiOption type="button" [value]="item.name"
+                id="{{item.idStatus}}">
                 {{item.name}}
               </button>
             </tui-data-list>
@@ -83,10 +79,12 @@
         <tui-input-date-range class="P MP-R custom-input" [tuiTextfieldSize]="'m'" formControlName="dateRange">
           Период
         </tui-input-date-range>
+        @if (isEditMode) {
         <div class="button-container">
           <span class="P MP-R save click" (click)="saveClick()">Сохранить</span>
           <span class="P MP-R clear click" (click)="clearClick()">Очистить</span>
         </div>
+        }
       </div>
     </form>
     <div class="workspace-history">
