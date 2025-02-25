@@ -91,20 +91,24 @@ export class ModalWorkerComponent {
   }
 
   loadWorkspaces(id: number) {
-    this.workspaceService.getWorkspacesByRoom(id)
+    this.workspaceService
+      .getWorkspacesByRoom(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          console.error(
+            'Ошибка при обработке данных о рабочих местах: ',
+            error
+          );
           return of(null);
         })
       )
       .subscribe({
-        next: (data) => {
+        next: data => {
           if (data) {
             this.workspaces = data;
           }
-        }
+        },
       });
   }
 

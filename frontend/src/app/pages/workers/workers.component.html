@@ -1,14 +1,16 @@
 <div class="container">
-    <span class="H2 MP-R">Список всех сотрудников</span>
-    <span class="instruction H3 MP-R">ФИО / Место работы / Должность / Организация</span>
+  <span class="H2 MP-R">Список всех сотрудников</span>
+  <span class="instruction H3 MP-R"
+    >ФИО / Место работы / Должность / Организация</span
+  >
   @for (item of workers; track $index) {
     <div class="worker" (click)="openWorker()">
-      <span class="worker-text P MP-R">{{item.firstName}}</span>
-      <span class="worker-text P MP-R">{{item.lastName}}</span>
-      <span class="worker-text P MP-R">{{item.middleName}}</span>
-      <span class="worker-text P MP-R">{{item.place}}</span>
-      <span class="worker-text P MP-R">{{item.organization}}</span>
-      <span class="worker-text P MP-R">{{item.position}}</span>
+      <span class="worker-text P MP-R">{{ item.firstName }}</span>
+      <span class="worker-text P MP-R">{{ item.lastName }}</span>
+      <span class="worker-text P MP-R">{{ item.middleName }}</span>
+      <span class="worker-text P MP-R">{{ item.place }}</span>
+      <span class="worker-text P MP-R">{{ item.organization }}</span>
+      <span class="worker-text P MP-R">{{ item.position }}</span>
     </div>
   }
 </div>

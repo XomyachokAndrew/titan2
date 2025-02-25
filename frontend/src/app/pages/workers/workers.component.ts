@@ -27,7 +27,7 @@ export class WorkersComponent {
       place: 'Офис',
       position: 'АХО',
       organization: 'Менеджер',
-    }
+    },
   ];
 
   private readonly dialog = tuiDialog(ModalWorkerComponent, {
