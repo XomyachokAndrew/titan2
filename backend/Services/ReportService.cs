@@ -19,6 +19,14 @@ namespace backend.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Генерирует отчет о стоимости аренды для указанного офиса.
+        /// </summary>
+        /// <param name="officeId">Идентификатор офиса.</param>
+        /// <param name="reportTypeId">Идентификатор типа отчета.</param>
+        /// <param name="idUser">Идентификатор пользователя, создавшего отчет.</param>
+        /// <returns>Путь к сгенерированному файлу отчета.</returns>
+        /// <exception cref="InvalidOperationException">Выбрасывается, если офис или договор аренды не найдены.</exception>
         public async Task<string> GenerateRentalCostReportAsync(int officeId, int reportTypeId, int idUser)
         {
             var office = await GetOfficeWithDetailsAsync(officeId);
@@ -45,7 +53,11 @@ namespace backend.Services
             return filePath; // Возвращаем путь к файлу
         }
 
-
+        /// <summary>
+        /// Получает офис с деталями по указанному идентификатору.
+        /// </summary>
+        /// <param name="officeId">Идентификатор офиса.</param>
+        /// <returns>Офис с деталями.</returns>
         private async Task<Office> GetOfficeWithDetailsAsync(int officeId)
         {
             return await _context.Offices
@@ -55,6 +67,11 @@ namespace backend.Services
                 .FirstOrDefaultAsync(o => o.IdOffice == officeId);
         }
 
+        /// <summary>
+        /// Получает идентификаторы комнат для указанного офиса.
+        /// </summary>
+        /// <param name="office">Офис.</param>
+        /// <returns>Список идентификаторов комнат.</returns>
         private async Task<List<int>> GetRoomIdsAsync(Office office)
         {
             return await Task.Run(() => office.Floors
@@ -63,6 +80,11 @@ namespace backend.Services
                 .ToList());
         }
 
+        /// <summary>
+        /// Получает текущие рабочие места для указанных идентификаторов комнат.
+        /// </summary>
+        /// <param name="roomIds">Список идентификаторов комнат.</param>
+        /// <returns>Список текущих рабочих мест.</returns>
         private async Task<List<CurrentWorkspace>> GetCurrentWorkspacesAsync(List<int> roomIds)
         {
             return await _context.CurrentWorkspaces
@@ -70,6 +92,11 @@ namespace backend.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Получает зарезервированные рабочие места для указанных идентификаторов комнат.
+        /// </summary>
+        /// <param name="roomIds">Список идентификаторов комнат.</param>
+        /// <returns>Список зарезервированных рабочих мест.</returns>
         private async Task<List<StatusesWorkspace>> GetReservedWorkspacesAsync(List<int> roomIds)
         {
             return await _context.StatusesWorkspaces
@@ -79,11 +106,23 @@ namespace backend.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Рассчитывает стоимость рабочего места на основе арендной платы и количества рабочих мест.
+        /// </summary>
+        /// <param name="rentalPrice">Арендная плата.</param>
+        /// <param name="workspaceCount">Количество рабочих мест.</param>
+        /// <returns>Стоимость одного рабочего места.</returns>
         private async Task<decimal> CalculateWorkspacePriceAsync(decimal rentalPrice, int workspaceCount)
         {
             return await Task.Run(() => workspaceCount > 0 ? Math.Round(rentalPrice / workspaceCount, 3) : 0);
         }
 
+        /// <summary>
+        /// Рассчитывает затраты по отделам на основе текущих рабочих мест и стоимости рабочего места.
+        /// </summary>
+        /// <param name="currentWorkspaces">Список текущих рабочих мест.</param>
+        /// <param name="priceWorkspace">Стоимость одного рабочего места.</param>
+        /// <returns>Словарь с информацией о затратах по отделам.</returns>
         private async Task<Dictionary<int, DepartmentCostInfoDto>> CalculateDepartmentCostsAsync(List<CurrentWorkspace> currentWorkspaces, decimal priceWorkspace)
         {
             return await Task.Run(() => currentWorkspaces
@@ -101,6 +140,12 @@ namespace backend.Services
                     }));
         }
 
+        /// <summary>
+        /// Рассчитывает затраты по зарезервированным рабочим местам и обновляет информацию по отделам.
+        /// </summary>
+        /// <param name="reservedWorkspaces">Список зарезервированных рабочих мест.</param>
+        /// <param name="departmentCosts">Словарь с информацией о затратах по отделам.</param>
+        /// <param name="priceWorkspace">Стоимость одного рабочего места.</param>
         private async Task CalculateReservedWorkspacesCostsAsync(List<StatusesWorkspace> reservedWorkspaces, Dictionary<int, DepartmentCostInfoDto> departmentCosts, decimal priceWorkspace)
         {
             foreach (var reserved in reservedWorkspaces)
@@ -110,7 +155,7 @@ namespace backend.Services
 
                 if (workerDetail == null || workerDetail.IdDepartment == null)
                 {
-                    continue;
+                    continue; // Пропускаем, если работник или отдел не найдены
                 }
 
                 if (departmentCosts.TryGetValue(workerDetail.IdDepartment.Value, out var departmentCostInfo))
@@ -132,6 +177,17 @@ namespace backend.Services
             }
         }
 
+        /// <summary>
+        /// Создает Excel-отчет о стоимости аренды офиса.
+        /// </summary>
+        /// <param name="office">Офис.</param>
+        /// <param name="rentalPrice">Арендная плата.</param>
+        /// <param name="departmentCosts">Словарь с информацией о затратах по отделам.</param>
+        /// <param name="totalWorkspacesCount">Общее количество рабочих мест.</param>
+        /// <param name="priceWorkspace">Стоимость одного рабочего места.</param>
+        /// <param name="reservedWorkspaces">Список зарезервированных рабочих мест.</param>
+        /// <param name="roomIds">Список идентификаторов комнат.</param>
+        /// <returns>Путь к созданному файлу отчета.</returns>
         private async Task<string> CreateExcelReportAsync(Office office, decimal rentalPrice, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<StatusesWorkspace> reservedWorkspaces, List<int> roomIds)
         {
             var sanitizedOfficeName = Regex.Replace(office.OfficeName, @"[<>:""/\\|?*]", "");
@@ -158,20 +214,29 @@ namespace backend.Services
                 await AddReservedWorkspacesCountAsync(sheet, reservedWorkspacesCount, priceWorkspace, reservedInfoStyle);
                 CreatePieChart(sheet, departmentCosts, sheet.LastRowNum + 3);
 
+                // Автоматически подгоняем ширину столбцов
                 for (int i = 0; i < sheet.GetRow(0).LastCellNum; i++)
                 {
                     sheet.AutoSizeColumn(i);
                 }
 
+                // Записываем файл на диск
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
                     await Task.Run(() => workbook.Write(fileStream)); // Асинхронное выполнение записи в файл
                 }
             }
 
-            return filePath;
+            return filePath; // Возвращаем путь к файлу
         }
 
+        /// <summary>
+        /// Добавляет информацию о количестве зарезервированных рабочих мест в отчет.
+        /// </summary>
+        /// <param name="sheet">Лист отчета.</param>
+        /// <param name="reservedCount">Количество зарезервированных рабочих мест.</param>
+        /// <param name="priceWorkspace">Стоимость одного рабочего места.</param>
+        /// <param name="style">Стиль ячеек.</param>
         private async Task AddReservedWorkspacesCountAsync(ISheet sheet, int reservedCount, decimal priceWorkspace, ICellStyle style)
         {
             var reservedRow = sheet.CreateRow(sheet.LastRowNum + 1);
@@ -184,6 +249,14 @@ namespace backend.Services
             reservedRow.GetCell(2).CellStyle = style;
         }
 
+        /// <summary>
+        /// Создает стиль ячейки для отчета.
+        /// </summary>
+        /// <param name="workbook">Рабочая книга.</param>
+        /// <param name="colorIndex">Индекс цвета фона.</param>
+        /// <param name="isBold">Указывает, является ли текст жирным.</param>
+        /// <param name="fontSize">Размер шрифта.</param>
+        /// <returns>Созданный стиль ячейки.</returns>
         private ICellStyle CreateCellStyle(IWorkbook workbook, short colorIndex, bool isBold, short fontSize)
         {
             var cellStyle = workbook.CreateCellStyle();
@@ -196,6 +269,13 @@ namespace backend.Services
             return cellStyle;
         }
 
+        /// <summary>
+        /// Добавляет информацию об офисе в отчет.
+        /// </summary>
+        /// <param name="sheet">Лист отчета.</param>
+        /// <param name="office">Офис.</param>
+        /// <param name="rentalPrice">Арендная плата.</param>
+        /// <param name="style">Стиль ячеек.</param>
         private async Task AddOfficeInfoRowAsync(ISheet sheet, Office office, decimal rentalPrice, ICellStyle style)
         {
             var officeInfoRow = sheet.CreateRow(0);
@@ -212,6 +292,11 @@ namespace backend.Services
             sheet.CreateRow(1);
         }
 
+        /// <summary>
+        /// Добавляет заголовок таблицы в отчет.
+        /// </summary>
+        /// <param name="sheet">Лист отчета.</param>
+        /// <param name="style">Стиль ячеек.</param>
         private void AddHeaderRow(ISheet sheet, ICellStyle style)
         {
             var headerRow = sheet.CreateRow(2);
@@ -223,6 +308,12 @@ namespace backend.Services
             headerRow.GetCell(2).CellStyle = style;
         }
 
+        /// <summary>
+        /// Заполняет данные по отделам в отчет.
+        /// </summary>
+        /// <param name="sheet">Лист отчета.</param>
+        /// <param name="departmentCosts">Словарь с информацией о затратах по отделам.</param>
+        /// <param name="style">Стиль ячеек.</param>
         private void FillDepartmentData(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, ICellStyle style)
         {
             int rowIndex = 3; // Начинаем с 3-й строки
@@ -238,6 +329,15 @@ namespace backend.Services
             }
         }
 
+        /// <summary>
+        /// Добавляет информацию о свободных рабочих местах в отчет.
+        /// </summary>
+        /// <param name="sheet">Лист отчета.</param>
+        /// <param name="departmentCosts">Словарь с информацией о затратах по отделам.</param>
+        /// <param name="totalWorkspacesCount">Общее количество рабочих мест.</param>
+        /// <param name="priceWorkspace">Стоимость одного рабочего места.</param>
+        /// <param name="roomIds">Список идентификаторов комнат.</param>
+        /// <param name="style">Стиль ячеек.</param>
         private async Task AddFreeWorkspacesInfoAsync(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int totalWorkspacesCount, decimal priceWorkspace, List<int> roomIds, ICellStyle style)
         {
             var occupiedWorkspacesCount = departmentCosts.Sum(dc => dc.Value.WorkspaceCount);
@@ -258,6 +358,12 @@ namespace backend.Services
             freeRow.GetCell(2).CellStyle = style;
         }
 
+        /// <summary>
+        /// Создает круговую диаграмму на основе данных по отделам.
+        /// </summary>
+        /// <param name="sheet">Лист отчета.</param>
+        /// <param name="departmentCosts">Словарь с информацией о затратах по отделам.</param>
+        /// <param name="startRowIndex">Строка, с которой начинается диаграмма.</param>
         private void CreatePieChart(ISheet sheet, Dictionary<int, DepartmentCostInfoDto> departmentCosts, int startRowIndex)
         {
             IDrawing drawing = sheet.CreateDrawingPatriarch();
@@ -287,6 +393,12 @@ namespace backend.Services
             pieChart.Plot(data);
         }
 
+        /// <summary>
+        /// Сохраняет отчет в базе данных.
+        /// </summary>
+        /// <param name="reportTypeId">Идентификатор типа отчета.</param>
+        /// <param name="idUser">Идентификатор пользователя, создавшего отчет.</param>
+        /// <param name="filePath">Путь к файлу отчета.</param>
         private async Task SaveReportToDatabaseAsync(int reportTypeId, int idUser, string filePath)
         {
             var report = new Report
@@ -298,7 +410,9 @@ namespace backend.Services
             };
 
             _context.Reports.Add(report);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Сохраняем изменения в базе данных
         }
     }
 }
+
+
