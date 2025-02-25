@@ -103,7 +103,7 @@ export class ModalComponent {
     private workerService: WorkerService,
     private postService: PostService,
     private departmentService: DepartmentService,
-    private WorkersStatusesTypeService: WorkersStatusesTypeService,
+    private workersStatusesTypeService: WorkersStatusesTypeService,
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
@@ -277,7 +277,7 @@ export class ModalComponent {
   }
 
   async loadWorkersStatusesType() {
-    this.WorkersStatusesTypeService.getWorkersStatusesTypes()
+    this.workersStatusesTypeService.getWorkersStatusesTypes()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -289,6 +289,28 @@ export class ModalComponent {
         next: (data) => {
           if (data) {
             this.workersStatuseTypes = data;
+          }
+        }
+      });
+  }
+
+  async loadWorker(id: number) {
+    this.workerService.getWorker(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных об отделах: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this.form.patchValue({
+              position: data.postName,
+              organization: data.departmentName,
+              status: data.statusName
+            })
           }
         }
       });
@@ -333,6 +355,7 @@ export class ModalComponent {
         );
         if (selectedWorker) {
           this.selectedWorkerId = selectedWorker.idWorker
+          this.loadWorker(this.selectedWorkerId);
         }
       }
     });
@@ -371,6 +394,8 @@ export class ModalComponent {
     }
 
     const formData = this.form.value;
+    console.log(formData);
+
     const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
     let endDate: string | null = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
     if (startDate === endDate) {
@@ -389,7 +414,7 @@ export class ModalComponent {
     }
     console.log(workspaceData);
 
-    this.postStatusWorkspace(workspaceData);
+    // this.postStatusWorkspace(workspaceData);
   }
 
   toggleEditMode() {
@@ -398,15 +423,11 @@ export class ModalComponent {
     if (this.isEditMode) {
       // Включаем все поля формы
       this.form.get('worker')?.enable();
-      this.form.get('position')?.enable();
-      this.form.get('organization')?.enable();
       this.form.get('status')?.enable();
       this.form.get('dateRange')?.enable();
     } else {
       // Отключаем поля формы
       this.form.get('worker')?.disable();
-      this.form.get('position')?.disable();
-      this.form.get('organization')?.disable();
       this.form.get('status')?.disable();
       this.form.get('dateRange')?.disable();
     }
@@ -414,17 +435,18 @@ export class ModalComponent {
 
   clearClick(): void {
     let initialValue = this.fb.group({
+      idWorkspace: this.form.value.idWorkspace,
       idStatusWorkspace: this.form.value.idStatusWorkspace,
-      worker: [{ value: "Работник", disabled: true }, Validators.required], // Для работника
-      position: [{ value: 'Должность', disabled: true }], // Для менеджера
-      organization: [{ value: 'Организация', disabled: true }], // Для организации
-      status: [{ value: "Статус", disabled: true }, Validators.required], // Для статуса
+      worker: [{ value: '', disabled: true }, Validators.required], // Для работника
+      position: [{ value: '', disabled: true }], // Для менеджера
+      organization: [{ value: '', disabled: true }], // Для организации
+      status: [{ value: '', disabled: true }, Validators.required], // Для статуса
       dateRange: [{
         value: null,
         disabled: true
       }, Validators.required]
     }).value;
-    this.form.reset(initialValue); // Сбрасываем форму до исходных значений
+    this.form.reset(initialValue) // Сбрасываем форму до исходных значений
     this.form.disable();
     if (this.isEditMode) {
       this.form.enable();
