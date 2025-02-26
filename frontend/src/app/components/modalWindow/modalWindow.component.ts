@@ -1,37 +1,22 @@
-//#region IMPORTS
-import { ChangeDetectorRef, OnChanges, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import type { TuiDialogContext } from '@taiga-ui/core';
-import { TuiDialogService, TuiTextfield } from '@taiga-ui/core';
+import { ChangeDetectorRef, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TuiDialogContext } from '@taiga-ui/core';
+import { TuiTextfield, TuiScrollbar } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSlider } from '@taiga-ui/kit';
 import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { tuiDateFormatProvider } from '@taiga-ui/core';
 import { TuiInputDateRangeModule } from '@taiga-ui/legacy';
 import { WorkerComponent } from '../workerCard/worker.component';
-import { TuiScrollbar } from '@taiga-ui/core';
 import {
   TuiInputModule,
   TuiSelectModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { IRoom } from '../../services/models/Room';
 import { WorkspaceService } from '../../services/controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
-import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 import { IRoomDto, IStatusWorkspaceDto, IWorkspaceInfoDto } from '../../services/models/DTO';
 import { IHistoryWorkspaceStatus } from '../../services/models/HistoryWorkspaceStatus';
 import { DatePipe } from '@angular/common';
@@ -41,7 +26,6 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { WorkerService } from '../../services/controllers/worker.service';
-import { IWorker } from '../../services/models/Worker';
 import { PostService } from '../../services/controllers/post.service';
 import { IPost } from '../../services/models/Post';
 import { DepartmentService } from '../../services/controllers/department.service';
@@ -49,10 +33,12 @@ import { IDepartment } from '../../services/models/Department';
 import { WorkersStatusesTypeService } from '../../services/controllers/workersStatusesType.service';
 import { IWorkersStatusesType } from '../../services/models/WorkersStatusesType';
 import { IWorkerDetail } from '../../services/models/WorkerDetail';
-//#endregion
+import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 
 /**
- * Компонент модального окна
+ * Компонент модального окна для управления рабочими местами.
+ * Позволяет просматривать, редактировать и сохранять информацию о рабочих местах,
+ * а также управлять связанными данными (работники, должности, отделы и т.д.).
  */
 @Component({
   standalone: true,
@@ -79,31 +65,30 @@ import { IWorkerDetail } from '../../services/models/WorkerDetail';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalComponent {
-  private destroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly workspaceService = inject(WorkspaceService);
+  private readonly workerService = inject(WorkerService);
+  private readonly postService = inject(PostService);
+  private readonly departmentService = inject(DepartmentService);
+  private readonly workerStatusTypeService = inject(WorkersStatusesTypeService);
+  private readonly fb = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   protected form: FormGroup;
-  protected value!: IRoomDto;
   protected isEditMode: boolean = false;
-  protected workspaces!: ICurrentWorkspace[];
-  protected workers!: IWorkerDetail[];
-  protected posts!: IPost[];
-  protected departments!: IDepartment[];
-  protected workerStatusTypes!: IWorkersStatusesType[];
-  protected historyWorkspace!: IHistoryWorkspaceStatus[];
-  protected worker!: IWorkerDetail;
+  protected workspaces: ICurrentWorkspace[] = [];
+  protected workers: IWorkerDetail[] = [];
+  protected posts: IPost[] = [];
+  protected departments: IDepartment[] = [];
+  protected workerStatusTypes: IWorkersStatusesType[] = [];
+  protected historyWorkspace: IHistoryWorkspaceStatus[] = [];
   protected selectedWorkerId: number = 0;
   protected selectedPostId: number = 0;
   protected selectedDepartmentId: number = 0;
 
-  constructor(
-    private workspaceService: WorkspaceService,
-    private workerService: WorkerService,
-    private postService: PostService,
-    private departmentService: DepartmentService,
-    private workerStatusTypeService: WorkersStatusesTypeService,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-  ) {
-    console.log('ChangeDetectorRef initialized:', this.cdr);
+  public readonly context = injectContext<TuiDialogContext<IRoomDto, IRoomDto>>();
+
+  constructor() {
     this.form = this.fb.group({
       idWorkspace: [{ value: 0, disabled: false }],
       idStatusWorkspace: [{ value: 0, disabled: false }],
@@ -114,400 +99,357 @@ export class ModalComponent {
       dateRange: [{ value: null, disabled: true }],
     });
 
+    this.loadInitialData();
+    this.setupFormListeners();
+  }
+
+  /**
+   * Загружает начальные данные (рабочие места и выпадающие списки).
+   */
+  private loadInitialData(): void {
     this.loadWorkspaces(this.data.idRoom);
     this.loadSelects();
+  }
 
-    this.form.get('worker')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedWorker = this.workers.find(worker =>
-          `${worker.fullWorkerName}` === selectedValue
-        );
-        if (selectedWorker) {
-          this.selectedWorkerId = selectedWorker.idWorker
-          this.loadWorker(this.selectedWorkerId);
-        }
+  /**
+   * Настраивает слушатели изменений значений формы.
+   */
+  private setupFormListeners(): void {
+    this.form.get('worker')?.valueChanges.subscribe((selectedValue) => {
+      const selectedWorker = this.workers.find(worker => `${worker.fullWorkerName}` === selectedValue);
+      if (selectedWorker) {
+        this.selectedWorkerId = selectedWorker.idWorker;
+        this.loadWorker(this.selectedWorkerId);
       }
     });
 
-    this.form.get('position')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedPost = this.posts.find(post => post.name === selectedValue);
-        if (selectedPost) {
-          this.selectedPostId = selectedPost.idPost;
-          console.log(selectedPost);
-        }
+    this.form.get('position')?.valueChanges.subscribe((selectedValue) => {
+      const selectedPost = this.posts.find(post => post.name === selectedValue);
+      if (selectedPost) {
+        this.selectedPostId = selectedPost.idPost;
       }
     });
 
-    this.form.get('organization')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
-        if (selectedDepartment) {
-          this.selectedDepartmentId = selectedDepartment.idDepartment;
-          console.log(selectedDepartment);
-        }
+    this.form.get('organization')?.valueChanges.subscribe((selectedValue) => {
+      const selectedDepartment = this.departments.find(department => department.name === selectedValue);
+      if (selectedDepartment) {
+        this.selectedDepartmentId = selectedDepartment.idDepartment;
       }
     });
   }
 
-  public readonly context = injectContext<TuiDialogContext<IRoomDto, IRoomDto>>();
-
   /**
-   * Данные передаваемые со страницы в модальное окно
+   * Возвращает данные, переданные в модальное окно.
    */
   protected get data(): IRoomDto {
     return this.context.data;
   }
 
   /**
-   * Асинхронный метод, загружающий рабочие места по выбранной комнате
-   * @param id уникальный индетификатор комнаты
+   * Загружает рабочие места для указанной комнаты.
+   * @param id - Уникальный идентификатор комнаты.
    */
-  async loadWorkspaces(id: number) {
+  private loadWorkspaces(id: number): void {
     this.workspaceService.getWorkspacesByRoom(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих местах: ', error);
-          return of(null);
+          console.error('Ошибка при загрузке рабочих мест:', error);
+          return of([]);
         })
       )
       .subscribe({
-        next: data => {
-          if (data) {
-            this.workspaces = data.map(ws => ({ ...ws }));
-            this.cdr.markForCheck();
-          }
+        next: (data) => {
+          this.workspaces = data;
+          this.cdr.markForCheck();
         },
-        error: err => console.error(err)
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Асинхронныый метод, подгружающий данные из бд в selects 
+   * Загружает данные для выпадающих списков (работники, должности, отделы, статусы).
    */
-  async loadSelects() {
-    await this.loadWorkers();
-    await this.loadPosts();
-    await this.loadDepartments();
-    await this.loadWorkerStatusTypes();
+  private async loadSelects(): Promise<void> {
+    await Promise.all([
+      this.loadWorkers(),
+      this.loadPosts(),
+      this.loadDepartments(),
+      this.loadWorkerStatusTypes(),
+    ]);
   }
 
   /**
-   * Асинхронный метод, для подгрузки рабочих
+   * Загружает список работников.
    */
-  async loadWorkers() {
+  private loadWorkers(): void {
     this.workerService.getWorkers()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих: ', error);
-          return of(null);
+          console.error('Ошибка при загрузке работников:', error);
+          return of([]);
         })
       )
       .subscribe({
-        next: data => {
-          if (data) {
-            this.workers = data.map(worker => ({ ...worker }));
-          }
-        },
-        error: err => console.error(err)
+        next: (data) => this.workers = data,
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Асинхронный метод, для подгрузки должностей
+   * Загружает список должностей.
    */
-  async loadPosts() {
+  private loadPosts(): void {
     this.postService.getPosts()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных должностей: ', error);
-          return of(null);
+          console.error('Ошибка при загрузке должностей:', error);
+          return of([]);
         })
       )
       .subscribe({
-        next: data => {
-          if (data) {
-            this.posts = data.map(post => ({ ...post }));
-          }
-        },
-        error: err => console.error(err)
+        next: (data) => this.posts = data,
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Асинхронный метод, для подгрузки отделов
+   * Загружает список отделов.
    */
-  async loadDepartments() {
+  private loadDepartments(): void {
     this.departmentService.getDepartments()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных отделов: ', error);
-          return of(null);
+          console.error('Ошибка при загрузке отделов:', error);
+          return of([]);
         })
       )
       .subscribe({
-        next: data => {
-          if (data) {
-            this.departments = data.map(department => ({ ...department }));
-          }
-        },
-        error: err => console.error(err)
+        next: (data) => this.departments = data,
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Асинхронный метод, для подгрузки статуса рабочего
+   * Загружает список статусов работников.
    */
-  async loadWorkerStatusTypes() {
+  private loadWorkerStatusTypes(): void {
     this.workerStatusTypeService.getWorkersStatusesTypes()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных типа статуса рабочего: ', error);
-          return of(null);
+          console.error('Ошибка при загрузке статусов работников:', error);
+          return of([]);
         })
       )
       .subscribe({
-        next: data => {
-          if (data) {
-            this.workerStatusTypes = data.map(workerStatusTypes => ({ ...workerStatusTypes }));
-          }
-        },
-        error: err => console.error(err)
+        next: (data) => this.workerStatusTypes = data,
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Метод, отправляющий post запрос
+   * Отправляет данные формы на сервер.
    */
-  onSubmit() {
+  protected onSubmit(): void {
     if (this.form.invalid) {
       console.error('Ошибка валидации');
+      return;
     }
 
     const formData = this.form.value;
-    
-    if (formData.dateRange && formData.dateRange.from && formData.dateRange.to) {
-      const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
-      let endDate = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
 
-      if (startDate === endDate) {
-        endDate = '';
-      }
-
-      const idStatusWorkspace = (formData.idStatusWorkspace === undefined || formData.idStatusWorkspace === null) ? 0 : formData.idStatusWorkspace;
-
-      if (formData.idWorkspace !== undefined && this.selectedWorkerId !== undefined) {
-        const workspaceData = {
-          idWorkspace: formData.idWorkspace,
-          startDate: startDate,
-          endDate: endDate,
-          idStatusWorkspace: idStatusWorkspace,
-          idWorker: this.selectedWorkerId,
-          idWorkspaceStatusType: 1,
-          idUser: 1,
-          idWorkspacesReservationsStatuses: 1,
-        };
-
-        this.postWorkspaceStatus(workspaceData);
-      }
-      else {
-        console.error('Некоторые обязательные поля формы не заполнены.');
-      }
-    }
-    else {
+    if (!formData.dateRange?.from || !formData.dateRange?.to) {
       console.error('Диапазон дат не заполнен.');
+      return;
+    }
+
+    const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
+    const endDate = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
+
+    const idStatusWorkspace = formData.idStatusWorkspace ?? 0;
+
+    if (formData.idWorkspace !== undefined && this.selectedWorkerId !== undefined) {
+      const workspaceData: IStatusWorkspaceDto = {
+        idWorkspace: formData.idWorkspace,
+        startDate: startDate,
+        endDate: startDate === endDate ? '' : endDate,
+        idStatusWorkspace: idStatusWorkspace,
+        idWorker: this.selectedWorkerId,
+        idWorkspaceStatusType: 1,
+        idUser: 1,
+        idWorkspacesReservationsStatuses: 1,
+      };
+
+      this.postWorkspaceStatus(workspaceData);
+    } else {
+      console.error('Некоторые обязательные поля формы не заполнены.');
     }
   }
 
   /**
-   * Метод, отправляющий 
+   * Отправляет данные о статусе рабочего места на сервер.
+   * @param statusWorkspaceDto - Данные о статусе рабочего места.
    */
-  postWorkspaceStatus(statusWorkspaceDto: IStatusWorkspaceDto) {
+  private postWorkspaceStatus(statusWorkspaceDto: IStatusWorkspaceDto): void {
     this.workspaceService.addStatusWorkspace(statusWorkspaceDto)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          console.error('Ошибка при отправке данных:', error);
           return of(null);
         })
       )
       .subscribe({
         next: () => {
-            this.loadWorkspaces(this.data.idRoom);
-            this.loadSelects();
-            this.historyWorkspace = [];
-            this.form.patchValue({
-              idStatusWorkspace: null,
-              idWorkspace: null,
-              worker: null,
-              post: null,
-              department: null,
-              status: null,
-              dateRange: null,
-            });
-            this.cdr.markForCheck();
+          this.loadWorkspaces(this.data.idRoom);
+          this.loadSelects();
+          this.historyWorkspace = [];
+          this.form.reset();
+          this.cdr.markForCheck();
         },
         error: (error) => console.error(error)
       });
   }
 
   /**
-   * Метод, очищающий форму от данных
+   * Очищает форму.
    */
-  clearClick() {
-    this.form.patchValue({
-      worker: null,
-      post: null,
-      department: null,
-      status: null,
-      dateRange: null,
-    });
+  protected clearClick(): void {
+    this.form.reset();
   }
 
   /**
-   * Асинхронный метод, для подгрузки истории рабочего места
-   * @param id уникальный индетификатор рабочего места
+   * Загружает историю изменений рабочего места.
+   * @param id - Уникальный идентификатор рабочего места.
    */
-  async loadWorkspaceHistory(id: number) {
+  protected async loadWorkspaceHistory(id: number): Promise<void> {
     this.workspaceService.getWorkspaceHistory(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных истории рабочего места: ', error);
-          return of(null);
+          console.error('Ошибка при загрузке истории:', error);
+          return of([]);
         })
       )
       .subscribe({
-        next: data => {
-          if (data) {
-            this.historyWorkspace = data.map(historyWorkspace => ({ ...historyWorkspace }));
-            this.cdr.markForCheck();
-          }
+        next: (data) => {
+          this.historyWorkspace = data;
+          this.cdr.markForCheck();
         },
-        error: err => console.error(err)
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Асинхронный метод, для подгрузки подробной информации о выбранном рабочем месте
-   * @param workspace Выбранное рабочее место
+   * Загружает подробную информацию о рабочем месте.
+   * @param workspace - Выбранное рабочее место.
    */
-  async loadWorksapceInfo(workspace: ICurrentWorkspace) {
+  protected async loadWorkspaceInfo(workspace: ICurrentWorkspace): Promise<void> {
     this.workspaceService.getWorkspaceInfo(workspace.idWorkspace)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных рабочего места: ', error);
+          console.error('Ошибка при загрузке информации:', error);
           return of(null);
         })
       )
       .subscribe({
-        next: data => {
+        next: (data) => {
           if (data) {
             this.patchForm(data, workspace);
             this.cdr.markForCheck();
           }
         },
-        error: err => console.error(err)
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Метод, обновляющий данные формы
-   * @param workspaceInfo Подробная информация о рабочем месте
-   * @param currentWorkspace Выбранное рабочее место
+   * Обновляет данные формы на основе информации о рабочем месте.
+   * @param workspaceInfo - Подробная информация о рабочем месте.
+   * @param currentWorkspace - Выбранное рабочее место.
    */
-  patchForm(workspaceInfo: IWorkspaceInfoDto, currentWorkspace: ICurrentWorkspace) {
+  private patchForm(workspaceInfo: IWorkspaceInfoDto, currentWorkspace: ICurrentWorkspace): void {
     const startDate = this.parseDateString(currentWorkspace.startDate);
     const endDate = currentWorkspace.endDate ? this.parseDateString(currentWorkspace.endDate) : startDate;
-
-    // Проверяем, что workspaceInfo инициализирован
-    const postName = workspaceInfo.workerDetails?.postName || null;
-    const departmentName = workspaceInfo.workerDetails?.departmentName || null;
-    const statusName = workspaceInfo.statusName || null;
 
     this.form.patchValue({
       idWorkspace: currentWorkspace.idWorkspace,
       idStatusWorkspace: currentWorkspace.idStatusWorkspace,
       worker: currentWorkspace.fullWorkerName,
-      post: postName,
-      department: departmentName,
-      status: statusName,
+      post: workspaceInfo.workerDetails?.postName || null,
+      department: workspaceInfo.workerDetails?.departmentName || null,
+      status: workspaceInfo.statusName || null,
       dateRange: new TuiDayRange(startDate, endDate),
     });
   }
 
   /**
-   * Обработчик нажатия на карточку рабочего
-   * @param workspace Выбранное рабочее место
+   * Обрабатывает клик по карточке работника.
+   * @param workspace - Выбранное рабочее место.
    */
-  async onWorkerClicked(workspace: ICurrentWorkspace) {
+  protected async onWorkerClicked(workspace: ICurrentWorkspace): Promise<void> {
     if (!this.cdr) {
       console.error('ChangeDetectorRef is not defined');
       return;
     }
 
-    await this.loadWorksapceInfo(workspace);
+    await this.loadWorkspaceInfo(workspace);
     await this.loadWorkspaceHistory(workspace.idWorkspace);
     this.cdr.markForCheck();
   }
 
   /**
-   * Асинхронный метод для подгрузки данных о рабочем и обновлении их в форме
-   * @param id Уникальный индетификатор выбранного рабочего
+   * Загружает данные о работнике и обновляет форму.
+   * @param id - Уникальный идентификатор работника.
    */
-  async loadWorker(id: number) {
+  private loadWorker(id: number): void {
     this.workerService.getWorker(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных рабочего: ', error);
+          console.error('Ошибка при загрузке данных работника:', error);
           return of(null);
         })
       )
       .subscribe({
-        next: data => {
+        next: (data) => {
           if (data) {
             this.form.patchValue({
               post: data.postName,
               department: data.departmentName,
-              status: data.statusName
-            })
+              status: data.statusName,
+            });
             this.cdr.markForCheck();
           }
         },
-        error: err => console.error(err)
+        error: (err) => console.error(err)
       });
   }
 
   /**
-   * Метод, включающий и выключающий режим редактирования
+   * Переключает режим редактирования формы.
    */
-  toggleEditMode() {
-    this.isEditMode = !this.isEditMode; // Переключаем флаг
+  protected toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
 
-    if (this.isEditMode) {
-      // Включаем все поля формы
-      this.form.get('worker')?.enable();
-      this.form.get('status')?.enable();
-      this.form.get('dateRange')?.enable();
-    } else {
-      // Отключаем поля формы
-      this.form.get('worker')?.disable();
-      this.form.get('status')?.disable();
-      this.form.get('dateRange')?.disable();
-    }
+    const fields = ['worker', 'status', 'dateRange'];
+    fields.forEach(field => {
+      const control = this.form.get(field);
+      if (control) {
+        this.isEditMode ? control.enable() : control.disable();
+      }
+    });
   }
 
   /**
-   * Метод, пробразующий дату из типа данных string в тип данных TuiDay
-   * @param dateString Дата в виде строки
-   * @returns Дата с типом данных TuiDay
+   * Преобразует строку даты в объект TuiDay.
+   * @param dateString - Строка даты.
+   * @returns Объект TuiDay.
    */
   private parseDateString(dateString: string = ""): TuiDay {
     const date = new Date(dateString);
@@ -515,443 +457,15 @@ export class ModalComponent {
   }
 
   /**
-   * Метод форматирующий дату в нужный вид
-   * @param isoDateString Дата в виде iso
-   * @returns Дата в виде строки
+   * Форматирует дату в формате ISO в строку формата YYYY-MM-DD.
+   * @param isoDateString - Строка даты в формате ISO.
+   * @returns Строка даты в формате YYYY-MM-DD.
    */
   private formatISODateToYMD(isoDateString: string): string {
-    // Создаем объект даты из строки в формате ISO
     const date = new Date(isoDateString);
-
-    // Проверяем, что дата корректна
     if (isNaN(date.getTime())) {
       throw new Error("Invalid date string");
     }
-
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+    return date.toISOString().split('T')[0];
   }
-}
-{
-  //#region Variables
-  // form: FormGroup;
-  // private readonly dialogs = inject(TuiDialogService);
-  // protected isEditMode = false;
-  // protected items = [10, 50, 100];
-  // private destroyRef = inject(DestroyRef);
-  // selectedWorkerId: number = 0;
-  // selectedPostId: number = 0;
-  // selectedDepartmentId: number = 0;
-  // selectedStatusId: number = 0;
-  //#region Use Interfaces
-  // protected value: IRoomDto | null = null;
-  // protected workspaces!: ICurrentWorkspace[];
-  // protected workers!: IWorkerDetail[];
-  // protected posts!: IPost[];
-  // protected departments!: IDepartment[];
-  // protected historyWorkspace!: IHistoryWorkspaceStatus[];
-  // protected workersStatuseTypes!: IWorkersStatusesType[];
-  //#endregion
-  //#endregion
-
-  //#region Constructor
-  // constructor(
-  //   private fb: FormBuilder,
-  //   private workspaceService: WorkspaceService,
-  //   private workerService: WorkerService,
-  //   private postService: PostService,
-  //   private departmentService: DepartmentService,
-  //   private workersStatusesTypeService: WorkersStatusesTypeService,
-  //   private cdr: ChangeDetectorRef
-  // ) {
-  //   this.form = this.fb.group({
-  //     idWorkspace: [{ value: 0, disabled: false }],
-  //     idStatusWorkspace: [{ value: 0, disabled: false }],
-  //     worker: [{ value: '', disabled: true }, Validators.required], // Для работника
-  //     position: [{ value: '', disabled: true }], // Для менеджера
-  //     organization: [{ value: '', disabled: true }], // Для организации
-  //     status: [{ value: '', disabled: true }, Validators.required], // Для статуса
-  //     dateRange: [{
-  //       value: null,
-  //       disabled: true
-  //     }, Validators.required]
-  //   });
-
-  //   this.loadWorkspaces(this.data.idRoom);
-  //   this.loadWorkers();
-  //   this.loadPost();
-  //   this.loadDepartment();
-  //   this.loadWorkersStatusesType();
-
-  //   this.getForms();
-  // }
-  //#endregion
-
-  //#region DialogData
-  // public readonly context = injectContext<TuiDialogContext<IRoomDto, IRoomDto>>();
-
-  // protected get data(): IRoomDto {
-  //   return this.context.data;
-  // }
-
-  // protected submit(): void {
-  //   if (this.value !== null) {
-  //     this.context.completeWith(this.value);
-  //   }
-  // }
-
-  // protected showDialog(content: TemplateRef<TuiDialogContext>): void {
-  //   this.dialogs.open(content, { dismissible: true }).subscribe();
-  // }
-  //#endregion
-
-  //#region load data from database
-  // async loadWorkspaces(id: number) {
-  //   this.workspaceService.getWorkspacesByRoom(id)
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных о рабочих местах: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.workspaces = data.map(workspace => ({ ...workspace }));;
-  //           this.cdr.markForCheck();
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadWorkers() {
-  //   this.workerService.getWorkers()
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных о рабочих: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.workers = data;
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadPost() {
-  //   this.postService.getPosts()
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных о должностях: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.posts = data;
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadDepartment() {
-  //   this.departmentService.getDepartments()
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных об отделах: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.departments = data;
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadWorkspace(id: number, workspace: ICurrentWorkspace) {
-  //   this.workspaceService.getWorkspaceInfo(id)
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных о рабочем месте: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           const startDate = this.parseDateString(workspace.startDate);
-  //           const endDate = workspace.endDate ? this.parseDateString(workspace.endDate) : startDate;
-  //           this.form.patchValue({
-  //             idWorkspace: id,
-  //             idStatusWorkspace: workspace.idStatusWorkspace,
-  //             idWorker: workspace.idWorker,
-  //             worker: data.workerDetails?.fullWorkerName,
-  //             position: data.workerDetails?.postName,
-  //             organization: data.workerDetails?.departmentName,
-  //             status: data.statusName,
-  //             dateRange: new TuiDayRange(
-  //               startDate,
-  //               endDate
-  //             )
-  //           });
-  //           this.cdr.markForCheck(); // Принудительное обновление
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadHistoryWorkspace(id: number) {
-  //   this.workspaceService.getWorkspaceHistory(id)
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных об истории рабочего места: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.historyWorkspace = data;
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadData(id: number, workspace: ICurrentWorkspace) {
-  //   await this.loadHistoryWorkspace(id);
-  //   await this.loadWorkspace(id, workspace);
-  // }
-
-  // async loadWorkersStatusesType() {
-  //   this.workersStatusesTypeService.getWorkersStatusesTypes()
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных о типах рабочих: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.workersStatuseTypes = data;
-  //         }
-  //       }
-  //     });
-  // }
-
-  // async loadWorker(id: number) {
-  //   this.workerService.getWorker(id)
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных об отделах: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           this.form.patchValue({
-  //             position: data.postName,
-  //             organization: data.departmentName,
-  //             status: data.statusName
-  //           })
-  //         }
-  //       }
-  //     });
-  // }
-  //#endregion
-
-  //#region Post data into database
-  // postStatusWorkspace(workspace: IStatusWorkspaceDto) {
-  //   this.workspaceService.addStatusWorkspace(workspace)
-  //     .pipe(
-  //       takeUntilDestroyed(this.destroyRef),
-  //       catchError(error => {
-  //         console.error('Ошибка при обработке данных о рабочих местах: ', error);
-  //         return of(null);
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (data) {
-  //           if (this.value) {
-  //             this.loadWorkspaces(this.data.idRoom);
-  //           }
-  //           this.loadWorkers();
-  //           this.loadPost();
-  //           this.loadDepartment();
-  //           this.cdr.markForCheck();
-  //         }
-  //       },
-  //       error: (error) => console.error(error)
-  //     });
-  // }
-  //#endregion
-
-  //#region Methods
-  // onWorkerClicked(workspace: ICurrentWorkspace) {
-  //   this.loadData(workspace.idWorkspace, workspace);
-  //   this.cdr.markForCheck(); // Принудительное обновление
-  // }
-
-  // getForms() {
-  //   this.form.get('worker')?.valueChanges.subscribe({
-  //     next: (selectedValue) => {
-  //       const selectedWorker = this.workers.find(worker =>
-  //         `${worker.fullWorkerName}` === selectedValue
-  //       );
-  //       if (selectedWorker) {
-  //         this.selectedWorkerId = selectedWorker.idWorker
-  //         this.loadWorker(this.selectedWorkerId);
-  //       }
-  //     }
-  //   });
-
-  //   this.form.get('position')?.valueChanges.subscribe({
-  //     next: (selectedValue) => {
-  //       const selectedPost = this.posts.find(post => post.name === selectedValue);
-  //       if (selectedPost) {
-  //         this.selectedPostId = selectedPost.idPost;
-  //       }
-  //     }
-  //   });
-
-  //   this.form.get('organization')?.valueChanges.subscribe({
-  //     next: (selectedValue) => {
-  //       const selectedDepartment = this.departments.find(department => department.name === selectedValue);
-  //       if (selectedDepartment) {
-  //         this.selectedDepartmentId = selectedDepartment.idDepartment;
-  //       }
-  //     }
-  //   });
-
-  //   this.form.get('status')?.valueChanges.subscribe({
-  //     next: (selectedValue) => {
-  //       const selectedStatus = this.workersStatuseTypes.find(wSt => wSt.name === selectedValue);
-  //       if (selectedStatus) {
-  //         this.selectedStatusId = selectedStatus.idStatus;
-  //       }
-  //     }
-  //   })
-  // }
-
-  // saveClick() {
-  //   if (this.form.invalid) {
-  //     console.error('Ошибка валидации');
-  //   }
-
-  //   const formData = this.form.value;
-  //   // console.log(formData);
-
-  //   if (formData.dateRange && formData.dateRange.from && formData.dateRange.to) {
-  //     const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
-  //     let endDate: string | null = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
-
-  //     if (startDate === endDate) {
-  //       endDate = '';
-  //     }
-
-  //     const idStatusWorkspace = (formData.idStatusWorkspace === undefined || formData.idStatusWorkspace === null) ? 0 : formData.idStatusWorkspace;
-
-  //     if (formData.idWorkspace !== undefined && this.selectedWorkerId !== undefined) {
-  //       const workspaceData: IStatusWorkspaceDto = {
-  //         idWorkspace: formData.idWorkspace,
-  //         startDate: startDate,
-  //         endDate: endDate,
-  //         idStatusWorkspace: idStatusWorkspace,
-  //         idWorker: this.selectedWorkerId,
-  //         idWorkspaceStatusType: 1,
-  //         idUser: 1,
-  //         idWorkspacesReservationsStatuses: 1,
-  //       };
-  //       // console.log(workspaceData);
-
-  //       this.postStatusWorkspace(workspaceData);
-  //     } else {
-  //       console.error('Некоторые обязательные поля формы не заполнены.');
-  //     }
-  //   } else {
-  //     console.error('Диапазон дат не заполнен.');
-  //   }
-  // }
-
-  // toggleEditMode() {
-  //   this.isEditMode = !this.isEditMode; // Переключаем флаг
-
-  //   if (this.isEditMode) {
-  //     // Включаем все поля формы
-  //     this.form.get('worker')?.enable();
-  //     this.form.get('status')?.enable();
-  //     this.form.get('dateRange')?.enable();
-  //   } else {
-  //     // Отключаем поля формы
-  //     this.form.get('worker')?.disable();
-  //     this.form.get('status')?.disable();
-  //     this.form.get('dateRange')?.disable();
-  //   }
-  // }
-
-  // clearClick(): void {
-  //   let initialValue = this.fb.group({
-  //     idWorkspace: this.form.value.idWorkspace,
-  //     idStatusWorkspace: this.form.value.idStatusWorkspace,
-  //     worker: [{ value: '', disabled: true }, Validators.required], // Для работника
-  //     position: [{ value: '', disabled: true }], // Для менеджера
-  //     organization: [{ value: '', disabled: true }], // Для организации
-  //     status: [{ value: '', disabled: true }, Validators.required], // Для статуса
-  //     dateRange: [{
-  //       value: null,
-  //       disabled: true
-  //     }, Validators.required]
-  //   }).value;
-  //   this.form.reset(initialValue) // Сбрасываем форму до исходных значений
-  //   this.form.disable();
-  //   if (this.isEditMode) {
-  //     this.form.get('idWorkspace')?.enable();
-  //     this.form.get('idStatusWorkspace')?.enable();
-  //     this.form.get('worker')?.enable();
-  //     this.form.get('status')?.enable();
-  //     this.form.get('dateRange')?.enable();
-  //   }
-  // }
-
-  // private parseDateString(dateString: string = ""): TuiDay {
-  //   const date = new Date(dateString);
-  //   return new TuiDay(date.getFullYear(), date.getMonth(), date.getDate());
-  // }
-
-  // private formatISODateToYMD(isoDateString: string): string {
-  //   // Создаем объект даты из строки в формате ISO
-  //   const date = new Date(isoDateString);
-
-  //   // Проверяем, что дата корректна
-  //   if (isNaN(date.getTime())) {
-  //     throw new Error("Invalid date string");
-  //   }
-
-  //   const year = date.getUTCFullYear();
-  //   const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-  //   const day = String(date.getUTCDate()).padStart(2, '0');
-
-  //   return `${year}-${month}-${day}`;
-  // }
-  //#endregion
 }
