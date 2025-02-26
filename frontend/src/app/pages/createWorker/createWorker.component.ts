@@ -101,8 +101,6 @@ export class CreateWorkerComponent {
   onSubmit() {
     if (this.employeeForm.valid) {
       const employee: Employee = this.employeeForm.value;
-      console.log('Employee Data:', employee);
-      // Здесь вы можете отправить данные на сервер или выполнить другие действия
     }
   }
 }
