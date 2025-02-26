@@ -64,6 +64,7 @@ export class OfficeComponent implements OnInit {
     this.isAuth = this.authService.isAuthenticated()
     if (!this.isAuth) {
       this.location.back();
+      return;
     }
     this.id = this.activateRoute.snapshot.params['id'];
     this.loadData();

@@ -92,7 +92,7 @@ export interface IWorkspaceInfoDto {
     statusName?: string;
     startDate?: string;
     endDate?: string;
-    workerDetails?: {
+    workerDetails: {
         fullWorkerName?: string;
         postName?: string;
         departmentName?: string;
