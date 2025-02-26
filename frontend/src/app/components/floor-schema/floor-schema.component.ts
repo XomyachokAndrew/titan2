@@ -1,13 +1,13 @@
 //#region IMPORTS 
 import { ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { SafeHtmlPipe } from '../../services/safe-html.pipe';
+import { SafeHtmlPipe } from '@services/safe-html.pipe';
 import { NgFor } from '@angular/common';
-import { IFloorDto, IRoomDto } from '../../services/models/DTO';
-import { RoomService } from '../../services/controllers/room.service';
+import { IFloorDto, IRoomDto } from '@DTO';
+import { RoomService } from '@controllers/room.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { tuiDialog } from '@taiga-ui/core/components/dialog';
-import { ModalComponent } from '../../components/modalWindow/modalWindow.component';
+import { ModalComponent } from '@components/modalWindow/modalWindow.component';
 //#endregion
 
 @Component({

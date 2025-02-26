@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { ModalWorkerComponent } from '../../components/workerModalWindow/workerModalWindow.component';
+import { ModalWorkerComponent } from '@components/workerModalWindow/workerModalWindow.component';
 import { tuiDialog } from '@taiga-ui/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

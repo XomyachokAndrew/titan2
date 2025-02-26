@@ -7,14 +7,14 @@ import {
   CdkVirtualForOf,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
-import { IDepartment } from '../../services/models/Department';
+import { IDepartment } from '@models/Department';
 import { TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
-import { DepartmentService } from '../../services/controllers/department.service';
+import { DepartmentService } from '@controllers/department.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
-import { PostService } from '../../services/controllers/post.service';
-import { IPost } from '../../services/models/Post';
+import { PostService } from '@controllers/post.service';
+import { IPost } from '@models/Post';
 
 interface Employee {
   firstName: string;

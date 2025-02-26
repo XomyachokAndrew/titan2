@@ -28,7 +28,6 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { IRoom } from '../../services/models/Room';
 import { WorkspaceService } from '../../services/controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';

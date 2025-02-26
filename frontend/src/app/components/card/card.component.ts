@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, input } from '@angular/core'
 import { TuiAppearance, TuiButton, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { Router } from '@angular/router';
-import { IOfficeDto } from '../../services/models/DTO';
+import { IOfficeDto } from '@DTO';
 
 @Component({
     selector: 'card-office',

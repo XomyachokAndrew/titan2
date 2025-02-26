@@ -26,26 +26,26 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { WorkspaceService } from '../../services/controllers/workspace.service';
+import { WorkspaceService } from '@controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
-import { IRoomDto, IStatusWorkspaceDto, IWorkspaceInfoDto } from '../../services/models/DTO';
-import { IHistoryWorkspaceStatus } from '../../services/models/HistoryWorkspaceStatus';
+import { IRoomDto, IStatusWorkspaceDto, IWorkspaceInfoDto } from '@DTO';
+import { IHistoryWorkspaceStatus } from '@models/HistoryWorkspaceStatus';
 import { DatePipe } from '@angular/common';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualForOf,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
-import { WorkerService } from '../../services/controllers/worker.service';
-import { PostService } from '../../services/controllers/post.service';
-import { IPost } from '../../services/models/Post';
-import { DepartmentService } from '../../services/controllers/department.service';
-import { IDepartment } from '../../services/models/Department';
-import { WorkersStatusesTypeService } from '../../services/controllers/workersStatusesType.service';
-import { IWorkersStatusesType } from '../../services/models/WorkersStatusesType';
-import { IWorkerDetail } from '../../services/models/WorkerDetail';
+import { WorkerService } from '@controllers/worker.service';
+import { PostService } from '@controllers/post.service';
+import { IPost } from '@models/Post';
+import { DepartmentService } from '@controllers/department.service';
+import { IDepartment } from '@models/Department';
+import { WorkersStatusesTypeService } from '@controllers/workersStatusesType.service';
+import { IWorkersStatusesType } from '@models/WorkersStatusesType';
+import { IWorkerDetail } from '@models/WorkerDetail';
 //#endregion
 
 /**

@@ -12,9 +12,9 @@ import {
 } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
-import { SearchComponent } from '../searchBar/search.component';
+import { SearchComponent } from '@components/searchBar/search.component';
 import { Location } from '@angular/common';
-import { UserService } from '../../services/controllers/user.service';
+import { UserService } from '@controllers/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({

@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { TuiButton } from '@taiga-ui/core';
-import { UserService } from '../../services/controllers/user.service';
+import { UserService } from '@controllers/user.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

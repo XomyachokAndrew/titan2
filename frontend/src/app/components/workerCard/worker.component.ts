@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TuiIconPipe } from '@taiga-ui/core';
-import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
+import { ICurrentWorkspace } from '@models/CurrentWorkspace';
 import { CommonModule } from '@angular/common';
 
 @Component({

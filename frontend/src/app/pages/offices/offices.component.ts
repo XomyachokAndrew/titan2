@@ -1,9 +1,9 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import CardComponent from '../../components/card/card.component';
-import { OfficeService } from '../../services/controllers/office.service';
+import CardComponent from '@components/card/card.component';
+import { OfficeService } from '@controllers/office.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IOfficeDto } from '../../services/models/DTO';
-import LoadingComponent from '../../components/loading/loading.component';
+import { IOfficeDto } from '@DTO';
+import LoadingComponent from '@components/loading/loading.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs'
 
