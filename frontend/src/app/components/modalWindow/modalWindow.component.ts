@@ -30,7 +30,7 @@ import { WorkspaceService } from '@controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
-import { IRoomDto, IStatusWorkspaceDto, IWorkspaceInfoDto } from '@DTO';
+import { IRoomDto, IStatusWorkspaceDto, IWorkspaceDto, IWorkspaceInfoDto } from '@DTO';
 import { IHistoryWorkspaceStatus } from '@models/HistoryWorkspaceStatus';
 import { DatePipe } from '@angular/common';
 import {
@@ -80,6 +80,7 @@ import { IWorkerDetail } from '@models/WorkerDetail';
 export class ModalComponent {
   private destroyRef = inject(DestroyRef);
   protected form: FormGroup;
+  protected newWorkspaceForm: FormGroup;
   protected value!: IRoomDto;
   protected isEditMode: boolean = false;
   protected workspaces!: ICurrentWorkspace[];
@@ -93,6 +94,7 @@ export class ModalComponent {
   protected selectedPostId: number = 0;
   protected selectedDepartmentId: number = 0;
   protected workspaceName: string = "";
+  protected isAddingWorkspace: boolean = false;
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -112,6 +114,11 @@ export class ModalComponent {
       department: [{ value: null, disabled: true }],
       status: [{ value: null, disabled: true }],
       dateRange: [{ value: null, disabled: true }],
+    });
+
+    this.newWorkspaceForm = this.fb.group({
+      idRoom: this.data.idRoom,
+      nameWorkspace: null,
     });
 
     this.loadWorkspaces(this.data.idRoom);
@@ -290,7 +297,7 @@ export class ModalComponent {
     }
 
     const formData = this.form.value;
-    
+
     if (formData.dateRange && formData.dateRange.from && formData.dateRange.to) {
       const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
       let endDate = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
@@ -338,20 +345,20 @@ export class ModalComponent {
       )
       .subscribe({
         next: () => {
-            this.loadWorkspaces(this.data.idRoom);
-            this.loadSelects();
-            this.workspaceName = "";
-            this.historyWorkspace = [];
-            this.form.patchValue({
-              idStatusWorkspace: null,
-              idWorkspace: null,
-              worker: null,
-              post: null,
-              department: null,
-              status: null,
-              dateRange: null,
-            });
-            this.cdr.markForCheck();
+          this.loadWorkspaces(this.data.idRoom);
+          this.loadSelects();
+          this.workspaceName = "";
+          this.historyWorkspace = [];
+          this.form.patchValue({
+            idStatusWorkspace: null,
+            idWorkspace: null,
+            worker: null,
+            post: null,
+            department: null,
+            status: null,
+            dateRange: null,
+          });
+          this.cdr.markForCheck();
         },
         error: (error) => console.error(error)
       });
@@ -459,6 +466,57 @@ export class ModalComponent {
     this.cdr.markForCheck();
   }
 
+  addWorkspace() {
+    this.isAddingWorkspace = true;
+  }
+
+  saveNewWorkspace() {
+    const formData = this.newWorkspaceForm.value;
+
+    if (formData.nameWorkspace) {
+      const workspace: IWorkspaceDto = {
+        name: formData.nameWorkspace,
+        idRoom: formData.idRoom
+      }
+
+      this.isAddingWorkspace = false;
+      this.newWorkspaceForm.patchValue({
+        nameWorkspace: null,
+      });
+      this.postWorkspace(workspace);
+    }
+  }
+
+  postWorkspace(workspace: IWorkspaceDto) {
+    this.workspaceService.addWorkspace(workspace)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loadWorkspaces(this.data.idRoom);
+          this.loadSelects();
+          this.workspaceName = "";
+          this.historyWorkspace = [];
+          this.form.patchValue({
+            idStatusWorkspace: null,
+            idWorkspace: null,
+            worker: null,
+            post: null,
+            department: null,
+            status: null,
+            dateRange: null,
+          });
+          this.cdr.markForCheck();
+        },
+        error: (error) => console.error(error)
+      });
+  }
+
   /**
    * Асинхронный метод для подгрузки данных о рабочем и обновлении их в форме
    * @param id Уникальный индетификатор выбранного рабочего
@@ -492,6 +550,10 @@ export class ModalComponent {
    */
   toggleEditMode() {
     this.isEditMode = !this.isEditMode; // Переключаем флаг
+    this.isAddingWorkspace = false;
+    this.newWorkspaceForm.patchValue({
+      nameWorkspace: null,
+    });
 
     if (this.isEditMode) {
       // Включаем все поля формы

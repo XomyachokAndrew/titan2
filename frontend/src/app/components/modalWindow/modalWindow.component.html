@@ -13,6 +13,22 @@
         @for (item of workspaces; track $index) {
         <worker [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"></worker>
         }
+        @if (isEditMode) {
+          @if (isAddingWorkspace) {
+              <form class="H3 workspace_add" [formGroup]="newWorkspaceForm">
+                <input type="hidden" formControlName="idRoom">
+                <tui-input class="H2 MP-SB custom-input" formControlName="nameWorkspace">
+                  Название рабочего места:
+                  <input tuiTextfieldLegacy type="text" />
+                </tui-input>
+                <span class="P MP-R submit click" (click)="saveNewWorkspace()">Сохранить</span>
+              </form>
+          } @else {
+            <div class="H3 workspace_add click" (click)="addWorkspace()">
+              +
+            </div>
+          }
+        }
       </div>
     </tui-scrollbar>
     <span class="P MP-R edit-mode click" (click)="toggleEditMode()">
@@ -21,7 +37,7 @@
   </div>
   <div class="workspace">
     <form [formGroup]="form">
-      <div class="workspase-worker">
+      <div class="workspace-worker">
         <input type="hidden" formControlName="idWorkspace">
         <input type="hidden" formControlName="idStatusWorkspace">
         <span class="H3 MP-R workspace-name">Рабочее место {{workspaceName}}</span>
@@ -81,7 +97,7 @@
         </tui-input-date-range>
         @if (isEditMode) {
         <div class="button-container">
-          <span class="P MP-R save click" (click)="onSubmit()">Сохранить</span>
+          <span class="P MP-R submit click" (click)="onSubmit()">Сохранить</span>
           <span class="P MP-R clear click" (click)="clearClick()">Очистить</span>
         </div>
         }

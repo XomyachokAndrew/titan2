@@ -45,8 +45,6 @@ import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
     TuiTextfield,
     TuiTextfieldControllerModule,
     TuiInputDateRangeModule,
-    WorkerComponent,
-    TuiScrollbar,
   ],
   templateUrl: './workerModalWindow.component.html',
   styleUrls: ['./workerModalWindow.scss'],

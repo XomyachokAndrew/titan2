@@ -30,10 +30,13 @@
 }
 
 .content {
-  display: flex; /* Добавлено */
-  flex-direction: column; /* Убедитесь, что элементы располагаются в колонку */
-  gap: 15px; /* Установите желаемый отступ между элементами */
-  padding: 0 30px;
+  display: flex;
+  /* Добавлено */
+  flex-direction: column;
+  /* Убедитесь, что элементы располагаются в колонку */
+  gap: 15px;
+  /* Установите желаемый отступ между элементами */
+  align-items: center;
 }
 
 .workspace {
@@ -57,7 +60,7 @@
   padding-bottom: 20px;
 }
 
-.workspase-worker {
+.workspace-worker {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -93,16 +96,6 @@
   justify-content: space-between;
 }
 
-.clear {
-  color: #9C4141;
-  padding-left: 5px;
-}
-
-.save {
-  color: #419C41;
-  padding-left: 5px;
-}
-
 .edit-mode {
   color: #9f9a9a;
   padding-left: 150px;
@@ -136,10 +129,17 @@
   }
 }
 
-.click {
-  cursor: pointer;
-}
-
 .scroll {
   block-size: 8.5rem;
+}
+
+.workspace_add {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  border-radius: 1.875rem;
+  background: #e6e6e6;
+  font-family: 'MyriadPro-r';
+  transition: 0.3s;
+  align-items: center;
 }
