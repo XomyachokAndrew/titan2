@@ -20,7 +20,7 @@
     </span>
   </div>
   <div class="workspace">
-    <form [formGroup]="form" action="" method="POST">
+    <form [formGroup]="form">
       <div class="workspase-worker">
         <input type="hidden" formControlName="idWorkspace">
         <input type="hidden" formControlName="idStatusWorkspace">
@@ -39,7 +39,7 @@
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Должность -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="position">
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="post">
           Должность
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
@@ -51,7 +51,7 @@
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Организация -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="organization">
+        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="department">
           Организация
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
@@ -62,13 +62,13 @@
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
-        <span class="P MP-R employes-data">Данные сотрудника</span>
+        <!-- <span class="P MP-R employes-data">Данные сотрудника</span> -->
         <!-- Статус -->
         <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="status">
           Статус
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of workersStatuseTypes" tuiOption type="button" [value]="item.name"
+              <button *cdkVirtualFor="let item of workerStatusTypes" tuiOption type="button" [value]="item.name"
                 id="{{item.idStatus}}">
                 {{item.name}}
               </button>
