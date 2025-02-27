@@ -412,6 +412,107 @@ namespace backend.Services
             _context.Reports.Add(report);
             await _context.SaveChangesAsync(); // Сохраняем изменения в базе данных
         }
+
+        private async Task<string> CreateExcelReportAsync(Office office)
+        {
+            var sanitizedOfficeName = Regex.Replace(office.OfficeName, @"[<>:""/\\|?*]", "");
+            sanitizedOfficeName = sanitizedOfficeName.Replace(" ", "_");
+            var currentDateTime = DateTime.Now;
+            var timeString = currentDateTime.ToString("HHmm");
+            var fileName = $"Отчет_{sanitizedOfficeName}_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
+            var filePath = Path.Combine("wwwroot", "resources", "reports", fileName);
+
+            using (var workbook = new XSSFWorkbook())
+            {
+                foreach (var floor in office.Floors)
+                {
+                    var sheet = workbook.CreateSheet($"Этаж {floor.NumberFloor}");
+
+                    // Установка стиля для заголовка этажа
+                    var floorStyle = CreateCellStyle(workbook, IndexedColors.LightBlue.Index, true, 14);
+                    var floorRow = sheet.CreateRow(0);
+                    floorRow.CreateCell(0).SetCellValue($"Этаж {floor.NumberFloor}");
+                    floorRow.GetCell(0).CellStyle = floorStyle;
+
+                    // Заголовки для столбцов
+                    var headerStyle = CreateCellStyle(workbook, IndexedColors.BrightGreen.Index, true, 12);
+                    var headerRow = sheet.CreateRow(1);
+                    headerRow.CreateCell(0).SetCellValue("Кабинет");
+                    headerRow.CreateCell(1).SetCellValue("Рабочее место");
+                    headerRow.CreateCell(2).SetCellValue("Работник");
+                    headerRow.CreateCell(3).SetCellValue("Должность");
+                    headerRow.CreateCell(4).SetCellValue("Отдел");
+                    headerRow.CreateCell(5).SetCellValue("Статус");
+                    headerRow.CreateCell(6).SetCellValue("Дата начала");
+                    headerRow.CreateCell(7).SetCellValue("Дата окончания");
+
+                    int rowIndex = 2; // Начинаем с третьей строки
+
+                    foreach (var room in floor.Rooms)
+                    {
+                        // Добавляем заголовок для кабинета
+                        var roomStyle = CreateCellStyle(workbook, IndexedColors.LightGreen.Index, true, 12);
+                        var roomRow = sheet.CreateRow(rowIndex++);
+                        roomRow.CreateCell(0).SetCellValue($"Кабинет: {room.Name}");
+                        roomRow.GetCell(0).CellStyle = roomStyle;
+
+                        var currentWorkspaces = await _context.CurrentWorkspaces
+                            .Where(ws => ws.IdRoom == room.IdRoom)
+                            .ToListAsync();
+
+                        foreach (var workspace in currentWorkspaces)
+                        {
+                            var workerDetail = await _context.WorkerDetails
+                                .SingleOrDefaultAsync(wd => wd.IdWorker == workspace.IdWorker);
+
+                            var row = sheet.CreateRow(rowIndex++);
+                            row.CreateCell(0).SetCellValue(""); // Пустая ячейка для отступа
+                            row.CreateCell(1).SetCellValue(workspace.WorkspaceName);
+
+                            // Добавляем информацию о работнике
+                            if (workerDetail != null)
+                            {
+                                row.CreateCell(2).SetCellValue(workerDetail.FullWorkerName);
+                                row.CreateCell(3).SetCellValue(workerDetail.PostName ?? "-");
+                                row.CreateCell(4).SetCellValue(workerDetail.DepartmentName ?? "-");
+                            }
+                            else
+                            {
+                                row.CreateCell(2).SetCellValue("Свободно");
+                                row.CreateCell(3).SetCellValue("-");
+                                row.CreateCell(4).SetCellValue("-");
+                            }
+
+                            // Добавляем информацию о статусах и датах
+                            row.CreateCell(5).SetCellValue(workspace.WorkspaceStatusTypeName ?? "-");
+                            row.CreateCell(6).SetCellValue(workspace.StartDate?.ToString("yyyy-MM-dd") ?? "-");
+                            row.CreateCell(7).SetCellValue(workspace.EndDate?.ToString("yyyy-MM-dd") ?? "-");
+                        }
+                    }
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                {
+                    await Task.Run(() => workbook.Write(fileStream)); // Асинхронное выполнение записи в файл
+                }
+            }
+
+            return filePath; // Возвращаем путь к файлу
+        }
+
+        public async Task<string> GenerateOfficeReportAsync(int officeId, int reportTypeId, int idUser)
+        {
+            var office = await GetOfficeWithDetailsAsync(officeId);
+            if (office == null)
+            {
+                throw new InvalidOperationException("Офис не найден.");
+            }
+
+            var filePath = await CreateExcelReportAsync(office);
+            await SaveReportToDatabaseAsync(reportTypeId, idUser, filePath);
+
+            return filePath; // Возвращаем путь к файлу
+        }
     }
 }
 
