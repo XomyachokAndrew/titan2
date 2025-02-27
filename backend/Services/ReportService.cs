@@ -429,13 +429,13 @@ namespace backend.Services
                     var sheet = workbook.CreateSheet($"Этаж {floor.NumberFloor}");
 
                     // Установка стиля для заголовка этажа
-                    var floorStyle = CreateCellStyle(workbook, IndexedColors.LightBlue.Index, true, 14);
+                    var floorStyle = CreateCellStyle(workbook, IndexedColors.Lime.Index, true, 14);
                     var floorRow = sheet.CreateRow(0);
                     floorRow.CreateCell(0).SetCellValue($"Этаж {floor.NumberFloor}");
                     floorRow.GetCell(0).CellStyle = floorStyle;
 
                     // Заголовки для столбцов
-                    var headerStyle = CreateCellStyle(workbook, IndexedColors.BrightGreen.Index, true, 12);
+                    var headerStyle = CreateCellStyle(workbook, IndexedColors.Aqua.Index, true, 12);
                     var headerRow = sheet.CreateRow(1);
                     headerRow.CreateCell(0).SetCellValue("Кабинет");
                     headerRow.CreateCell(1).SetCellValue("Рабочее место");
@@ -443,8 +443,15 @@ namespace backend.Services
                     headerRow.CreateCell(3).SetCellValue("Должность");
                     headerRow.CreateCell(4).SetCellValue("Отдел");
                     headerRow.CreateCell(5).SetCellValue("Статус");
-                    headerRow.CreateCell(6).SetCellValue("Дата начала");
-                    headerRow.CreateCell(7).SetCellValue("Дата окончания");
+                    headerRow.CreateCell(6).SetCellValue("Резервирование");
+                    headerRow.CreateCell(7).SetCellValue("Дата начала");
+                    headerRow.CreateCell(8).SetCellValue("Дата окончания");
+
+                    // Применение стиля к заголовкам
+                    for (int i = 0; i < 9; i++)
+                    {
+                        headerRow.GetCell(i).CellStyle = headerStyle;
+                    }
 
                     int rowIndex = 2; // Начинаем с третьей строки
 
@@ -485,9 +492,35 @@ namespace backend.Services
 
                             // Добавляем информацию о статусах и датах
                             row.CreateCell(5).SetCellValue(workspace.WorkspaceStatusTypeName ?? "-");
-                            row.CreateCell(6).SetCellValue(workspace.StartDate?.ToString("yyyy-MM-dd") ?? "-");
-                            row.CreateCell(7).SetCellValue(workspace.EndDate?.ToString("yyyy-MM-dd") ?? "-");
+                            row.CreateCell(6).SetCellValue(workspace.ReservationStatuseName ?? "-");
+                            row.CreateCell(7).SetCellValue(workspace.StartDate?.ToString("yyyy-MM-dd") ?? "-");
+                            row.CreateCell(8).SetCellValue(workspace.EndDate?.ToString("yyyy-MM-dd") ?? "-");
+
+                            // Установка цвета фона в зависимости от статуса рабочего места
+                            if (workspace.IdWorkspaceReservationsStatuses == null && workspace.IdWorkspaceStatusType == null && workspace.IdWorker == null) // Свободно
+                            {
+                                // Установка цвета фона для свободного рабочего места
+                                var freeStyle = CreateCellStyle(workbook, IndexedColors.Coral.Index, false, 12);
+                                for (int i = 1; i < row.Cells.Count; i++) // Применяем стиль ко всем ячейкам, кроме первой
+                                {
+                                    row.GetCell(i).CellStyle = freeStyle;
+                                }
+                            }
+                            else if (workspace.IdWorkspaceReservationsStatuses != null) // Забронировано
+                            {
+                                var reservedStyle = CreateCellStyle(workbook, IndexedColors.LightYellow.Index, false, 12);
+                                for (int i = 1; i < row.Cells.Count; i++) // Применяем стиль ко всем ячейкам, кроме первой
+                                {
+                                    row.GetCell(i).CellStyle = reservedStyle;
+                                }
+                            }
                         }
+                    }
+
+                    // Установка ширины столбцов по содержимому
+                    for (int i = 0; i < 9; i++) // 9 столбцов
+                    {
+                        sheet.AutoSizeColumn(i);
                     }
                 }
 
@@ -497,7 +530,7 @@ namespace backend.Services
                 }
             }
 
-            return filePath; // Возвращаем путь к файлу
+            return filePath; // Возвращаем путь к созданному файлу
         }
 
         public async Task<string> GenerateOfficeReportAsync(int officeId, int reportTypeId, int idUser)
