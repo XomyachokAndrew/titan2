@@ -58,11 +58,6 @@ namespace backend.Controllers
             // Читаем содержимое файла
             var svgContent = await System.IO.File.ReadAllTextAsync(schemePath);
 
-            // Вычисляем количество занятых и зарезервированных рабочих мест
-            var occupiedWorkspaces = _context.CurrentWorkspaces
-                .Where(w => w.IdWorker != null)
-                .Count(w => floor.Rooms.Select(r => r.IdRoom).Contains(w.IdRoom.Value));
-
             var reservedWorkspaces = _context.CurrentWorkspaces
                 .Where(w => w.IdWorker == null && w.IdWorkspaceReservationsStatuses != null)
                 .Count(w => floor.Rooms.Select(r => r.IdRoom).Contains(w.IdRoom.Value));
@@ -72,7 +67,6 @@ namespace backend.Controllers
             {
                 IdFloor = floor.IdFloor,
                 NumberFloor = floor.NumberFloor,
-                TotalWorkspace = floor.TotalWorkspace,
                 SchemeContent = svgContent,
                 IdOffice = floor.IdOffice,
                 Square = floor.Square,
@@ -83,7 +77,8 @@ namespace backend.Controllers
                     TotalWorkspace = r.TotalWorkspace,
                     Square = r.Square
                 }).ToList(),
-                OccupiedWorkspaces = occupiedWorkspaces,
+                TotalWorkspace = floor.TotalWorkspace,
+                FreeWorkspaces = floor.FreeWorkspaces,
                 ReservedWorkspaces = reservedWorkspaces
             };
 
