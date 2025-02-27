@@ -7,12 +7,11 @@
   backdrop-filter: blur(12.003968238830566px);
   height: 25rem;
   padding: 2.25rem 1.25rem;
-  gap: 15px;
+  justify-content: space-between;
 }
 
 .custom-input {
   width: 35rem;
-  padding-top: 15px;
   --tui-font-text-m: normal 1rem / 0.5rem 'MyriadPro-r';
   --tui-radius-m: 0.75rem;
   --tui-text-secondary: black;
@@ -25,14 +24,6 @@
   padding-bottom: 20px;
   gap: 10px;
   padding-left: 140px;
-}
-
-.submit {
-  color: #419c41;
-}
-
-.clear {
-  color: #9c4141;
 }
 
 .button-container {

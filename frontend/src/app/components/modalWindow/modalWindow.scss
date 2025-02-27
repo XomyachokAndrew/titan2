@@ -99,15 +99,6 @@
   padding-bottom: 25px;
 }
 
-.custom-select {
-  --tui-font-text-m: normal 1rem / 1rem 'MyriadPro-r';
-  --tui-radius-m: 8rem;
-  --tui-text-secondary: black;
-  --tui-background-accent-1: black;
-  --tui-background-base: white;
-  --tui-padding-l: 1rem;
-}
-
 .custom-input {
   --tui-font-text-m: normal 1rem / 1rem 'MyriadPro-r';
   --tui-radius-m: 8rem;
@@ -126,9 +117,6 @@
   }
 }
 
-.scroll {
-  block-size: 8.5rem;
-}
 
 .workspace_add {
   padding: 1rem;

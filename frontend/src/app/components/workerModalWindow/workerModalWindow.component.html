@@ -1,24 +1,48 @@
 <div class="worker-info H3 MP-R">Информация о сотруднике</div>
-<div class="container">
+<form class="container" [formGroup]="form">
   <span class="H3 MP-R">Данные сотрудника</span>
-  <tui-input class="H2 MP-SB custom-input" formControlName="firstName">
+  <input type="hidden" formControlName="workerId">
+  <tui-input class="H2 MP-SB custom-input" formControlName="worker">
     Работник:
     <input tuiTextfieldLegacy />
   </tui-input>
-  <tui-input class="H2 MP-SB custom-input" formControlName="position">
-    Рабочее место:
-    <input tuiTextfieldLegacy />
-  </tui-input>
-  <tui-input class="H2 MP-SB custom-input" formControlName="position">
-    Должность:
-    <input tuiTextfieldLegacy />
-  </tui-input>
-  <tui-input class="H2 MP-SB custom-input" formControlName="organization">
-    Организация:
-    <input tuiTextfieldLegacy />
-  </tui-input>
+  <!-- Должность -->
+  <tui-select class="P MP-R custom-input" tuiTextfieldSize="l" formControlName="post">
+    Должность
+    <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+      <tui-data-list>
+        <button *cdkVirtualFor="let item of posts" tuiOption type="button" [value]="item.name" id="{{item.idPost}}">
+          {{item.name}}
+        </button>
+      </tui-data-list>
+    </cdk-virtual-scroll-viewport>
+  </tui-select>
+  <!-- Организация -->
+  <tui-select class="P MP-R custom-input" tuiTextfieldSize="l" formControlName="department">
+    Организация
+    <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+      <tui-data-list>
+        <button *cdkVirtualFor="let item of departments" tuiOption type="button" [value]="item.name"
+          id="{{item.idDepartment}}">
+          {{item.name}}
+        </button>
+      </tui-data-list>
+    </cdk-virtual-scroll-viewport>
+  </tui-select>
+  <!-- Статус -->
+  <tui-select class="P MP-R custom-input" tuiTextfieldSize="l" formControlName="status">
+    Статус
+    <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+      <tui-data-list>
+        <button *cdkVirtualFor="let item of workerStatusTypes" tuiOption type="button" [value]="item.name"
+          id="{{item.idStatus}}">
+          {{item.name}}
+        </button>
+      </tui-data-list>
+    </cdk-virtual-scroll-viewport>
+  </tui-select>
   <div class="button-container">
-    <span class="P MP-R submit"> Сохранить </span>
-    <span class="P MP-R clear">Очистить </span>
+    <span class="P MP-R submit click" (click)="onSubmit()">Сохранить</span>
+    <span class="P MP-R clear click">Очистить </span>
   </div>
-</div>
+</form>

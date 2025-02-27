@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IWorker } from '../models/Worker';
 import { environment } from '../../../environments/environment';
 import { IStatusWorkerDto, IWorkerDto } from '../models/DTO';
 import { IWorkerDetail } from '../models/WorkerDetail';

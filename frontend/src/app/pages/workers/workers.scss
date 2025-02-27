@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: row;
     width: 50rem;
-    gap: 10px;
+    justify-content: space-between;
 }
 
 .worker-text {

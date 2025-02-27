@@ -339,7 +339,7 @@ export class ModalComponent {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          console.error('Ошибка при добавлении статуса: ', error);
           return of(null);
         })
       )

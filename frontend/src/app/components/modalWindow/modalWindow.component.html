@@ -43,7 +43,7 @@
         <span class="H3 MP-R workspace-name">Рабочее место {{workspaceName}}</span>
         <span class="P MP-R employes-data">Данные сотрудника</span>
         <!-- Работник -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="worker">
+        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="worker">
           Работник
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
@@ -55,7 +55,7 @@
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Должность -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="post">
+        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="post">
           Должность
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
@@ -67,7 +67,7 @@
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Организация -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="department">
+        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="department">
           Организация
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>
@@ -80,7 +80,7 @@
         </tui-select>
         <!-- <span class="P MP-R employes-data">Данные сотрудника</span> -->
         <!-- Статус -->
-        <tui-select class="P MP-R custom-select" tuiTextfieldSize="m" formControlName="status">
+        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="status">
           Статус
           <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
             <tui-data-list>

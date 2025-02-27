@@ -15,23 +15,29 @@ import {
   FormControl,
 } from '@angular/forms';
 import type { TuiDialogContext } from '@taiga-ui/core';
-import { TuiButton, TuiDialogService, TuiTextfield } from '@taiga-ui/core';
+import {  TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSlider } from '@taiga-ui/kit';
-import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { tuiDateFormatProvider } from '@taiga-ui/core';
 import { TuiInputDateRangeModule } from '@taiga-ui/legacy';
-import { WorkerComponent } from '../workerCard/worker.component';
-import { TuiScrollbar } from '@taiga-ui/core';
 import {
   TuiInputModule,
   TuiSelectModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { WorkspaceService } from '../../services/controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
+import { IWorkerDetail } from '@models/WorkerDetail';
+import { PostService } from '@controllers/post.service';
+import { DepartmentService } from '@controllers/department.service';
+import { WorkersStatusesTypeService } from '@controllers/workersStatusesType.service';
+import { IDepartment } from '@models/Department';
+import { IPost } from '@models/Post';
+import { IWorkersStatusesType } from '@models/WorkersStatusesType';
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { WorkerService } from '@controllers/worker.service';
+import { IStatusWorkerDto } from '@models/DTO';
 
 @Component({
   standalone: true,
@@ -45,6 +51,9 @@ import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
     TuiTextfield,
     TuiTextfieldControllerModule,
     TuiInputDateRangeModule,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    CdkVirtualScrollViewport,
   ],
   templateUrl: './workerModalWindow.component.html',
   styleUrls: ['./workerModalWindow.scss'],
@@ -53,75 +62,184 @@ import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 })
 export class ModalWorkerComponent {
   form: FormGroup; // Объявляем FormGroup
-  private readonly dialogs = inject(TuiDialogService);
-  protected readonly disable = signal(true);
-  protected value: string | null = null;
-  protected name = '';
-  protected items = [10, 50, 100];
+  protected value: IWorkerDetail | null = null;
   protected workspaces!: ICurrentWorkspace[];
+  protected departments!: IDepartment[];
+  protected posts!: IPost[];
+  protected workerStatusTypes!: IWorkersStatusesType[];
+  protected selectedPostId: number = 0;
+  protected selectedDepartmentId: number = 0;
+  protected selectedWorkerStatusTypeId: number = 0;
+  private initialForm!: any;
   private destroyRef = inject(DestroyRef);
-  protected dateRangeItems: Array<{ label: string; value: TuiDayRange }> = [
-    {
-      label: 'Last 7 days',
-      value: new TuiDayRange(new TuiDay(2023, 9, 1), new TuiDay(2023, 9, 7)),
-    },
-    {
-      label: 'Last 30 days',
-      value: new TuiDayRange(new TuiDay(2023, 8, 1), new TuiDay(2023, 9, 1)),
-    },
-  ];
 
   constructor(
     private fb: FormBuilder,
-    private workspaceService: WorkspaceService
+    private postService: PostService,
+    private departmentService: DepartmentService,
+    private workerStatusTypeService: WorkersStatusesTypeService,
+    private workerService: WorkerService,
   ) {
     this.form = this.fb.group({
-      worker: [null, Validators.required], // Для работника
-      manager: [{ value: '', disabled: true }], // Для менеджера
-      organization: [{ value: '', disabled: true }], // Для организации
-      status: [null, Validators.required], // Для статуса
-      dateRange: new FormControl(
-        new TuiDayRange(new TuiDay(2018, 2, 10), new TuiDay(2018, 3, 20)),
-        Validators.required
-      ),
+      workerId: this.data.idWorker,
+      worker: [{ value: this.data.fullWorkerName, disabled: true }],
+      post: this.data.postName,
+      department: this.data.departmentName,
+      status: this.data.statusName,
+    });
+
+    this.initialForm = this.form.value;
+
+    this.loadDepartments();
+    this.loadPosts();
+    this.loadWorkerStatusTypes();
+
+    this.form.get('status')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedWorkerStatusType = this.workerStatusTypes.find(wst =>
+          wst.name === selectedValue
+        );
+        if (selectedWorkerStatusType) {
+          this.selectedWorkerStatusTypeId = selectedWorkerStatusType.idStatus
+          console.log(this.selectedWorkerStatusTypeId);
+        }
+      }
+    });
+
+    this.form.get('post')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedPost = this.posts.find(post => post.name === selectedValue);
+        if (selectedPost) {
+          this.selectedPostId = selectedPost.idPost;
+          console.log(this.selectedPostId);
+
+        }
+      }
+    });
+
+    this.form.get('department')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
+        if (selectedDepartment) {
+          this.selectedDepartmentId = selectedDepartment.idDepartment;
+          console.log(this.selectedDepartmentId);
+
+        }
+      }
     });
   }
 
-  loadWorkspaces(id: number) {
-    this.workspaceService
-      .getWorkspacesByRoom(id)
+  public readonly context = injectContext<TuiDialogContext<IWorkerDetail, IWorkerDetail>>();
+
+  protected get data() {
+    return this.context.data;
+  }
+
+  /**
+ * Асинхронный метод, для подгрузки должностей
+ */
+  async loadPosts() {
+    this.postService.getPosts()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error(
-            'Ошибка при обработке данных о рабочих местах: ',
-            error
-          );
+          console.error('Ошибка при обработке данных должностей: ', error);
           return of(null);
         })
       )
       .subscribe({
         next: data => {
           if (data) {
-            this.workspaces = data;
+            this.posts = data.map(post => ({ ...post }));
           }
         },
+        error: err => console.error(err)
       });
   }
 
-  public readonly context = injectContext<TuiDialogContext<string, string>>();
-
-  protected get data(): string {
-    return this.context.data;
+  /**
+ * Асинхронный метод, для подгрузки отделов
+ */
+  async loadDepartments() {
+    this.departmentService.getDepartments()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных отделов: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: data => {
+          if (data) {
+            this.departments = data.map(department => ({ ...department }));
+          }
+        },
+        error: err => console.error(err)
+      });
   }
 
-  protected submit(): void {
-    if (this.value !== null) {
-      this.context.completeWith(this.value);
+  /**
+   * Асинхронный метод, для подгрузки статуса рабочего
+   */
+  async loadWorkerStatusTypes() {
+    this.workerStatusTypeService.getWorkersStatusesTypes()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных типа статуса рабочего: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: data => {
+          if (data) {
+            this.workerStatusTypes = data.map(workerStatusTypes => ({ ...workerStatusTypes }));
+          }
+        },
+        error: err => console.error(err)
+      });
+  }
+
+  onSubmit() {
+    const formData = this.form.value;
+    console.log(formData.workerId);
+    
+    if (
+      formData.post == this.initialForm.post
+      && formData.department == this.initialForm.department
+      && formData.status == this.initialForm.status
+    ) { }
+    else {
+      console.log('qwe');
+
+      const statusWorker: IStatusWorkerDto = {
+        idStatusWorker: 0,
+        idWorker: formData.workerId,
+        idPost: this.selectedPostId,
+        idDepartment: this.selectedDepartmentId,
+        idUser: 1,
+        idStatus: this.selectedWorkerStatusTypeId,
+      }
+
+      this.updatedWorker(statusWorker);
     }
   }
 
-  protected showDialog(content: TemplateRef<TuiDialogContext>): void {
-    this.dialogs.open(content, { dismissible: true }).subscribe();
+  updatedWorker(statusWorker: IStatusWorkerDto) {
+    this.workerService.addStatusWorker(statusWorker)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при добавлении статуса: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          console.log(statusWorker);
+        },
+        error: (error) => console.error(error)
+      });
   }
 }
