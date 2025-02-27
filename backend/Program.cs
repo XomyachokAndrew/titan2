@@ -1,4 +1,5 @@
 using backend.Data;
+using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -54,6 +55,9 @@ builder.Services.AddAuthentication(x =>
         ValidateAudience = false // Установите true, если необходимо проверять аудиторию токена
     };
 });
+
+// Регистрация сервиса
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // Узнайте больше о настройке Swagger/OpenAPI по адресу http://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
