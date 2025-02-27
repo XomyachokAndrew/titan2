@@ -29,7 +29,7 @@ import { injectContext } from '@taiga-ui/polymorpheus';
 import { WorkspaceService } from '@controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
-import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
+import { ICurrentWorkspace } from '@models/CurrentWorkspace';
 import { IRoomDto, IStatusWorkspaceDto, IWorkspaceDto, IWorkspaceInfoDto } from '@DTO';
 import { IHistoryWorkspaceStatus } from '@models/HistoryWorkspaceStatus';
 import { DatePipe } from '@angular/common';
@@ -466,14 +466,20 @@ export class ModalComponent {
     this.cdr.markForCheck();
   }
 
+  /**
+   * Метод, добавляющтий поле ввода для добавления нового рабочего места
+   */
   addWorkspace() {
     this.isAddingWorkspace = true;
   }
 
+  /**
+   * Метод добавления рабочего места
+   */
   saveNewWorkspace() {
     const formData = this.newWorkspaceForm.value;
 
-    if (formData.nameWorkspace) {
+    if (formData.nameWorkspace && formData.nameWorkspace.trim()) {
       const workspace: IWorkspaceDto = {
         name: formData.nameWorkspace,
         idRoom: formData.idRoom
@@ -487,6 +493,9 @@ export class ModalComponent {
     }
   }
 
+  /**
+   * Добавление рабочего места в базу данных
+   */
   postWorkspace(workspace: IWorkspaceDto) {
     this.workspaceService.addWorkspace(workspace)
       .pipe(
