@@ -15,7 +15,7 @@ public partial class Floor
 
     public int? Square { get; set; }
 
-    public int? FreeWorkspaces { get; set; }
+    public int FreeWorkspaces { get; set; }
 
     public string Scheme { get; set; } = null!;
 

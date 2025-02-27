@@ -112,14 +112,18 @@ public partial class Context : DbContext
             entity.ToTable("floors", "offices_management");
 
             entity.Property(e => e.IdFloor).HasColumnName("id_floor");
-            entity.Property(e => e.FreeWorkspaces).HasColumnName("free_workspaces");
+            entity.Property(e => e.FreeWorkspaces)
+                .HasDefaultValue(0)
+                .HasColumnName("free_workspaces");
             entity.Property(e => e.IdOffice).HasColumnName("id_office");
             entity.Property(e => e.NumberFloor).HasColumnName("number_floor");
             entity.Property(e => e.Scheme)
                 .HasColumnType("character varying")
                 .HasColumnName("scheme");
             entity.Property(e => e.Square).HasColumnName("square");
-            entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
+            entity.Property(e => e.TotalWorkspace)
+                .HasDefaultValue(0)
+                .HasColumnName("total_workspace");
 
             entity.HasOne(d => d.IdOfficeNavigation).WithMany(p => p.Floors)
                 .HasForeignKey(d => d.IdOffice)
@@ -164,7 +168,9 @@ public partial class Context : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(30)
                 .HasColumnName("city");
-            entity.Property(e => e.FreeWorkspaces).HasColumnName("free_workspaces");
+            entity.Property(e => e.FreeWorkspaces)
+                .HasDefaultValue(0)
+                .HasColumnName("free_workspaces");
             entity.Property(e => e.IdOfficeStatus).HasColumnName("id_office_status");
             entity.Property(e => e.Image)
                 .HasMaxLength(100)
@@ -173,7 +179,9 @@ public partial class Context : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("office_name");
             entity.Property(e => e.Square).HasColumnName("square");
-            entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
+            entity.Property(e => e.TotalWorkspace)
+                .HasDefaultValue(0)
+                .HasColumnName("total_workspace");
 
             entity.HasOne(d => d.IdOfficeStatusNavigation).WithMany(p => p.Offices)
                 .HasForeignKey(d => d.IdOfficeStatus)
@@ -293,7 +301,9 @@ public partial class Context : DbContext
                 .HasMaxLength(45)
                 .HasColumnName("name");
             entity.Property(e => e.Square).HasColumnName("square");
-            entity.Property(e => e.TotalWorkspace).HasColumnName("total_workspace");
+            entity.Property(e => e.TotalWorkspace)
+                .HasDefaultValue(0)
+                .HasColumnName("total_workspace");
 
             entity.HasOne(d => d.IdFloorNavigation).WithMany(p => p.Rooms)
                 .HasForeignKey(d => d.IdFloor)
@@ -466,6 +476,7 @@ public partial class Context : DbContext
             entity.Property(e => e.IdDepartment).HasColumnName("id_department");
             entity.Property(e => e.IdPost).HasColumnName("id_post");
             entity.Property(e => e.IdStatus).HasColumnName("id_status");
+            entity.Property(e => e.IdStatusWorker).HasColumnName("id_status_worker");
             entity.Property(e => e.IdWorker).HasColumnName("id_worker");
             entity.Property(e => e.PostName)
                 .HasMaxLength(200)
