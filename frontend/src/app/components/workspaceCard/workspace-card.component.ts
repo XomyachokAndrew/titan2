@@ -4,23 +4,17 @@ import { ICurrentWorkspace } from '@models/CurrentWorkspace';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'worker',
-  templateUrl: './worker.component.html',
+  selector: 'workspace-card',
+  templateUrl: './workspace-card.component.html',
   imports: [TuiIconPipe, CommonModule],
   styleUrls: ['./worker.scss'],
 })
-export class WorkerComponent /*implements OnChanges*/ {
+export class WorkspaceCardComponent{
   @Input() currentWorkspace!: ICurrentWorkspace;
   @Input() isEdit: boolean = false;
   @Output() workerClicked = new EventEmitter<ICurrentWorkspace>();
 
   constructor() { }
-
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if (changes['currentWorkspace']) {
-  //     // console.log('Данные обновлены:', this.currentWorkspace);
-  //   }
-  // }
 
   onClick() {
     this.workerClicked.emit(this.currentWorkspace);
