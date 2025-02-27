@@ -200,11 +200,11 @@ namespace backend.Services
             using (var workbook = new XSSFWorkbook())
             {
                 var sheet = workbook.CreateSheet("Отчет о стоимости офиса");
-                var officeInfoStyle = CreateCellStyle(workbook, IndexedColors.Yellow.Index, true, 12);
-                var headerStyle = CreateCellStyle(workbook, IndexedColors.BrightGreen.Index, true, 12);
+                var officeInfoStyle = CreateCellStyle(workbook, IndexedColors.LightOrange.Index, true, 12);
+                var headerStyle = CreateCellStyle(workbook, IndexedColors.LightYellow.Index, true, 12);
                 var departmentInfoStyle = CreateCellStyle(workbook, IndexedColors.LightGreen.Index, false, 11);
-                var freeInfoStyle = CreateCellStyle(workbook, IndexedColors.Red.Index, true, 11);
-                var reservedInfoStyle = CreateCellStyle(workbook, IndexedColors.LightBlue.Index, false, 11);
+                var freeInfoStyle = CreateCellStyle(workbook, IndexedColors.Coral.Index, true, 11);
+                var reservedInfoStyle = CreateCellStyle(workbook, IndexedColors.SkyBlue.Index, false, 11);
 
                 await AddOfficeInfoRowAsync(sheet, office, rentalPrice, officeInfoStyle);
                 AddHeaderRow(sheet, headerStyle);
