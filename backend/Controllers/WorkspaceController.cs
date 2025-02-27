@@ -125,9 +125,8 @@ namespace backend.Controllers
             _context.StatusesWorkspaces.Add(statusWorkspace); // Добавление статуса в контекст
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
 
-            // Проверка на существование статуса рабочего пространства
-            var status = await _context.StatusesWorkspaces.FindAsync(statusWorkspaceDto.IdStatusWorkspace);
-            if (status != null)
+
+            if (statusWorkspaceDto.IdStatusWorkspace != null)
             {
                 // Обновление даты окончания предыдущего статуса
                 await UpdateEndDate(statusWorkspaceDto.IdStatusWorkspace, statusWorkspace.StartDate);

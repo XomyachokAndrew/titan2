@@ -7,6 +7,8 @@ public partial class WorkerDetail
 {
     public int? IdWorker { get; set; }
 
+    public int? IdStatusWorker { get; set; }
+
     public string? FullWorkerName { get; set; }
 
     public int? IdPost { get; set; }
