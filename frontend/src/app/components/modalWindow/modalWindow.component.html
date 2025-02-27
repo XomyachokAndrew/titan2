@@ -11,7 +11,7 @@
     <tui-scrollbar class="box">
       <div class="content">
         @for (item of workspaces; track $index) {
-        <worker [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"></worker>
+        <workspace-card [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"></workspace-card>
         }
         @if (isEditMode) {
           @if (isAddingWorkspace) {

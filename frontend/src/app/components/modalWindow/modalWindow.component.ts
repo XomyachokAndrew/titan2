@@ -18,7 +18,7 @@ import { TuiDataListWrapper, TuiSlider } from '@taiga-ui/kit';
 import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { tuiDateFormatProvider } from '@taiga-ui/core';
 import { TuiInputDateRangeModule } from '@taiga-ui/legacy';
-import { WorkerComponent } from '../workerCard/worker.component';
+import { WorkspaceCardComponent } from '../workspaceCard/workspace-card.component';
 import { TuiScrollbar } from '@taiga-ui/core';
 import {
   TuiInputModule,
@@ -65,7 +65,7 @@ import { IWorkerDetail } from '@models/WorkerDetail';
     TuiTextfield,
     TuiTextfieldControllerModule,
     TuiInputDateRangeModule,
-    WorkerComponent,
+    WorkspaceCardComponent,
     TuiScrollbar,
     DatePipe,
     CdkFixedSizeVirtualScroll,

@@ -15,7 +15,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import type { TuiDialogContext } from '@taiga-ui/core';
-import {  TuiTextfield } from '@taiga-ui/core';
+import { TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper, TuiSlider } from '@taiga-ui/kit';
 import { tuiDateFormatProvider } from '@taiga-ui/core';
 import { TuiInputDateRangeModule } from '@taiga-ui/legacy';
@@ -81,10 +81,14 @@ export class ModalWorkerComponent {
     private workerService: WorkerService,
   ) {
     this.form = this.fb.group({
-      workerId: this.data.idWorker,
+      statusWorkerId: this.data.idStatusWorker,
+      workerId: this.data.idWorker, // Работник
       worker: [{ value: this.data.fullWorkerName, disabled: true }],
+      postId: this.data.idPost, // Должнось
       post: this.data.postName,
+      departmentId: this.data.idDepartment, // Отдел
       department: this.data.departmentName,
+      statusId: this.data.idStatus, // Статус
       status: this.data.statusName,
     });
 
@@ -101,7 +105,6 @@ export class ModalWorkerComponent {
         );
         if (selectedWorkerStatusType) {
           this.selectedWorkerStatusTypeId = selectedWorkerStatusType.idStatus
-          console.log(this.selectedWorkerStatusTypeId);
         }
       }
     });
@@ -111,8 +114,6 @@ export class ModalWorkerComponent {
         const selectedPost = this.posts.find(post => post.name === selectedValue);
         if (selectedPost) {
           this.selectedPostId = selectedPost.idPost;
-          console.log(this.selectedPostId);
-
         }
       }
     });
@@ -122,8 +123,6 @@ export class ModalWorkerComponent {
         const selectedDepartment = this.departments.find(department => department.name === selectedValue);
         if (selectedDepartment) {
           this.selectedDepartmentId = selectedDepartment.idDepartment;
-          console.log(this.selectedDepartmentId);
-
         }
       }
     });
@@ -203,23 +202,19 @@ export class ModalWorkerComponent {
 
   onSubmit() {
     const formData = this.form.value;
-    console.log(formData.workerId);
-    
     if (
       formData.post == this.initialForm.post
       && formData.department == this.initialForm.department
       && formData.status == this.initialForm.status
     ) { }
     else {
-      console.log('qwe');
-
       const statusWorker: IStatusWorkerDto = {
-        idStatusWorker: 0,
+        idStatusWorker: formData.statusWorkerId,
         idWorker: formData.workerId,
-        idPost: this.selectedPostId,
-        idDepartment: this.selectedDepartmentId,
+        idPost: this.selectedPostId ? this.selectedPostId : formData.postId,
+        idDepartment: this.selectedDepartmentId ? this.selectedDepartmentId : formData.departmentId,
         idUser: 1,
-        idStatus: this.selectedWorkerStatusTypeId,
+        idStatus: this.selectedWorkerStatusTypeId ? this.selectedWorkerStatusTypeId : formData.statusId,
       }
 
       this.updatedWorker(statusWorker);
@@ -237,7 +232,7 @@ export class ModalWorkerComponent {
       )
       .subscribe({
         next: () => {
-          console.log(statusWorker);
+          this.context.completeWith(this.data);
         },
         error: (error) => console.error(error)
       });
