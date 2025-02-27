@@ -3,21 +3,16 @@
     flex-direction: column;
     width: 100rem;
     gap: 20px;
-    padding: 30px 0px 30px 150px;
+    padding: 30px 150px;
+}
+
+.title {
+    width: 16rem;
 }
 
 .instruction {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-.worker {
     display: flex;
-    flex-direction: row;
-    width: 50rem;
     justify-content: space-between;
-}
-
-.worker-text {
-    color: rgba(0, 87, 166, 0.50);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }

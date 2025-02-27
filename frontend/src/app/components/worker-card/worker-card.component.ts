@@ -9,7 +9,6 @@ import { IWorkerDetail } from '@models/WorkerDetail';
 
 @Component({
   selector: 'worker-card',
-  standalone: true,
   imports: [
   ],
   templateUrl: './worker-card.component.html',
@@ -19,6 +18,9 @@ import { IWorkerDetail } from '@models/WorkerDetail';
 export class WorkerCardComponent {
   @Input() worker!: IWorkerDetail;
   @Output() workerClicked = new EventEmitter<IWorkerDetail>();
+
+  constructor() {
+  }
 
   openWorker() {
     this.workerClicked.emit(this.worker);
