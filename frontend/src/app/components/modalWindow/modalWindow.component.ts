@@ -464,6 +464,38 @@ export class ModalComponent {
   }
 
   /**
+   * Обработчик нажатия на кнопку удаления рабочего места
+   * @param workspace Рабочее место
+   */
+  onDeleteWorkspace(workspace: ICurrentWorkspace) {
+    this.deleteWorkspace(workspace.idWorkspace);
+    
+  }
+
+  /**
+   * Метод удаления рабочего места
+   * @param id Уникальный индетификатор рабочего места
+   */
+  deleteWorkspace(id: number) {
+    this.workspaceService.deleteWorkspace(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при удалении рабочего места: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loadWorkspaces(this.data.idRoom);
+          this.loadSelects();
+          this.cdr.markForCheck();
+        },
+        error: (error) => console.error(error)
+      });
+  }
+
+  /**
    * Метод, добавляющтий поле ввода для добавления нового рабочего места
    */
   addWorkspace() {

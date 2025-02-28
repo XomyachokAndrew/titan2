@@ -1,11 +1,11 @@
-<div class="P employe click" (click)="onClick()">
+<div class="P employe" (click)="onClick()">
   @switch (currentWorkspace.fullWorkerName) {
-    @case ("") {
-      <img class="circle" src="public/dot_gray.svg" />
-    }
-    @default {
-      <img class="circle" src="public/dot_red.svg" />
-    }
+  @case ("") {
+  <img class="circle" src="public/dot_gray.svg" />
+  }
+  @default {
+  <img class="circle" src="public/dot_red.svg" />
+  }
   }
   <span>{{currentWorkspace.workspaceName}} {{currentWorkspace.fullWorkerName}}</span>
   <span>
@@ -19,7 +19,9 @@
     }
   </span>
   @if (isEdit) {
-  <img class="delete" alt="" [src]="'@tui.trash' | tuiIcon" />
+  <span class="delete click" (click)="deleteWorkspace()">
+    <img alt="" [src]="'@tui.trash' | tuiIcon" />
+  </span>
   }
   @else {
   }

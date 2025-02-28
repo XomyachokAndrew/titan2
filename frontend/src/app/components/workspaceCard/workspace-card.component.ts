@@ -13,10 +13,15 @@ export class WorkspaceCardComponent{
   @Input() currentWorkspace!: ICurrentWorkspace;
   @Input() isEdit: boolean = false;
   @Output() workerClicked = new EventEmitter<ICurrentWorkspace>();
+  @Output() deleteClicked = new EventEmitter<ICurrentWorkspace>();
 
   constructor() { }
 
   onClick() {
     this.workerClicked.emit(this.currentWorkspace);
+  }
+
+  deleteWorkspace() {
+    this.deleteClicked.emit(this.currentWorkspace);
   }
 }

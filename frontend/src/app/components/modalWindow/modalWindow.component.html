@@ -2,7 +2,8 @@
   <span class="MP-R H3">Информация о кабинете</span>
   <div class="heading__info">
     <span class="MP-R H3">{{ data.name }}</span>
-    <span class="H3 MP-R">Занято 2 места из 3</span>
+    <span class="H3 MP-R">Занято {{data.totalWorkspace - (data.freeWorkspace || 0)}} места из
+      {{data.totalWorkspace}}</span>
   </div>
 </div>
 <div class="container">
@@ -11,23 +12,24 @@
     <tui-scrollbar class="box">
       <div class="content">
         @for (item of workspaces; track $index) {
-        <workspace-card [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"></workspace-card>
+        <workspace-card [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"
+          (deleteClicked)="onDeleteWorkspace($event)"></workspace-card>
         }
         @if (isEditMode) {
-          @if (isAddingWorkspace) {
-              <form class="H3 workspace_add" [formGroup]="newWorkspaceForm">
-                <input type="hidden" formControlName="idRoom">
-                <tui-input class="H2 MP-SB custom-input" formControlName="nameWorkspace">
-                  Название рабочего места:
-                  <input tuiTextfieldLegacy type="text" />
-                </tui-input>
-                <span class="P MP-R submit click" (click)="saveNewWorkspace()">Сохранить</span>
-              </form>
-          } @else {
-            <div class="H3 workspace_add click" (click)="addWorkspace()">
-              +
-            </div>
-          }
+        @if (isAddingWorkspace) {
+        <form class="H3 workspace_add" [formGroup]="newWorkspaceForm">
+          <input type="hidden" formControlName="idRoom">
+          <tui-input class="H2 MP-SB custom-input" formControlName="nameWorkspace">
+            Название рабочего места:
+            <input tuiTextfieldLegacy type="text" />
+          </tui-input>
+          <span class="P MP-R submit click" (click)="saveNewWorkspace()">Сохранить</span>
+        </form>
+        } @else {
+        <div class="H3 workspace_add click" (click)="addWorkspace()">
+          +
+        </div>
+        }
         }
       </div>
     </tui-scrollbar>
@@ -78,7 +80,6 @@
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
-        <!-- <span class="P MP-R employes-data">Данные сотрудника</span> -->
         <!-- Статус -->
         <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="status">
           Статус
