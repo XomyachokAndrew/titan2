@@ -3,12 +3,12 @@ export interface ICurrentWorkspace {
     idRoom?: number;
     workspaceName?: string;
     idWorker?: number;
-    fullWorkerName?: string;
+    fullWorkerName: string | null;
     idStatusWorkspace?: number;
     idWorkspaceStatusType?: number;
     workspaceStatusTypeName?: string;
     idWorkspaceReservationsStatuses?: number;
     reservationStatuseName?: string;
-    startDate?: string;
+    startDate: string | null;
     endDate?: string;
 }

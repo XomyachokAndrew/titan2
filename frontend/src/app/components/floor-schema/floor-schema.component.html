@@ -2,7 +2,7 @@
     id="{{floorInfo.totalWorkspace}}">
     <g filter="url(#filter0_d_299_152)">
         <ng-container *ngFor="let room of floorInfo.rooms; let i = index">
-            <a id="{{room.idRoom}}" (click)='onRoomClick(room)' style="cursor: pointer;"
+            <a id="{{room.idRoom}}" (click)='onRoomClick(room)' class="click"
                 [innerHTML]="rooms[i] | safeHtml"></a>
         </ng-container>
     </g>

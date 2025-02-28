@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiInputModule, TuiSelectComponent, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualForOf,
@@ -121,6 +121,15 @@ export class CreateWorkerComponent {
 
   async onSubmit() {
     if (!this.employeeForm.valid) {
+      this.alerts
+      .open(
+        `Поля введены неправильно`,
+        {
+          label: 'Добавление работника',
+          appearance: 'negative'
+        }
+      )
+      .subscribe();
       return;
     }
 

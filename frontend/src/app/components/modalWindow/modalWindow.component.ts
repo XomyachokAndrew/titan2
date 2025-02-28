@@ -393,6 +393,9 @@ export class ModalComponent {
             this.historyWorkspace = data.map(historyWorkspace => ({ ...historyWorkspace }));
             this.cdr.markForCheck();
           }
+          else{
+            this.historyWorkspace = [];
+          }
         },
         error: err => console.error(err)
       });
@@ -429,23 +432,31 @@ export class ModalComponent {
    * @param currentWorkspace Выбранное рабочее место
    */
   patchForm(workspaceInfo: IWorkspaceInfoDto, currentWorkspace: ICurrentWorkspace) {
-    const startDate = this.parseDateString(currentWorkspace.startDate);
-    const endDate = currentWorkspace.endDate ? this.parseDateString(currentWorkspace.endDate) : startDate;
+    let date = null;
+    const startDate: TuiDay | null = this.parseDateString(currentWorkspace.startDate);
+    const endDate: TuiDay | null = currentWorkspace.endDate ? this.parseDateString(currentWorkspace.endDate) : startDate;
+    if (startDate !== null && endDate !== null) {
+      date = new TuiDayRange(startDate, endDate);
+    }
 
     // Проверяем, что workspaceInfo инициализирован
     const postName = workspaceInfo.workerDetails?.postName || null;
     const departmentName = workspaceInfo.workerDetails?.departmentName || null;
     const statusName = workspaceInfo.statusName || null;
+    const workerName = currentWorkspace.fullWorkerName ? currentWorkspace.fullWorkerName : null;
 
     this.form.patchValue({
       idWorkspace: currentWorkspace.idWorkspace,
       idStatusWorkspace: currentWorkspace.idStatusWorkspace,
-      worker: currentWorkspace.fullWorkerName,
+      worker: workerName,
       post: postName,
       department: departmentName,
       status: statusName,
-      dateRange: new TuiDayRange(startDate, endDate),
+      dateRange: date,
     });
+
+    this.form.get('worker')?.enable();
+    this.form.get('dateRange')?.enable();
   }
 
   /**
@@ -469,7 +480,7 @@ export class ModalComponent {
    */
   onDeleteWorkspace(workspace: ICurrentWorkspace) {
     this.deleteWorkspace(workspace.idWorkspace);
-    
+
   }
 
   /**
@@ -596,12 +607,10 @@ export class ModalComponent {
     if (this.isEditMode) {
       // Включаем все поля формы
       this.form.get('worker')?.enable();
-      this.form.get('status')?.enable();
       this.form.get('dateRange')?.enable();
     } else {
       // Отключаем поля формы
       this.form.get('worker')?.disable();
-      this.form.get('status')?.disable();
       this.form.get('dateRange')?.disable();
     }
   }
@@ -611,7 +620,10 @@ export class ModalComponent {
    * @param dateString Дата в виде строки
    * @returns Дата с типом данных TuiDay
    */
-  private parseDateString(dateString: string = ""): TuiDay {
+  private parseDateString(dateString: string | null): TuiDay | null {
+    if (dateString === null) {
+      return null;
+    }
     const date = new Date(dateString);
     return new TuiDay(date.getFullYear(), date.getMonth(), date.getDate());
   }
