@@ -105,7 +105,6 @@ export class ModalComponent {
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
   ) {
-    console.log('ChangeDetectorRef initialized:', this.cdr);
     this.form = this.fb.group({
       idWorkspace: [{ value: 0, disabled: false }],
       idStatusWorkspace: [{ value: 0, disabled: false }],
@@ -141,7 +140,6 @@ export class ModalComponent {
         const selectedPost = this.posts.find(post => post.name === selectedValue);
         if (selectedPost) {
           this.selectedPostId = selectedPost.idPost;
-          console.log(selectedPost);
         }
       }
     });
@@ -151,7 +149,6 @@ export class ModalComponent {
         const selectedDepartment = this.departments.find(department => department.name === selectedValue);
         if (selectedDepartment) {
           this.selectedDepartmentId = selectedDepartment.idDepartment;
-          console.log(selectedDepartment);
         }
       }
     });
@@ -300,10 +297,10 @@ export class ModalComponent {
 
     if (formData.dateRange && formData.dateRange.from && formData.dateRange.to) {
       const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
-      let endDate = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
+      let endDate: string | undefined = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
 
       if (startDate === endDate) {
-        endDate = '';
+        endDate = undefined;
       }
 
       const idStatusWorkspace = (formData.idStatusWorkspace === undefined || formData.idStatusWorkspace === null) ? 0 : formData.idStatusWorkspace;

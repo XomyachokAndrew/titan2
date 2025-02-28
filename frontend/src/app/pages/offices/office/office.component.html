@@ -27,16 +27,16 @@
           }}</span>
       </div>
       <div class="P MB-B info-text">
-        Кол-во сотрудников: <span class="span-number">0</span>
+        Кол-во сотрудников: <span class="span-number">{{ paginatedFloor.totalWorkspace - paginatedFloor.freeWorkspaces }}</span>
       </div>
       <div class="P MB-B info-text">
         Свободных мест:
         <span class="span-number">{{
-          paginatedFloor.totalWorkspace || 0
+          paginatedFloor.freeWorkspaces || 0
           }}</span>
       </div>
       <div class="P MB-B info-text">
-        Забронированные места: <span class="span-number">2</span>
+        Забронированные места: <span class="span-number">{{ paginatedFloor.reservedWorkspaces || 0}}</span>
       </div>
       }
       <!-- Здесь конец информации -->
