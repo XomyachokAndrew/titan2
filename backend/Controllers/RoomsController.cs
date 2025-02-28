@@ -23,6 +23,7 @@ namespace backend.Controllers
         {
             var rooms = await _context.Rooms
                 .Where(r => r.IdFloor == id)
+                .OrderBy(r => r.Name)
                 .ToListAsync();
 
             if (rooms == null || !rooms.Any())
@@ -37,7 +38,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            return await _context.Rooms.OrderBy(r => r.Name).ToListAsync();
         }
 
         // GET: api/Rooms/5
