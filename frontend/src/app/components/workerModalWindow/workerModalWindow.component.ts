@@ -237,4 +237,27 @@ export class ModalWorkerComponent {
         error: (error) => console.error(error)
       });
   }
+
+  deleteClick() {
+    console.log(this.form.get('workerId')?.value);
+    
+    this.deleteWorker(this.form.get('workerId')?.value)
+  }
+
+  deleteWorker(id: number) {
+    this.workerService.deleteWorker(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при удалении статуса: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.context.completeWith(this.data);
+        },
+        error: (error) => console.error(error)
+      });
+  }
 }
