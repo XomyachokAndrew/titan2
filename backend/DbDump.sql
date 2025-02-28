@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-02-27 14:27:46
+-- Started on 2025-02-28 10:30:34
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1030,12 +1030,14 @@ CREATE VIEW offices_management.worker_details AS
             sw.id_department,
             sw.start_date,
             sw.end_date,
-            sw.id_status
+            sw.id_status,
+            sw.id_status_worker,
+            row_number() OVER (PARTITION BY sw.id_worker ORDER BY sw.start_date DESC) AS rn
            FROM offices_management.statuses_workers sw
-          WHERE (((sw.end_date IS NULL) OR (sw.end_date > CURRENT_DATE)) AND (sw.start_date < CURRENT_DATE))
+          WHERE (((sw.end_date IS NULL) OR (sw.end_date > CURRENT_DATE)) AND (sw.start_date <= CURRENT_DATE))
         )
  SELECT w.id_worker,
-    s.id_status_worker,
+    ls.id_status_worker,
     (((((w.surname)::text || ' '::text) || (w.name)::text) || ' '::text) || (COALESCE(w.patronymic, ''::character varying))::text) AS full_worker_name,
     p.id_post,
     p.name AS post_name,
@@ -1043,12 +1045,12 @@ CREATE VIEW offices_management.worker_details AS
     d.name AS department_name,
     wst.id_status,
     wst.name AS status_name
-   FROM (((((offices_management.workers w
-     JOIN latest_status ls ON ((w.id_worker = ls.id_worker)))
-     LEFT JOIN offices_management.statuses_workers s ON ((ls.id_worker = s.id_worker)))
+   FROM ((((offices_management.workers w
+     JOIN latest_status ls ON (((w.id_worker = ls.id_worker) AND (ls.rn = 1))))
      LEFT JOIN offices_management.workers_statuses_types wst ON ((ls.id_status = wst.id_status)))
      JOIN offices_management.posts p ON ((ls.id_post = p.id_post)))
-     JOIN offices_management.departments d ON ((ls.id_department = d.id_department)));
+     JOIN offices_management.departments d ON ((ls.id_department = d.id_department)))
+  WHERE (w.is_deleted <> true);
 
 
 ALTER VIEW offices_management.worker_details OWNER TO postgres;
@@ -1447,7 +1449,7 @@ INSERT INTO offices_management.statuses_workspaces VALUES (42, '2023-10-10', '20
 INSERT INTO offices_management.statuses_workspaces VALUES (66, '2024-10-10', '2024-10-30', 30, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (11, '2023-01-01', NULL, 11, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (13, '2023-03-01', NULL, 13, NULL, NULL, 1, NULL);
-INSERT INTO offices_management.statuses_workspaces VALUES (69, '2024-10-10', NULL, 47, NULL, 13, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (69, '2024-10-10', '2025-02-28', 47, NULL, 13, 1, NULL);
 
 
 --
@@ -2122,7 +2124,7 @@ ALTER TABLE ONLY offices_management.workspaces
     ADD CONSTRAINT workspaces_id_room_fkey FOREIGN KEY (id_room) REFERENCES offices_management.rooms(id_room);
 
 
--- Completed on 2025-02-27 14:27:46
+-- Completed on 2025-02-28 10:30:35
 
 --
 -- PostgreSQL database dump complete
