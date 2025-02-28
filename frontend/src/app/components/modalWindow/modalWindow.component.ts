@@ -136,7 +136,7 @@ export class ModalComponent {
       }
     });
 
-    this.form.get('position')?.valueChanges.subscribe({
+    this.form.get('post')?.valueChanges.subscribe({
       next: (selectedValue) => {
         const selectedPost = this.posts.find(post => post.name === selectedValue);
         if (selectedPost) {
@@ -146,7 +146,7 @@ export class ModalComponent {
       }
     });
 
-    this.form.get('organization')?.valueChanges.subscribe({
+    this.form.get('department')?.valueChanges.subscribe({
       next: (selectedValue) => {
         const selectedDepartment = this.departments.find(department => department.name === selectedValue);
         if (selectedDepartment) {

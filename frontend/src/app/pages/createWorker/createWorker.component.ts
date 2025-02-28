@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -15,14 +15,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { PostService } from '@controllers/post.service';
 import { IPost } from '@models/Post';
-
-interface Employee {
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  position: string;
-  organization: string;
-}
+import { WorkerService } from '@controllers/worker.service';
+import { IStatusWorkerDto, IWorkerDto } from '@models/DTO';
+import { IWorker } from '@models/Worker';
 
 @Component({
   selector: 'createWorker',
@@ -44,25 +39,50 @@ export class CreateWorkerComponent {
   employeeForm: FormGroup;
   protected departments!: IDepartment[];
   protected posts!: IPost[];
+  protected selectedPostId: number = 0;
+  protected selectedDepartmentId: number = 0;
   private destroyRef = inject(DestroyRef);
 
   constructor(
     private fb: FormBuilder,
     private departmentService: DepartmentService,
     private postService: PostService,
+    private workerService: WorkerService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.employeeForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      middleName: [''],
-      position: ['', Validators.required],
-      organization: ['', Validators.required],
+      firstName: [null, Validators.required],
+      lastName: [null, Validators.required],
+      middleName: [null],
+      post: [null, Validators.required],
+      department: [null, Validators.required],
     });
 
-    this.loadDepartment();
+    this.loadDepartments();
+    this.loadPosts();
+
+    this.employeeForm.get('post')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedPost = this.posts.find(post => post.name === selectedValue);
+        if (selectedPost) {
+          this.selectedPostId = selectedPost.idPost;
+          console.log(selectedPost);
+        }
+      }
+    });
+
+    this.employeeForm.get('department')?.valueChanges.subscribe({
+      next: (selectedValue) => {
+        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
+        if (selectedDepartment) {
+          this.selectedDepartmentId = selectedDepartment.idDepartment;
+          console.log(selectedDepartment);
+        }
+      }
+    });
   }
 
-  async loadDepartment() {
+  async loadDepartments() {
     this.departmentService.getDepartments()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -80,7 +100,7 @@ export class CreateWorkerComponent {
       });
   }
 
-  async loadPost() {
+  async loadPosts() {
     this.postService.getPosts()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -98,9 +118,88 @@ export class CreateWorkerComponent {
       });
   }
 
-  onSubmit() {
-    if (this.employeeForm.valid) {
-      const employee: Employee = this.employeeForm.value;
+  async onSubmit() {
+    if (!this.employeeForm.valid) {
+      return;
     }
+
+    const formData = this.employeeForm.value;
+
+    const worker: IWorkerDto = {
+      name: formData.firstName,
+      surname: formData.lastName,
+      patronymic: formData.middleName
+    };
+
+    this.postWorker(worker);
+  }
+
+  postWorker(worker: IWorkerDto) {
+    this.workerService.addWorker(worker)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при добавлении статуса: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: async () => {
+          console.log('Good worker');
+          await this.loadWorkerId();
+          this.cdr.markForCheck();
+        },
+        error: (error) => console.error(error)
+      });
+  }
+
+  updatedWorker(lastWorker: IWorker) {
+    const statusWorker: IStatusWorkerDto = {
+      idStatusWorker: 0,
+      idWorker: lastWorker.idWorker,
+      idPost: this.selectedPostId,
+      idDepartment: this.selectedDepartmentId,
+      idUser: 1,
+      idStatus: 1,
+    };
+
+    this.postStatusWorker(statusWorker);
+  }
+
+  postStatusWorker(statusWorker: IStatusWorkerDto) {
+    this.workerService.addStatusWorker(statusWorker)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при добавлении статуса: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          console.log('Very good worker');
+
+        },
+        error: (error) => console.error(error)
+      });
+  }
+
+  async loadWorkerId() {
+    this.workerService.getLastWorker()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обработке данных о рабочих: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: data => {
+          if (data) {
+            this.updatedWorker(data);
+          }
+        },
+        error: err => console.error(err)
+      });
   }
 }
