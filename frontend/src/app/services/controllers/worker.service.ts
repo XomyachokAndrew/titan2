@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { IStatusWorkerDto, IWorkerDto } from '../models/DTO';
 import { IWorkerDetail } from '../models/WorkerDetail';
+import { IWorker } from '@models/Worker';
 
 
 @Injectable({
@@ -25,6 +26,13 @@ export class WorkerService {
   getWorker(id: number): Observable<IWorkerDetail> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<IWorkerDetail>(url)
+      .pipe(catchError(this.handleError));
+  }
+
+  // GET: api/workers/id
+  getLastWorker(): Observable<IWorker> {
+    const url = `${this.apiUrl}/id`;
+    return this.http.get<IWorker>(url)
       .pipe(catchError(this.handleError));
   }
 

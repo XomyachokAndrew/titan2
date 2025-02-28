@@ -18,6 +18,12 @@ namespace backend.Controllers
             _context = context;
         }
 
+        [HttpGet("id")]
+        public async Task<ActionResult<WorkerDetail>> GetWorkerId()
+        {
+            return Ok(_context.Workers.OrderByDescending(w => w.IdWorker).First());
+        }
+
         /// <summary>
         /// Получает список всех работников.
         /// </summary>
