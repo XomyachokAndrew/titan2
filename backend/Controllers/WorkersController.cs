@@ -18,12 +18,6 @@ namespace backend.Controllers
             _context = context;
         }
 
-        [HttpGet("id")]
-        public async Task<ActionResult<WorkerDetail>> GetWorkerId()
-        {
-            return Ok(_context.Workers.OrderByDescending(w => w.IdWorker).First());
-        }
-
         /// <summary>
         /// Получает список всех работников.
         /// </summary>
@@ -262,7 +256,7 @@ namespace backend.Controllers
             await _context.Workers.AddAsync(worker);
             await _context.SaveChangesAsync();
 
-            return Ok(); // Возвращаем 200 OK после успешного добавления
+            return Ok(new { worker.IdWorker }); // Возвращаем 200 OK после успешного добавления
         }
 
         /// <summary>
