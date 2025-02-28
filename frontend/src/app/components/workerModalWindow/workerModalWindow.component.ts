@@ -26,7 +26,7 @@ import {
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
+import { catchError, last, of } from 'rxjs';
 import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 import { IWorkerDetail } from '@models/WorkerDetail';
 import { PostService } from '@controllers/post.service';
@@ -37,7 +37,7 @@ import { IPost } from '@models/Post';
 import { IWorkersStatusesType } from '@models/WorkersStatusesType';
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { WorkerService } from '@controllers/worker.service';
-import { IStatusWorkerDto } from '@models/DTO';
+import { IStatusWorkerDto, IWorkerDto } from '@models/DTO';
 
 @Component({
   standalone: true,
@@ -83,7 +83,7 @@ export class ModalWorkerComponent {
     this.form = this.fb.group({
       statusWorkerId: this.data.idStatusWorker,
       workerId: this.data.idWorker, // Работник
-      worker: [{ value: this.data.fullWorkerName, disabled: true }],
+      worker: this.data.fullWorkerName,
       postId: this.data.idPost, // Должнось
       post: this.data.postName,
       departmentId: this.data.idDepartment, // Отдел
@@ -202,6 +202,17 @@ export class ModalWorkerComponent {
 
   onSubmit() {
     const formData = this.form.value;
+
+    if (this.data.fullWorkerName !== formData.worker) {
+      const [lastName, firstName, middleName] = formData.worker.split(' ');
+      const workerDto: IWorkerDto = {
+        name: firstName,
+        surname: lastName,
+        patronymic: middleName
+      }
+      this.updatedWorkerName(formData.workerId, workerDto)
+    }
+
     if (
       formData.post == this.initialForm.post
       && formData.department == this.initialForm.department
@@ -238,9 +249,26 @@ export class ModalWorkerComponent {
       });
   }
 
+  updatedWorkerName(id: number, workerDto: IWorkerDto) {
+    this.workerService.updateWorker(id, workerDto)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          console.error('Ошибка при обновлении имени: ', error);
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.context.completeWith(this.data);
+        },
+        error: (error) => console.error(error)
+      });
+  }
+
   deleteClick() {
     console.log(this.form.get('workerId')?.value);
-    
+
     this.deleteWorker(this.form.get('workerId')?.value)
   }
 
