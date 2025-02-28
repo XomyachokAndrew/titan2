@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
 import {
@@ -13,7 +13,7 @@ import {
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
 import { SearchComponent } from '@components/searchBar/search.component';
-import { Location } from '@angular/common';
+import { Location, NgClass } from '@angular/common';
 import { UserService } from '@controllers/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -29,7 +29,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         TuiNavigation,
         TuiTabs,
         TuiTextfield,
-        SearchComponent
+        SearchComponent,
+        NgClass
     ],
     templateUrl: './header.html',
     styleUrl: './header.scss',
@@ -41,6 +42,8 @@ export default class HeaderComponent implements OnInit {
     title: string = "Интерактивная карта офисов";
     user: string = '';
     private destroyRef = inject(DestroyRef);
+    isHeaderVisible = true;
+    private lastScrollPosition = 0;
 
     constructor(
         private router: Router,
@@ -51,6 +54,7 @@ export default class HeaderComponent implements OnInit {
     ngOnInit() {
         this.setupRouterEvents();
         this.setupAuthentication();
+        this.lastScrollPosition = window.pageYOffset;
     }
 
     /**
@@ -93,5 +97,20 @@ export default class HeaderComponent implements OnInit {
         else {
             this.router.navigate(['/login']);
         }
+    }
+
+    @HostListener('window:scroll', ['$event'])
+    onWindowScroll() {
+        const currentScrollPosition = window.pageYOffset;
+
+        if (currentScrollPosition > this.lastScrollPosition) {
+            // Прокрутка вниз
+            this.isHeaderVisible = false;
+        } else {
+            // Прокрутка вверх
+            this.isHeaderVisible = true;
+        }
+
+        this.lastScrollPosition = currentScrollPosition;
     }
 }

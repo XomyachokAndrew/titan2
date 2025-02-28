@@ -130,3 +130,7 @@ tui-icon[tuiIcons]:after {
 .header-button:hover {
     color: rgb(195, 194, 199);
 }
+
+.header-hidden {
+    transform: translateY(-100%);
+  }
