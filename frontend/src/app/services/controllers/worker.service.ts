@@ -29,13 +29,6 @@ export class WorkerService {
       .pipe(catchError(this.handleError));
   }
 
-  // GET: api/workers/id
-  getLastWorker(): Observable<IWorker> {
-    const url = `${this.apiUrl}/id`;
-    return this.http.get<IWorker>(url)
-      .pipe(catchError(this.handleError));
-  }
-
   // PUT: api/workers/update/{id}
   updateWorker(id: number, workerDto: IWorkerDto): Observable<any> {
     const url = `${this.apiUrl}/update/${id}`;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -8,7 +8,7 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { IDepartment } from '@models/Department';
-import { TuiTextfield } from '@taiga-ui/core';
+import { TuiTextfield, TuiAlertService } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { DepartmentService } from '@controllers/department.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,12 +36,13 @@ import { IWorker } from '@models/Worker';
   ],
 })
 export class CreateWorkerComponent {
-  employeeForm: FormGroup;
+  protected employeeForm: FormGroup;
   protected departments!: IDepartment[];
   protected posts!: IPost[];
   protected selectedPostId: number = 0;
   protected selectedDepartmentId: number = 0;
   private destroyRef = inject(DestroyRef);
+  private alerts = inject(TuiAlertService);
 
   constructor(
     private fb: FormBuilder,
@@ -54,8 +55,8 @@ export class CreateWorkerComponent {
       firstName: [null, Validators.required],
       lastName: [null, Validators.required],
       middleName: [null],
-      post: [null, Validators.required],
-      department: [null, Validators.required],
+      post: [null],
+      department: [null],
     });
 
     this.loadDepartments();
@@ -132,6 +133,8 @@ export class CreateWorkerComponent {
     };
 
     this.postWorker(worker);
+
+    this.clearClick();
   }
 
   postWorker(worker: IWorkerDto) {
@@ -144,19 +147,19 @@ export class CreateWorkerComponent {
         })
       )
       .subscribe({
-        next: async () => {
-          console.log('Good worker');
-          await this.loadWorkerId();
+        next: async (data) => {
+          this.addWorkerAlert(worker);
+          this.updatedWorker(data.idWorker);
           this.cdr.markForCheck();
         },
         error: (error) => console.error(error)
       });
   }
 
-  updatedWorker(lastWorker: IWorker) {
+  updatedWorker(idWorker: number) {
     const statusWorker: IStatusWorkerDto = {
       idStatusWorker: 0,
-      idWorker: lastWorker.idWorker,
+      idWorker: idWorker,
       idPost: this.selectedPostId,
       idDepartment: this.selectedDepartmentId,
       idUser: 1,
@@ -177,29 +180,24 @@ export class CreateWorkerComponent {
       )
       .subscribe({
         next: () => {
-          console.log('Very good worker');
-
         },
         error: (error) => console.error(error)
       });
   }
 
-  async loadWorkerId() {
-    this.workerService.getLastWorker()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих: ', error);
-          return of(null);
-        })
+  clearClick() {
+    this.employeeForm.reset();
+  }
+
+  addWorkerAlert(worker: IWorkerDto) {
+    this.alerts
+      .open(
+        `Работник ${worker.surname} ${worker.name} ${worker.patronymic} успешно добавлен`,
+        {
+          label: 'Добавление работника',
+          appearance: 'positive'
+        }
       )
-      .subscribe({
-        next: data => {
-          if (data) {
-            this.updatedWorker(data);
-          }
-        },
-        error: err => console.error(err)
-      });
+      .subscribe();
   }
 }
