@@ -47,9 +47,7 @@ export class WorkersComponent {
             this.workers = data
               .map(worker => ({ ...worker }))
               .sort((a, b) => a.idWorker - b.idWorker);
-            console.log(this.workers);
             this.cdr.markForCheck();
-
           }
         },
         error: (error) => console.error(error)

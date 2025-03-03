@@ -13,8 +13,16 @@
       *ngIf="isSearchVisible"
       type="text"
       [(ngModel)]="searchTerm"
-      (input)="search()"
+      (input)="onInputChange()"
       placeholder="Поиск"
       (click)="$event.stopPropagation()"
   />
+
+  <div class="search-results" *ngIf="isSearchVisible && searchResults">
+    <ng-container *ngFor="let result of searchResults">
+      <div class="result-item" *ngFor="let r of result" (click)="selectResult(r)">
+        {{ r.name || r.officeName || r.fullWorkerName || r.workspaceName }}
+      </div>
+    </ng-container>
+  </div>
 </div>

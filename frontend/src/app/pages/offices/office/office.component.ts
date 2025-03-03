@@ -58,7 +58,9 @@ export class OfficeComponent implements OnInit {
     private officeService: OfficeService,
     private location: Location,
     private authService: UserService
-  ) { }
+  ) {
+    
+   }
 
   ngOnInit() {
     this.isAuth = this.authService.isAuthenticated()
@@ -67,6 +69,7 @@ export class OfficeComponent implements OnInit {
       return;
     }
     this.id = this.activateRoute.snapshot.params['id'];
+    
     this.loadData();
   }
   //#endregion

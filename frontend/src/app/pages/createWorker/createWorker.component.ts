@@ -195,6 +195,15 @@ export class CreateWorkerComponent {
   }
 
   clearClick() {
+    this.alerts
+      .open(
+        `Поля отчистились`,
+        {
+          label: 'Добавление работника',
+          appearance: 'positive'
+        }
+      )
+      .subscribe();
     this.employeeForm.reset();
   }
 

@@ -39,3 +39,26 @@ input[type="text"] {
   border-color: transparent;
   justify-content: right;
 }
+
+.search-results {
+  position: absolute;
+  top: 100%; // Позиционируем блок результатов под полем ввода
+  left: 0;
+  width: 100%;
+  max-height: 200px; // Максимальная высота блока результатов
+  overflow-y: auto; // Добавляем прокрутку, если результатов много
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000; // Убедитесь, что результаты отображаются поверх других элементов
+}
+
+.result-item {
+  padding: 8px;
+  cursor: pointer;
+  color: black;
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
