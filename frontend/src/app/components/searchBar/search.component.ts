@@ -7,6 +7,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalComponent } from '@components/modalWindow/modalWindow.component';
 import { tuiDialog } from '@taiga-ui/core';
 import { ModalWorkerComponent } from '@components/workerModalWindow/workerModalWindow.component';
+import { TuiInputModule } from '@taiga-ui/legacy';
+import { TuiDataListWrapper } from '@taiga-ui/kit';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
+import { TuiDataList } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-search',
@@ -14,7 +22,13 @@ import { ModalWorkerComponent } from '@components/workerModalWindow/workerModalW
   styleUrls: ['./search.scss'],
   imports: [
     FormsModule,
-    CommonModule
+    CommonModule,
+    TuiInputModule,
+    TuiDataListWrapper,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    CdkVirtualScrollViewport,
+    TuiDataList,
   ],
 })
 export class SearchComponent {
@@ -25,8 +39,8 @@ export class SearchComponent {
 
   constructor(
     private searchService: SearchService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   toggleSearch(event: MouseEvent) {
     event.stopPropagation(); // Остановить всплытие события клика
@@ -43,16 +57,15 @@ export class SearchComponent {
 
   onInputChange() {
     if (this.searchTerm.trim()) {
-      this.searchService.searchOffices(this.searchTerm).subscribe(
-        {
-          next: (response) => {
-            this.searchResults = Object.values(response);
-          },
-          error: (error) => {
-            console.error('Error during search:', error);
-          }
-        }
-      );
+      this.searchService.searchOffices(this.searchTerm).subscribe({
+        next: response => {
+          this.searchResults = Object.values(response);
+          console.log(this.searchResults);
+        },
+        error: error => {
+          console.error('Error during search:', error);
+        },
+      });
     } else {
       this.searchResults = []; // Очищаем результаты, если поле ввода пустое
     }
@@ -60,7 +73,7 @@ export class SearchComponent {
 
   private readonly dialogRoom = tuiDialog(ModalComponent, {
     dismissible: true,
-    size: 'auto'
+    size: 'auto',
   });
 
   private readonly dialogWorker = tuiDialog(ModalWorkerComponent, {
@@ -73,30 +86,32 @@ export class SearchComponent {
     console.log(result);
 
     if (result.idOffice) {
-      await this.router.navigate(["/"]);
-      await this.router.navigate(["/offices", result.idOffice]);
+      await this.router.navigate(['/']);
+      await this.router.navigate(['/offices', result.idOffice]);
     }
     if (result.idRoom) {
-      this.dialogRoom(result).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: (data) => {
-          console.info(`Dialog emitted data = ${data}`);
-        },
-        complete: () => {
-          console.info('Dialog closed');
-        },
-      });
+      this.dialogRoom(result)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: data => {
+            console.info(`Dialog emitted data = ${data}`);
+          },
+          complete: () => {
+            console.info('Dialog closed');
+          },
+        });
     }
     if (result.idWorker) {
       this.dialogWorker(result)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: data => {
-          console.info(`Dialog emitted data = ${data}`);
-        },
-        complete: () => {
-          console.info('Dialog closed');
-        },
-      });
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: data => {
+            console.info(`Dialog emitted data = ${data}`);
+          },
+          complete: () => {
+            console.info('Dialog closed');
+          },
+        });
     }
 
     this.searchResults = []; // Очищаем результаты после выбора

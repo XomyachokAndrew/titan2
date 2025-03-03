@@ -30,7 +30,12 @@ import { WorkspaceService } from '@controllers/workspace.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { ICurrentWorkspace } from '@models/CurrentWorkspace';
-import { IRoomDto, IStatusWorkspaceDto, IWorkspaceDto, IWorkspaceInfoDto } from '@DTO';
+import {
+  IRoomDto,
+  IStatusWorkspaceDto,
+  IWorkspaceDto,
+  IWorkspaceInfoDto,
+} from '@DTO';
 import { IHistoryWorkspaceStatus } from '@models/HistoryWorkspaceStatus';
 import { DatePipe } from '@angular/common';
 import {
@@ -94,7 +99,7 @@ export class ModalComponent {
   protected selectedWorkerId: number = 0;
   protected selectedPostId: number = 0;
   protected selectedDepartmentId: number = 0;
-  protected workspaceName: string = "";
+  protected workspaceName: string = '';
   protected isAddingWorkspace: boolean = false;
   //#endregion
   constructor(
@@ -104,7 +109,7 @@ export class ModalComponent {
     private departmentService: DepartmentService,
     private workerStatusTypeService: WorkersStatusesTypeService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       idWorkspace: [{ value: 0, disabled: false }],
@@ -125,37 +130,42 @@ export class ModalComponent {
     this.loadSelects();
 
     this.form.get('worker')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedWorker = this.workers.find(worker =>
-          `${worker.fullWorkerName}` === selectedValue
+      next: selectedValue => {
+        const selectedWorker = this.workers.find(
+          worker => `${worker.fullWorkerName}` === selectedValue
         );
         if (selectedWorker) {
-          this.selectedWorkerId = selectedWorker.idWorker
+          this.selectedWorkerId = selectedWorker.idWorker;
           this.loadWorker(this.selectedWorkerId);
         }
-      }
+      },
     });
 
     this.form.get('post')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedPost = this.posts.find(post => post.name === selectedValue);
+      next: selectedValue => {
+        const selectedPost = this.posts.find(
+          post => post.name === selectedValue
+        );
         if (selectedPost) {
           this.selectedPostId = selectedPost.idPost;
         }
-      }
+      },
     });
 
     this.form.get('department')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
+      next: selectedValue => {
+        const selectedDepartment = this.departments.find(
+          department => department.name === selectedValue
+        );
         if (selectedDepartment) {
           this.selectedDepartmentId = selectedDepartment.idDepartment;
         }
-      }
+      },
     });
   }
 
-  public readonly context = injectContext<TuiDialogContext<IRoomDto, IRoomDto>>();
+  public readonly context =
+    injectContext<TuiDialogContext<IRoomDto, IRoomDto>>();
 
   /**
    * Данные передаваемые со страницы в модальное окно
@@ -169,11 +179,15 @@ export class ModalComponent {
    * @param id уникальный индетификатор комнаты
    */
   async loadWorkspaces(id: number) {
-    this.workspaceService.getWorkspacesByRoom(id)
+    this.workspaceService
+      .getWorkspacesByRoom(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          console.error(
+            'Ошибка при обработке данных о рабочих местах: ',
+            error
+          );
           return of(null);
         })
       )
@@ -184,12 +198,12 @@ export class ModalComponent {
             this.cdr.markForCheck();
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
   /**
-   * Асинхронныый метод, подгружающий данные из бд в selects 
+   * Асинхронныый метод, подгружающий данные из бд в selects
    */
   async loadSelects() {
     await this.loadWorkers();
@@ -202,7 +216,8 @@ export class ModalComponent {
    * Асинхронный метод, для подгрузки рабочих
    */
   async loadWorkers() {
-    this.workerService.getWorkers()
+    this.workerService
+      .getWorkers()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -216,7 +231,7 @@ export class ModalComponent {
             this.workers = data.map(worker => ({ ...worker }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -224,7 +239,8 @@ export class ModalComponent {
    * Асинхронный метод, для подгрузки должностей
    */
   async loadPosts() {
-    this.postService.getPosts()
+    this.postService
+      .getPosts()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -238,7 +254,7 @@ export class ModalComponent {
             this.posts = data.map(post => ({ ...post }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -246,7 +262,8 @@ export class ModalComponent {
    * Асинхронный метод, для подгрузки отделов
    */
   async loadDepartments() {
-    this.departmentService.getDepartments()
+    this.departmentService
+      .getDepartments()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -260,7 +277,7 @@ export class ModalComponent {
             this.departments = data.map(department => ({ ...department }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -268,21 +285,27 @@ export class ModalComponent {
    * Асинхронный метод, для подгрузки статуса рабочего
    */
   async loadWorkerStatusTypes() {
-    this.workerStatusTypeService.getWorkersStatusesTypes()
+    this.workerStatusTypeService
+      .getWorkersStatusesTypes()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных типа статуса рабочего: ', error);
+          console.error(
+            'Ошибка при обработке данных типа статуса рабочего: ',
+            error
+          );
           return of(null);
         })
       )
       .subscribe({
         next: data => {
           if (data) {
-            this.workerStatusTypes = data.map(workerStatusTypes => ({ ...workerStatusTypes }));
+            this.workerStatusTypes = data.map(workerStatusTypes => ({
+              ...workerStatusTypes,
+            }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -296,17 +319,32 @@ export class ModalComponent {
 
     const formData = this.form.value;
 
-    if (formData.dateRange && formData.dateRange.from && formData.dateRange.to) {
-      const startDate = this.formatISODateToYMD(formData.dateRange.from.toLocalNativeDate().toISOString());
-      let endDate: string | undefined = this.formatISODateToYMD(formData.dateRange.to.toLocalNativeDate().toISOString());
+    if (
+      formData.dateRange &&
+      formData.dateRange.from &&
+      formData.dateRange.to
+    ) {
+      const startDate = this.formatISODateToYMD(
+        formData.dateRange.from.toLocalNativeDate().toISOString()
+      );
+      let endDate: string | undefined = this.formatISODateToYMD(
+        formData.dateRange.to.toLocalNativeDate().toISOString()
+      );
 
       if (startDate === endDate) {
         endDate = undefined;
       }
 
-      const idStatusWorkspace = (formData.idStatusWorkspace === undefined || formData.idStatusWorkspace === null) ? 0 : formData.idStatusWorkspace;
+      const idStatusWorkspace =
+        formData.idStatusWorkspace === undefined ||
+        formData.idStatusWorkspace === null
+          ? 0
+          : formData.idStatusWorkspace;
 
-      if (formData.idWorkspace !== undefined && this.selectedWorkerId !== undefined) {
+      if (
+        formData.idWorkspace !== undefined &&
+        this.selectedWorkerId !== undefined
+      ) {
         const workspaceData = {
           idWorkspace: formData.idWorkspace,
           startDate: startDate,
@@ -319,21 +357,20 @@ export class ModalComponent {
         };
 
         this.postWorkspaceStatus(workspaceData);
-      }
-      else {
+      } else {
         console.error('Некоторые обязательные поля формы не заполнены.');
       }
-    }
-    else {
+    } else {
       console.error('Диапазон дат не заполнен.');
     }
   }
 
   /**
-   * Метод, отправляющий 
+   * Метод, отправляющий
    */
   postWorkspaceStatus(statusWorkspaceDto: IStatusWorkspaceDto) {
-    this.workspaceService.addStatusWorkspace(statusWorkspaceDto)
+    this.workspaceService
+      .addStatusWorkspace(statusWorkspaceDto)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -345,7 +382,7 @@ export class ModalComponent {
         next: () => {
           this.loadWorkspaces(this.data.idRoom);
           this.loadSelects();
-          this.workspaceName = "";
+          this.workspaceName = '';
           this.historyWorkspace = [];
           this.form.patchValue({
             idStatusWorkspace: null,
@@ -358,7 +395,7 @@ export class ModalComponent {
           });
           this.cdr.markForCheck();
         },
-        error: (error) => console.error(error)
+        error: error => console.error(error),
       });
   }
 
@@ -380,25 +417,30 @@ export class ModalComponent {
    * @param id уникальный индетификатор рабочего места
    */
   async loadWorkspaceHistory(id: number) {
-    this.workspaceService.getWorkspaceHistory(id)
+    this.workspaceService
+      .getWorkspaceHistory(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных истории рабочего места: ', error);
+          console.error(
+            'Ошибка при обработке данных истории рабочего места: ',
+            error
+          );
           return of(null);
         })
       )
       .subscribe({
         next: data => {
           if (data) {
-            this.historyWorkspace = data.map(historyWorkspace => ({ ...historyWorkspace }));
+            this.historyWorkspace = data.map(historyWorkspace => ({
+              ...historyWorkspace,
+            }));
             this.cdr.markForCheck();
-          }
-          else {
+          } else {
             this.historyWorkspace = [];
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -407,7 +449,8 @@ export class ModalComponent {
    * @param workspace Выбранное рабочее место
    */
   async loadWorksapceInfo(workspace: ICurrentWorkspace) {
-    this.workspaceService.getWorkspaceInfo(workspace.idWorkspace)
+    this.workspaceService
+      .getWorkspaceInfo(workspace.idWorkspace)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -418,12 +461,12 @@ export class ModalComponent {
       .subscribe({
         next: data => {
           if (data) {
-            this.workspaceName = data.workspaceName ? data.workspaceName : "";
+            this.workspaceName = data.workspaceName ? data.workspaceName : '';
             this.patchForm(data, workspace);
             this.cdr.markForCheck();
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -432,10 +475,17 @@ export class ModalComponent {
    * @param workspaceInfo Подробная информация о рабочем месте
    * @param currentWorkspace Выбранное рабочее место
    */
-  patchForm(workspaceInfo: IWorkspaceInfoDto, currentWorkspace: ICurrentWorkspace) {
+  patchForm(
+    workspaceInfo: IWorkspaceInfoDto,
+    currentWorkspace: ICurrentWorkspace
+  ) {
     let date = null;
-    const startDate: TuiDay | null = this.parseDateString(currentWorkspace.startDate);
-    const endDate: TuiDay | null = currentWorkspace.endDate ? this.parseDateString(currentWorkspace.endDate) : startDate;
+    const startDate: TuiDay | null = this.parseDateString(
+      currentWorkspace.startDate
+    );
+    const endDate: TuiDay | null = currentWorkspace.endDate
+      ? this.parseDateString(currentWorkspace.endDate)
+      : startDate;
     if (startDate !== null && endDate !== null) {
       date = new TuiDayRange(startDate, endDate);
     }
@@ -444,7 +494,9 @@ export class ModalComponent {
     const postName = workspaceInfo.workerDetails?.postName || null;
     const departmentName = workspaceInfo.workerDetails?.departmentName || null;
     const statusName = workspaceInfo.statusName || null;
-    const workerName = currentWorkspace.fullWorkerName ? currentWorkspace.fullWorkerName : null;
+    const workerName = currentWorkspace.fullWorkerName
+      ? currentWorkspace.fullWorkerName
+      : null;
 
     this.form.patchValue({
       idWorkspace: currentWorkspace.idWorkspace,
@@ -481,7 +533,6 @@ export class ModalComponent {
    */
   onDeleteWorkspace(workspace: ICurrentWorkspace) {
     this.deleteWorkspace(workspace.idWorkspace);
-
   }
 
   /**
@@ -489,7 +540,8 @@ export class ModalComponent {
    * @param id Уникальный индетификатор рабочего места
    */
   deleteWorkspace(id: number) {
-    this.workspaceService.deleteWorkspace(id)
+    this.workspaceService
+      .deleteWorkspace(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -503,7 +555,7 @@ export class ModalComponent {
           this.loadSelects();
           this.cdr.markForCheck();
         },
-        error: (error) => console.error(error)
+        error: error => console.error(error),
       });
   }
 
@@ -523,8 +575,8 @@ export class ModalComponent {
     if (formData.nameWorkspace && formData.nameWorkspace.trim()) {
       const workspace: IWorkspaceDto = {
         name: formData.nameWorkspace,
-        idRoom: formData.idRoom
-      }
+        idRoom: formData.idRoom,
+      };
 
       this.isAddingWorkspace = false;
       this.newWorkspaceForm.patchValue({
@@ -538,11 +590,15 @@ export class ModalComponent {
    * Добавление рабочего места в базу данных
    */
   postWorkspace(workspace: IWorkspaceDto) {
-    this.workspaceService.addWorkspace(workspace)
+    this.workspaceService
+      .addWorkspace(workspace)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных о рабочих местах: ', error);
+          console.error(
+            'Ошибка при обработке данных о рабочих местах: ',
+            error
+          );
           return of(null);
         })
       )
@@ -550,7 +606,7 @@ export class ModalComponent {
         next: () => {
           this.loadWorkspaces(this.data.idRoom);
           this.loadSelects();
-          this.workspaceName = "";
+          this.workspaceName = '';
           this.historyWorkspace = [];
           this.form.patchValue({
             idStatusWorkspace: null,
@@ -563,7 +619,7 @@ export class ModalComponent {
           });
           this.cdr.markForCheck();
         },
-        error: (error) => console.error(error)
+        error: error => console.error(error),
       });
   }
 
@@ -572,7 +628,8 @@ export class ModalComponent {
    * @param id Уникальный индетификатор выбранного рабочего
    */
   async loadWorker(id: number) {
-    this.workerService.getWorker(id)
+    this.workerService
+      .getWorker(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -586,12 +643,12 @@ export class ModalComponent {
             this.form.patchValue({
               post: data.postName,
               department: data.departmentName,
-              status: data.statusName
-            })
+              status: data.statusName,
+            });
             this.cdr.markForCheck();
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
@@ -640,7 +697,7 @@ export class ModalComponent {
 
     // Проверяем, что дата корректна
     if (isNaN(date.getTime())) {
-      throw new Error("Invalid date string");
+      throw new Error('Invalid date string');
     }
 
     const year = date.getUTCFullYear();

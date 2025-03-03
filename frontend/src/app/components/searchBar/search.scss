@@ -1,9 +1,9 @@
-@import "../../styles/font.css";
+@import '../../styles/font.css';
 
 .search-bar {
   display: flex;
   align-items: center;
-  justify-content: right  ;
+  justify-content: right;
 }
 
 .search-icon-container {
@@ -24,12 +24,12 @@
   align-items: center;
 }
 
-input[type="text"] {
+input[type='text'] {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   display: inline-block; /* Убедитесь, что поле ввода отображается как блочный элемент */
-  width: 13.625rem;
+  width: 14rem;
   height: 2.5rem;
   border-radius: var(--tui-radius-m);
   color: black;
@@ -43,8 +43,7 @@ input[type="text"] {
 .search-results {
   position: absolute;
   top: 100%; // Позиционируем блок результатов под полем ввода
-  left: 0;
-  width: 100%;
+  width: 14rem;
   max-height: 200px; // Максимальная высота блока результатов
   overflow-y: auto; // Добавляем прокрутку, если результатов много
   background-color: white;

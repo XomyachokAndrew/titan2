@@ -2,34 +2,43 @@
   <span class="MP-R H3">Информация о кабинете</span>
   <div class="heading__info">
     <span class="MP-R H3">{{ data.name }}</span>
-    <span class="H3 MP-R">Занято {{data.totalWorkspace - (data.freeWorkspace || 0)}} места из
-      {{data.totalWorkspace}}</span>
+    <span class="H3 MP-R"
+      >Занято {{ data.totalWorkspace - (data.freeWorkspace || 0) }} места из
+      {{ data.totalWorkspace }}</span
+    >
   </div>
 </div>
 <div class="container">
   <div class="employes">
-    <span class="H3 MP-R workspace-edit">{{ isEditMode ? 'Редактирование кабинета' : '' }}</span>
+    <span class="H3 MP-R workspace-edit">{{
+      isEditMode ? 'Редактирование кабинета' : ''
+    }}</span>
     <tui-scrollbar class="box">
       <div class="content">
         @for (item of workspaces; track $index) {
-        <workspace-card [currentWorkspace]="item" [isEdit]="isEditMode" (workerClicked)="onWorkerClicked($event)"
-          (deleteClicked)="onDeleteWorkspace($event)"></workspace-card>
+          <workspace-card
+            [currentWorkspace]="item"
+            [isEdit]="isEditMode"
+            (workerClicked)="onWorkerClicked($event)"
+            (deleteClicked)="onDeleteWorkspace($event)"></workspace-card>
         }
         @if (isEditMode) {
-        @if (isAddingWorkspace) {
-        <form class="H3 workspace_add" [formGroup]="newWorkspaceForm">
-          <input type="hidden" formControlName="idRoom">
-          <tui-input class="H2 MP-SB custom-input" formControlName="nameWorkspace">
-            Название рабочего места:
-            <input tuiTextfieldLegacy type="text" />
-          </tui-input>
-          <span class="P MP-R submit click" (click)="saveNewWorkspace()">Сохранить</span>
-        </form>
-        } @else {
-        <div class="H3 workspace_add click" (click)="addWorkspace()">
-          +
-        </div>
-        }
+          @if (isAddingWorkspace) {
+            <form class="H3 workspace_add" [formGroup]="newWorkspaceForm">
+              <input type="hidden" formControlName="idRoom" />
+              <tui-input
+                class="H2 MP-SB custom-input"
+                formControlName="nameWorkspace">
+                Название рабочего места:
+                <input tuiTextfieldLegacy type="text" />
+              </tui-input>
+              <span class="P MP-R submit click" (click)="saveNewWorkspace()"
+                >Сохранить</span
+              >
+            </form>
+          } @else {
+            <div class="H3 workspace_add click" (click)="addWorkspace()">+</div>
+          }
         }
       </div>
     </tui-scrollbar>
@@ -40,79 +49,138 @@
   <div class="workspace">
     <form [formGroup]="form">
       <div class="workspace-worker">
-        <input type="hidden" formControlName="idWorkspace">
-        <input type="hidden" formControlName="idStatusWorkspace">
-        <span class="H3 MP-R workspace-name">Рабочее место {{workspaceName}}</span>
+        <input type="hidden" formControlName="idWorkspace" />
+        <input type="hidden" formControlName="idStatusWorkspace" />
+        <span class="H3 MP-R workspace-name"
+          >Рабочее место {{ workspaceName }}</span
+        >
         <span class="P MP-R employes-data">Данные сотрудника</span>
         <!-- Работник -->
-        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="worker">
+        <tui-select
+          class="P MP-R custom-input"
+          tuiTextfieldSize="m"
+          formControlName="worker">
           Работник
-          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+          <cdk-virtual-scroll-viewport
+            *tuiDataList
+            appendOnly
+            tuiScrollable
+            class="scroll"
+            [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of workers" tuiOption type="button" [value]="item.fullWorkerName"
+              <button
+                *cdkVirtualFor="let item of workers"
+                tuiOption
+                type="button"
+                [value]="item.fullWorkerName"
                 [id]="item.idWorker">
-                {{item.fullWorkerName}}
+                {{ item.fullWorkerName }}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Должность -->
-        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="post">
+        <tui-select
+          class="P MP-R custom-input"
+          tuiTextfieldSize="m"
+          formControlName="post">
           Должность
-          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+          <cdk-virtual-scroll-viewport
+            *tuiDataList
+            appendOnly
+            tuiScrollable
+            class="scroll"
+            [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of posts" tuiOption type="button" [value]="item.name"
-                id="{{item.idPost}}">
-                {{item.name}}
+              <button
+                *cdkVirtualFor="let item of posts"
+                tuiOption
+                type="button"
+                [value]="item.name"
+                id="{{ item.idPost }}">
+                {{ item.name }}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Организация -->
-        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="department">
+        <tui-select
+          class="P MP-R custom-input"
+          tuiTextfieldSize="m"
+          formControlName="department">
           Организация
-          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+          <cdk-virtual-scroll-viewport
+            *tuiDataList
+            appendOnly
+            tuiScrollable
+            class="scroll"
+            [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of departments" tuiOption type="button" [value]="item.name"
-                id="{{item.idDepartment}}">
-                {{item.name}}
+              <button
+                *cdkVirtualFor="let item of departments"
+                tuiOption
+                type="button"
+                [value]="item.name"
+                id="{{ item.idDepartment }}">
+                {{ item.name }}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Статус -->
-        <tui-select class="P MP-R custom-input" tuiTextfieldSize="m" formControlName="status">
+        <tui-select
+          class="P MP-R custom-input"
+          tuiTextfieldSize="m"
+          formControlName="status">
           Статус
-          <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+          <cdk-virtual-scroll-viewport
+            *tuiDataList
+            appendOnly
+            tuiScrollable
+            class="scroll"
+            [itemSize]="3">
             <tui-data-list>
-              <button *cdkVirtualFor="let item of workerStatusTypes" tuiOption type="button" [value]="item.name"
-                id="{{item.idStatus}}">
-                {{item.name}}
+              <button
+                *cdkVirtualFor="let item of workerStatusTypes"
+                tuiOption
+                type="button"
+                [value]="item.name"
+                id="{{ item.idStatus }}">
+                {{ item.name }}
               </button>
             </tui-data-list>
           </cdk-virtual-scroll-viewport>
         </tui-select>
         <!-- Период -->
-        <tui-input-date-range class="P MP-R custom-input" [tuiTextfieldSize]="'m'" formControlName="dateRange">
+        <tui-input-date-range
+          class="P MP-R custom-input"
+          [tuiTextfieldSize]="'m'"
+          formControlName="dateRange">
           Период
         </tui-input-date-range>
         @if (isEditMode) {
-        <div class="button-container">
-          <span class="P MP-R submit click" (click)="onSubmit()">Сохранить</span>
-          <span class="P MP-R clear click" (click)="clearClick()">Очистить</span>
-        </div>
+          <div class="button-container">
+            <span class="P MP-R submit click" (click)="onSubmit()"
+              >Сохранить</span
+            >
+            <span class="P MP-R clear click" (click)="clearClick()"
+              >Очистить</span
+            >
+          </div>
         }
       </div>
     </form>
     <div class="workspace-history">
-      <span class="H3 MP-R workspace-history-dates">История рабочего места</span>
+      <span class="H3 MP-R workspace-history-dates"
+        >История рабочего места</span
+      >
       @for (item of historyWorkspace; track $index) {
-      <span class="P MP-R worker-date-end">
-        {{item.workerFullName}}
-        {{item.startDate | date:
-        'dd.MM.yyyy'}}
-        /
-        {{item.endDate | date: 'dd.MM.yyyy' }}</span>
+        <span class="P MP-R worker-date-end">
+          {{ item.workerFullName }}
+          {{ item.startDate | date: 'dd.MM.yyyy' }}
+          /
+          {{ item.endDate | date: 'dd.MM.yyyy' }}</span
+        >
       }
     </div>
   </div>
