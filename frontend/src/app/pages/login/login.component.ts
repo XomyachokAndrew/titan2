@@ -15,7 +15,7 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiAlertService, TuiButton } from '@taiga-ui/core';
 import { UserService } from '@controllers/user.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   isAuth: boolean = false;
   private destroyRef = inject(DestroyRef);
+  private alerts = inject(TuiAlertService);
 
   constructor(
     private renderer: Renderer2,
@@ -74,22 +75,42 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const loginDto = this.form.value;
-      this.authService
-        .login(loginDto)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: () => {
-            this.isAuth = this.authService.isAuthenticated();
-            if (this.isAuth) {
-              this.router.navigate(['offices']);
-            }
-          },
-          error: error => {
-            console.error('Failed', error);
-          },
-        });
+    if (!this.form.valid) {
+      this.alerts
+        .open(
+          `Поля не заполнены`,
+          {
+            label: 'Авторизация',
+            appearance: 'negative'
+          }
+        )
+        .subscribe();
+      return;
     }
+
+    const loginDto = this.form.value;
+    this.authService
+      .login(loginDto)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isAuth = this.authService.isAuthenticated();
+          if (this.isAuth) {
+            this.router.navigate(['offices']);
+          }
+        },
+        error: error => {
+          console.error('Failed', error);
+          this.alerts
+            .open(
+              `Логин или пароль введены неправильно`,
+              {
+                label: 'Авторизация',
+                appearance: 'negative'
+              }
+            )
+            .subscribe();
+        },
+      });
   }
 }

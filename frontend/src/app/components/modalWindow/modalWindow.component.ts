@@ -78,6 +78,7 @@ import { IWorkerDetail } from '@models/WorkerDetail';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalComponent {
+  //#region  Variables
   private destroyRef = inject(DestroyRef);
   protected form: FormGroup;
   protected newWorkspaceForm: FormGroup;
@@ -95,7 +96,7 @@ export class ModalComponent {
   protected selectedDepartmentId: number = 0;
   protected workspaceName: string = "";
   protected isAddingWorkspace: boolean = false;
-
+  //#endregion
   constructor(
     private workspaceService: WorkspaceService,
     private workerService: WorkerService,
@@ -393,7 +394,7 @@ export class ModalComponent {
             this.historyWorkspace = data.map(historyWorkspace => ({ ...historyWorkspace }));
             this.cdr.markForCheck();
           }
-          else{
+          else {
             this.historyWorkspace = [];
           }
         },
