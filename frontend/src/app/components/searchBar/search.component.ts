@@ -60,7 +60,6 @@ export class SearchComponent {
       this.searchService.searchOffices(this.searchTerm).subscribe({
         next: response => {
           this.searchResults = Object.values(response);
-          console.log(this.searchResults);
         },
         error: error => {
           console.error('Error during search:', error);
@@ -83,7 +82,6 @@ export class SearchComponent {
 
   async selectResult(result: any) {
     this.searchTerm = ''; // Устанавливаем выбранный результат в поле ввода
-    console.log(result);
 
     if (result.idOffice) {
       await this.router.navigate(['/']);
