@@ -63,7 +63,7 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
     this.isAuth = this.authService.isAuthenticated()
     if (!this.isAuth) {
-      // this.location.back();
+      this.location.back();
     }
     
     this.initializeForm();
