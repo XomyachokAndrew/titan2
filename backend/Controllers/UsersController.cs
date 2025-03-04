@@ -47,7 +47,7 @@ namespace backend.Controllers
                 Name = registrationDto.Name,
                 Surname = registrationDto.Surname,
                 Patronymic = registrationDto.Patronymic,
-                IsAdmin = false // По умолчанию, можно изменить по необходимости
+                IsAdmin = registrationDto.Role,
             };
 
             // Добавляем пользователя в контекст и сохраняем изменения
