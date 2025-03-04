@@ -9,11 +9,6 @@ import { tuiDialog } from '@taiga-ui/core';
 import { ModalWorkerComponent } from '@components/workerModalWindow/workerModalWindow.component';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
-import {
-  CdkFixedSizeVirtualScroll,
-  CdkVirtualForOf,
-  CdkVirtualScrollViewport,
-} from '@angular/cdk/scrolling';
 import { TuiDataList } from '@taiga-ui/core';
 
 @Component({
@@ -25,9 +20,6 @@ import { TuiDataList } from '@taiga-ui/core';
     CommonModule,
     TuiInputModule,
     TuiDataListWrapper,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
-    CdkVirtualScrollViewport,
     TuiDataList,
   ],
 })
