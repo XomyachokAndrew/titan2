@@ -42,12 +42,12 @@ export class RegistrationComponent implements OnInit {
     private location: Location
   ) {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      patronymic: ['', Validators.required],
-      login: ['', Validators.required],
-      password: ['', Validators.required],
-      role: ['', Validators.required]
+      name: [null, Validators.required],
+      surname: [null, Validators.required],
+      patronymic: [null, Validators.required],
+      login: [null, Validators.required],
+      password: [null, Validators.required],
+      role: [null, Validators.required]
     });
 
     this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
@@ -65,19 +65,6 @@ export class RegistrationComponent implements OnInit {
     if (!this.isAuth) {
       this.location.back();
     }
-    
-    this.initializeForm();
-  }
-
-  initializeForm(): void {
-    this.form.patchValue({
-      name: '',
-      surname: '',
-      patronymic: '',
-      login: '',
-      password: '',
-      role: '',
-    });
   }
 
   onSubmit(): void {
@@ -85,6 +72,7 @@ export class RegistrationComponent implements OnInit {
 
     if (this.form.valid) {
       const registerDto = this.form.value;
+      registerDto.role = registerDto.role === 'Администратор' ? true : false;
       this.authService
         .register(registerDto)
         .pipe(
@@ -96,7 +84,6 @@ export class RegistrationComponent implements OnInit {
         )
         .subscribe({
           next: (data) => {
-            console.log(data);
             this.location.back();
           }
         })

@@ -31,6 +31,7 @@
     "@taiga-ui/icons-fontawesome": "^4.25.0",
     "@taiga-ui/kit": "^4.21.0",
     "@taiga-ui/layout": "^4.21.0",
+    "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

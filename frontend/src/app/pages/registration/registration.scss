@@ -7,8 +7,6 @@ svg {
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 60vh;
 }
 
 .custom-input {
@@ -38,6 +36,7 @@ form {
   background: rgba(116, 53, 53, 0.68);
   border-radius: 6.1875rem;
   overflow: hidden;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
@@ -47,6 +46,8 @@ form {
   max-width: 30rem;
   width: 70%;
   max-height: 40rem;
+  margin: 43px;
+
 }
 
 .title {

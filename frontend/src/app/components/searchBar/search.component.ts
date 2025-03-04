@@ -44,6 +44,7 @@ export class SearchComponent {
     // Если клик был вне области поиска, скрываем поле ввода
     if (this.isSearchVisible) {
       this.isSearchVisible = false;
+      this.searchTerm = '';
     }
   }
 
@@ -52,6 +53,7 @@ export class SearchComponent {
       this.searchService.searchOffices(this.searchTerm).subscribe({
         next: response => {
           this.searchResults = Object.values(response);
+          // TODO Сделать поиск рабочих мест
         },
         error: error => {
           console.error('Error during search:', error);
@@ -79,7 +81,11 @@ export class SearchComponent {
       await this.router.navigate(['/']);
       await this.router.navigate(['/offices', result.idOffice]);
     }
-    if (result.idRoom) {
+    if (result.idWorkspace) {
+      console.log(result);
+      
+    }
+    else if (result.idRoom) {
       this.dialogRoom(result)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({

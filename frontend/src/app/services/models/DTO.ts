@@ -74,6 +74,7 @@ export interface IUserRegistrationDto {
     patronymic?: string;
     login: string;
     password: string;
+    role: boolean;
 }
 
 export interface IWorkerDto {
