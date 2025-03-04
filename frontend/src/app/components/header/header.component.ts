@@ -16,6 +16,7 @@ import { SearchComponent } from '@components/searchBar/search.component';
 import { Location, NgClass } from '@angular/common';
 import { UserService } from '@controllers/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
     selector: 'app-header',
@@ -44,6 +45,7 @@ export default class HeaderComponent implements OnInit {
     private destroyRef = inject(DestroyRef);
     isHeaderVisible = true;
     private lastScrollPosition = 0;
+    protected role!: string | null;
 
     constructor(
         private router: Router,
@@ -55,6 +57,14 @@ export default class HeaderComponent implements OnInit {
         this.setupRouterEvents();
         this.setupAuthentication();
         this.lastScrollPosition = window.pageYOffset;
+    }
+
+    private decodeToken(): void {
+        const token = localStorage.getItem('token'); // Assuming you have a method to get the token
+        if (token) {
+            const decodedToken: any = jwtDecode(token);
+            this.role = decodedToken.role;
+        }
     }
 
     /**
@@ -82,6 +92,9 @@ export default class HeaderComponent implements OnInit {
             .subscribe(isAuthenticated => {
                 this.isAuthenticated = isAuthenticated;
                 this.user = isAuthenticated ? 'Выйти' : '';
+                if (isAuthenticated) {
+                    this.decodeToken();
+                }
             });
     }
 

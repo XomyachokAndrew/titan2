@@ -11,7 +11,7 @@
     <div class="search-container">
         <app-search class="search" />
     </div>
-    <button (click)="authOrLogout()" class="P MP-R admin-button">
+    <button (click)="authOrLogout()" style="margin-right: 20px;" class="P MP-R admin-button">
         @if(isAuthenticated){
         <tui-icon icon="@tui.user" />
         <p>Выйти</p>
@@ -20,5 +20,8 @@
         <p>Войти</p>
         }
     </button>
+    @if (isAuthenticated && role === 'Admin') {
+    <a class="P MP-R admin-button" href="/registration">Регистрация</a>
+    }
 </header>
 }
