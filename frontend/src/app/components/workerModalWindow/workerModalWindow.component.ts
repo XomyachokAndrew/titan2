@@ -95,6 +95,8 @@ export class ModalWorkerComponent {
       status: this.data.statusName,
     });
 
+    this.isAdmin = this.authService.isAdmin();
+
     if (!this.isAdmin) {
       this.context.completeWith(this.data);
       return;
