@@ -24,7 +24,8 @@ namespace backend.Controllers
         {
             // Запрос рабочих пространств, связанных с указанной комнатой
             var workspaces = await _context.CurrentWorkspaces
-                .Where(ws => ws.IdRoom == roomId)
+                .Where(cw => cw.IdRoom == roomId)
+                .OrderBy(cw => cw.WorkspaceName)
                 .ToListAsync();
 
             // Проверка на наличие рабочих пространств

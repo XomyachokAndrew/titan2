@@ -26,7 +26,12 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkerDetail>>> GetWorkers()
         {
-            return await _context.WorkerDetails.ToListAsync();
+            // Получаем отсортированный список работников
+            var workers = await _context.WorkerDetails
+                                         .OrderBy(w => w.FullWorkerName) 
+                                         .ToListAsync(); 
+
+            return workers; // Возвращаем список работников
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
         {
-            return await _context.Posts.ToListAsync();
+            return await _context.Posts.OrderBy(p => p.Name).ToListAsync();
         }
 
         // GET: api/Posts/5

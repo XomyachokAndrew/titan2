@@ -25,7 +25,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkspaceStatusesType>>> GetWorkspaceStatusesTypes()
         {
-            return await _context.WorkspaceStatusesTypes.ToListAsync();
+            return await _context.WorkspaceStatusesTypes.OrderBy(wst => wst.Name).ToListAsync();
         }
 
         // GET: api/WorkspaceStatusesTypes/5

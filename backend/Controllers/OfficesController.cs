@@ -38,7 +38,7 @@ namespace backend.Controllers
             // Формируем базовый URL для изображений
             var baseImageUrl = $"{Request.Scheme}://{Request.Host}/resources/offices/";
 
-            var offices = _context.Offices.Select(o => new OfficeDto
+            var offices = await _context.Offices.Select(o => new OfficeDto
             {
                 IdOffice = o.IdOffice,
                 OfficeName = o.OfficeName,
@@ -60,7 +60,9 @@ namespace backend.Controllers
                         .Contains(w.IdRoom.Value)
                     ),
                 Density = o.TotalWorkspace != 0 ? Math.Round((decimal)o.Square / (decimal)o.TotalWorkspace, 2) : 0
-            }).ToList();
+            })
+                .OrderBy(o => o.OfficeName)
+                .ToListAsync();
 
             return Ok(offices);
         }

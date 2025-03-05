@@ -23,6 +23,7 @@ namespace backend.Controllers
         {
             var floors = await _context.Floors
                 .Where(f => f.IdOffice == id)
+                .OrderBy(f => f.NumberFloor)
                 .ToListAsync();
 
             if (floors == null || !floors.Any())
