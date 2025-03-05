@@ -59,7 +59,6 @@ builder.Services.AddAuthentication(x =>
 // Регистрация сервиса
 builder.Services.AddScoped<IReportService, ReportService>();
 
-// Узнайте больше о настройке Swagger/OpenAPI по адресу http://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

@@ -14,8 +14,8 @@ namespace backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly Context _context; // Замените YourDbContext на ваш контекст базы данных
-        private readonly IConfiguration _configuration;
+        private readonly Context _context; // Контекст базы данных
+        private readonly IConfiguration _configuration; // Конфигурация для доступа к настройкам
 
         public UserController(Context context, IConfiguration configuration)
         {
@@ -23,6 +23,11 @@ namespace backend.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Регистрация нового пользователя.
+        /// </summary>
+        /// <param name="registrationDto">DTO с данными для регистрации пользователя.</param>
+        /// <returns>Результат выполнения операции.</returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto registrationDto)
         {
@@ -35,7 +40,8 @@ namespace backend.Controllers
             // Создаем экземпляр CredentialHasher
             CredentialHasher credentialHasher = new CredentialHasher();
             credentialHasher.SetCredentials(registrationDto.Login, registrationDto.Password);
-            Console.WriteLine(credentialHasher);
+            Console.WriteLine(credentialHasher); // Логирование хешера для отладки
+
             // Хешируем пароль
             byte[] hashedPassword = credentialHasher.HashCredentials();
 
@@ -47,7 +53,7 @@ namespace backend.Controllers
                 Name = registrationDto.Name,
                 Surname = registrationDto.Surname,
                 Patronymic = registrationDto.Patronymic,
-                IsAdmin = false // По умолчанию, можно изменить по необходимости
+                IsAdmin = registrationDto.IsAdmin, // По умолчанию, можно изменить по необходимости
             };
 
             // Добавляем пользователя в контекст и сохраняем изменения
@@ -57,22 +63,29 @@ namespace backend.Controllers
             return Ok("Пользователь успешно зарегистрирован.");
         }
 
-        // Метод для авторизации пользователя
+        /// <summary>
+        /// Авторизация пользователя.
+        /// </summary>
+        /// <param name="loginDto">DTO с данными для авторизации пользователя.</param>
+        /// <returns>Результат выполнения операции.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
         {
+            // Поиск пользователя по логину
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == loginDto.Login);
             if (user == null)
             {
                 return Unauthorized("Неверный логин или пароль.");
             }
 
+            // Проверка пароля
             CredentialHasher credentialHasher = new CredentialHasher();
             if (!credentialHasher.VerifyPassword(loginDto.Password, user.Password, loginDto.Login))
             {
                 return Unauthorized("Неверный логин или пароль.");
             }
 
+            // Генерация JWT токена
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -80,11 +93,11 @@ namespace backend.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Login),
-            new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
-            new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
+                    new Claim(ClaimTypes.Name, user.Login),
+                    new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
+                    new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(1), // Установка времени жизни токена
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -98,16 +111,22 @@ namespace backend.Controllers
             return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = refreshToken });
         }
 
-        // Метод для обновления токена
+        /// <summary>
+        /// Обновление токена доступа.
+        /// </summary>
+        /// <param name="refreshTokenDto">DTO с рефреш-токеном.</param>
+        /// <returns>Результат выполнения операции.</returns>
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
+            // Поиск пользователя по рефреш-токену
             var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshTokenDto.RefreshToken);
             if (user == null)
             {
                 return Unauthorized("Неверный рефреш-токен.");
             }
 
+            // Генерация нового JWT токена
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -115,11 +134,11 @@ namespace backend.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Login),
-            new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
-            new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
+                    new Claim(ClaimTypes.Name, user.Login),
+                    new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
+                    new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(1), // Установка времени жизни токена
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -134,4 +153,3 @@ namespace backend.Controllers
         }
     }
 }
-

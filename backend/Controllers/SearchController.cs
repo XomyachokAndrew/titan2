@@ -15,21 +15,27 @@ namespace backend.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Поиск офисов, комнат, рабочих мест и работников по заданному запросу.
+        /// </summary>
+        /// <param name="query">Строка запроса для поиска.</param>
+        /// <returns>Объединенные результаты поиска по офисам, комнатам, рабочим местам и работникам.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> SearchOffices(string query)
         {
+            // Проверка на пустой или состоящий только из пробелов запрос
             if (string.IsNullOrWhiteSpace(query))
             {
-                return BadRequest("Search query cannot be empty.");
+                return BadRequest("Search query cannot be empty."); // Возврат 400 Bad Request, если запрос пустой
             }
 
-            var lowerQuery = query.ToLower();
+            var lowerQuery = query.ToLower(); // Приведение запроса к нижнему регистру для нечувствительного поиска
 
             // Поиск офисов
             var offices = await _context.Offices
-                .Where(o => o.OfficeName.ToLower().Contains(lowerQuery) || 
-                       o.Address.ToLower().Contains(lowerQuery) || 
-                       o.City.ToLower().Contains(lowerQuery))
+                .Where(o => o.OfficeName.ToLower().Contains(lowerQuery) ||
+                            o.Address.ToLower().Contains(lowerQuery) ||
+                            o.City.ToLower().Contains(lowerQuery))
                 .ToListAsync();
 
             // Поиск комнат
@@ -39,7 +45,7 @@ namespace backend.Controllers
 
             // Поиск рабочих мест
             var workspaces = await _context.CurrentWorkspaces
-                .Where(w => w.WorkspaceName.ToLower().Contains(lowerQuery) || 
+                .Where(w => w.WorkspaceName.ToLower().Contains(lowerQuery) ||
                             w.WorkspaceStatusTypeName.ToLower().Contains(lowerQuery))
                 .ToListAsync();
 
@@ -60,7 +66,7 @@ namespace backend.Controllers
                 Workers = workers
             };
 
-            return Ok(results);
+            return Ok(results); // Возврат объединенных результатов поиска
         }
     }
 }

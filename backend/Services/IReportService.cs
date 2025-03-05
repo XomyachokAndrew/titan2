@@ -5,7 +5,7 @@
     /// </summary>
     public interface IReportService
     {
-        Task<string> GenerateRentalCostReportAsync(int officeId, int reportTypeId, int idUser);
-        Task<string> GenerateOfficeReportAsync(int officeId, int reportTypeId, int idUser); // Новый метод
+        Task<string> GenerateRentalCostReportAsync(int officeId, int reportTypeId, int idUser); // Создание финансового отчёта
+        Task<string> GenerateOfficeReportAsync(int officeId, int reportTypeId, int idUser); // Создание отчёта по рассадке 
     }
 }

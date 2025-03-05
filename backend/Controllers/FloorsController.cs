@@ -17,7 +17,11 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // GET: api/floors/office/{id}
+        /// <summary>
+        /// Получает список этажей по идентификатору офиса.
+        /// </summary>
+        /// <param name="id">Идентификатор офиса.</param>
+        /// <returns>Список этажей, относящихся к указанному офису, или 404, если не найдены.</returns>
         [HttpGet("office/{id}")]
         public async Task<ActionResult<IEnumerable<Floor>>> GetFloorsByOfficeId(int id)
         {
@@ -34,7 +38,11 @@ namespace backend.Controllers
             return Ok(floors);
         }
 
-        // GET: api/floors/{id}
+        /// <summary>
+        /// Получает информацию об этаже по идентификатору.
+        /// </summary>
+        /// <param name="id">Идентификатор этажа.</param>
+        /// <returns>Информацию об этаже в виде DTO или 404, если этаж не найден.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<FloorDto>> GetFloor(int id)
         {
