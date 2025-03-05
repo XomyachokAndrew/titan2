@@ -26,7 +26,7 @@ import {
 } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, last, of } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { ICurrentWorkspace } from '../../services/models/CurrentWorkspace';
 import { IWorkerDetail } from '@models/WorkerDetail';
 import { PostService } from '@controllers/post.service';
