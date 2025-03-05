@@ -59,7 +59,6 @@ namespace backend.Controllers
             return Ok("Пользователь успешно зарегистрирован.");
         }
 
-        [Authorize]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
         {
@@ -109,7 +108,6 @@ namespace backend.Controllers
         }
 
         // Метод для обновления токена
-        [Authorize]
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
