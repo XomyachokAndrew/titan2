@@ -2,12 +2,14 @@
 using backend.Models;
 using backend.ModelsDto;
 using MathNet.Numerics.Statistics.Mcmc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OfficesController : ControllerBase

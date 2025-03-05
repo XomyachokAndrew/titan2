@@ -2,6 +2,7 @@
 using backend.Models;
 using backend.ModelsDto;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
@@ -12,6 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
