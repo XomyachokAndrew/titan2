@@ -1,0 +1,17 @@
+<div class="heading">
+  <span class="MP-R H3">Отчет по офису</span>
+  <div class="heading__info">
+    <span class="MP-R H3">{{ data.officeName }}</span>
+  </div>
+</div>
+<div class="container">
+  <form [formGroup]="form">
+    <tui-select class="H2 MP-SB custom-input" formControlName="reportType">
+      Выберите тип отчета:
+      <tui-data-list-wrapper *tuiDataList [items]="reportTypes" />
+    </tui-select>
+    <div class="button-container">
+      <span class="P MP-R submit click" (click)="onSubmit()">Создать отчет</span>
+    </div>
+  </form>
+</div>

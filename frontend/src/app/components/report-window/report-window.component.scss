@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  width: 13rem;
+  padding: 1rem;
+  gap: 30px;
+}
+
+.custom-input {
+  --tui-font-text-m: normal 1rem / 1rem 'MyriadPro-r';
+  --tui-radius-m: 8rem;
+  --tui-text-secondary: black;
+  --tui-background-accent-1: black;
+  --tui-background-base: white;
+  --tui-padding-m: 1.5rem;
+}
+
+.heading {
+  padding: 1rem;
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.button-container {
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
