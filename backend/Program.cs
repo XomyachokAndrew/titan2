@@ -3,6 +3,7 @@ using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 
@@ -61,12 +62,38 @@ builder.Services.AddScoped<IReportService, ReportService>();
 
 // Узнайте больше о настройке Swagger/OpenAPI по адресу http://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// Регистрация Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     // Укажите путь к XML файлу документации
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath); // Включение XML документации
+
+    // Добавление схемы безопасности для JWT
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Введите 'Bearer' [пробел] и ваш токен в поле ниже для доступа к защищенным ресурсам.",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    // Применение схемы безопасности ко всем API
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 var app = builder.Build();
