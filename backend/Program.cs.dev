@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,8 @@ builder.Services.AddAuthentication(x =>
         ValidateAudience = false // Установите true, если необходимо проверять аудиторию токена
     };
 });
+
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // Узнайте больше о настройке Swagger/OpenAPI по адресу http://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
