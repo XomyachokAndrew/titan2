@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class WorkspaceController : ControllerBase
@@ -21,6 +20,7 @@ namespace backend.Controllers
         }
 
         // Получение рабочих пространств по ID комнаты
+        [Authorize]
         [HttpGet("WorkspacesByRoom/{roomId}")]
         public async Task<ActionResult<IEnumerable<CurrentWorkspace>>> GetWorkspacesByRoom(int roomId)
         {
@@ -40,6 +40,7 @@ namespace backend.Controllers
         }
 
         // Получение информации о рабочем пространстве по ID
+        [Authorize]
         [HttpGet("info/{id}")]
         public async Task<ActionResult<WorkspaceInfoDto>> GetWorkspaceInfo(int id)
         {
@@ -80,6 +81,7 @@ namespace backend.Controllers
 
         // Получение истории статусов рабочего пространства
         // GET: api/workspaces/{id}/history
+        [Authorize]
         [HttpGet("history/{id}")]
         public async Task<ActionResult<IEnumerable<HistoryWorkspaceStatus>>> GetWorkspaceHistory(int id)
         {
@@ -98,6 +100,7 @@ namespace backend.Controllers
         }
 
         // Метод для добавления статуса рабочего пространства
+        [Authorize(Roles = "Admin")]
         [HttpPost("status/add")]
         public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
         {
@@ -139,6 +142,7 @@ namespace backend.Controllers
         }
 
         // Метод для обновления даты окончания статуса рабочего пространства
+        [Authorize(Roles = "Admin")]
         [HttpPut("update-end-date/{id}")]
         public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
         {
@@ -156,6 +160,7 @@ namespace backend.Controllers
             return NoContent(); 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateStatus/{id}")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusWorkspaceDto updatedStatusDto)
         {
@@ -218,6 +223,7 @@ namespace backend.Controllers
         }
 
         // POST: api/workspaces/create
+        [Authorize(Roles = "Admin")]
         [HttpPost("add")]
         public async Task<IActionResult> AddWorkspace([FromBody] WorkspaceDto workspaceDto)
         {
@@ -241,6 +247,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/workspaces/{id}
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteWorkspace(int id)
         {

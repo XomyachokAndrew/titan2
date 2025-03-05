@@ -24,6 +24,7 @@ namespace backend.Controllers
             _configuration = configuration;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto registrationDto)
         {
@@ -48,7 +49,7 @@ namespace backend.Controllers
                 Name = registrationDto.Name,
                 Surname = registrationDto.Surname,
                 Patronymic = registrationDto.Patronymic,
-                IsAdmin = registrationDto.IsAdmin // По умолчанию, можно изменить по необходимости
+                IsAdmin = registrationDto.IsAdmin ?? false // По умолчанию, можно изменить по необходимости
             };
 
             // Добавляем пользователя в контекст и сохраняем изменения
@@ -58,6 +59,7 @@ namespace backend.Controllers
             return Ok("Пользователь успешно зарегистрирован.");
         }
 
+        [Authorize]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
         {
@@ -107,6 +109,7 @@ namespace backend.Controllers
         }
 
         // Метод для обновления токена
+        [Authorize]
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {

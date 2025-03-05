@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class WorkspaceStatusesTypesController : ControllerBase
@@ -24,6 +23,7 @@ namespace backend.Controllers
         }
 
         // GET: api/WorkspaceStatusesTypes
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkspaceStatusesType>>> GetWorkspaceStatusesTypes()
         {
@@ -31,6 +31,7 @@ namespace backend.Controllers
         }
 
         // GET: api/WorkspaceStatusesTypes/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<WorkspaceStatusesType>> GetWorkspaceStatusesType(int id)
         {
@@ -46,6 +47,7 @@ namespace backend.Controllers
 
         // PUT: api/WorkspaceStatusesTypes/5
         // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkspaceStatusesType(int id, WorkspaceStatusesType workspaceStatusesType)
         {
@@ -77,6 +79,7 @@ namespace backend.Controllers
 
         // POST: api/WorkspaceStatusesTypes
         // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<WorkspaceStatusesType>> PostWorkspaceStatusesType(WorkspaceStatusesType workspaceStatusesType)
         {
@@ -87,6 +90,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/WorkspaceStatusesTypes/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkspaceStatusesType(int id)
         {

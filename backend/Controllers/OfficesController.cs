@@ -21,6 +21,7 @@ namespace backend.Controllers
             _context = context;
         }
 
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Office>> GetOfficeById(int id)
         {
