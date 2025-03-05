@@ -51,6 +51,8 @@ import { IDepartment } from '@models/Department';
 import { WorkersStatusesTypeService } from '@controllers/workersStatusesType.service';
 import { IWorkersStatusesType } from '@models/WorkersStatusesType';
 import { IWorkerDetail } from '@models/WorkerDetail';
+import { UserService } from '@controllers/user.service';
+import { Router } from '@angular/router';
 //#endregion
 
 /**
@@ -84,6 +86,7 @@ import { IWorkerDetail } from '@models/WorkerDetail';
 })
 export class ModalComponent {
   //#region  Variables
+  protected isAdmin: boolean = false;
   private destroyRef = inject(DestroyRef);
   protected form: FormGroup;
   protected newWorkspaceForm: FormGroup;
@@ -109,7 +112,9 @@ export class ModalComponent {
     private departmentService: DepartmentService,
     private workerStatusTypeService: WorkersStatusesTypeService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: UserService,
+    private router: Router
   ) {
     this.form = this.fb.group({
       idWorkspace: [{ value: 0, disabled: false }],
@@ -120,6 +125,8 @@ export class ModalComponent {
       status: [{ value: null, disabled: true }],
       dateRange: [{ value: null, disabled: true }],
     });
+
+    this.isAdmin = this.authService.isAdmin();
 
     this.newWorkspaceForm = this.fb.group({
       idRoom: this.data.idRoom,
@@ -337,7 +344,7 @@ export class ModalComponent {
 
       const idStatusWorkspace =
         formData.idStatusWorkspace === undefined ||
-        formData.idStatusWorkspace === null
+          formData.idStatusWorkspace === null
           ? 0
           : formData.idStatusWorkspace;
 
@@ -508,8 +515,10 @@ export class ModalComponent {
       dateRange: date,
     });
 
-    this.form.get('worker')?.enable();
-    this.form.get('dateRange')?.enable();
+    if (this.isAdmin) {
+      this.form.get('worker')?.enable();
+      this.form.get('dateRange')?.enable();
+    }
   }
 
   /**

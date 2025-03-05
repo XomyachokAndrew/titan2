@@ -6,6 +6,8 @@ import { WorkerService } from '@controllers/worker.service';
 import { catchError, of } from 'rxjs';
 import { IWorkerDetail } from '@models/WorkerDetail';
 import { WorkerCardComponent } from "@components/worker-card/worker-card.component";
+import { Router } from '@angular/router';
+import { UserService } from '@controllers/user.service';
 
 @Component({
   selector: 'workers',
@@ -19,10 +21,13 @@ import { WorkerCardComponent } from "@components/worker-card/worker-card.compone
 export class WorkersComponent {
   private destroyRef = inject(DestroyRef);
   protected workers!: IWorkerDetail[];
+  protected isAdmin: boolean = false;
 
   constructor(
     private workerService: WorkerService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
+    private authService: UserService,
   ) {
     this.loadWorkers();
   }
@@ -55,6 +60,12 @@ export class WorkersComponent {
   }
 
   openWorker(worker: IWorkerDetail) {
+    this.isAdmin = this.authService.isAdmin();
+    if (!this.isAdmin) {
+      console.log(this.isAdmin);
+      
+      return;
+    }
     this.dialog(worker)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

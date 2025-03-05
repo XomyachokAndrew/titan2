@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
   isAuth: boolean = false;
   private destroyRef = inject(DestroyRef);
   private alerts = inject(TuiAlertService);
+  protected isAdmin: boolean = false;
 
   constructor(
     private renderer: Renderer2,
@@ -49,6 +50,13 @@ export class LoginComponent implements OnInit {
       login: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    this.isAdmin = this.authService.isAdmin();
+
+    if (this.isAdmin) {
+      this.router.navigate(['']);
+      return;
+    }
 
     this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
     this.renderer.setStyle(this.document.documentElement, 'overflow', 'hidden');

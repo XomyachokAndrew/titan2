@@ -20,6 +20,7 @@ import { UserService } from '@controllers/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import { Location } from '@angular/common'; // <-- Добавлено
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'registration',
@@ -33,13 +34,15 @@ export class RegistrationComponent implements OnInit {
   form: FormGroup;
   private isAuth: boolean = false;
   private destroyRef = inject(DestroyRef);
+  protected isAdmin: boolean = false;
 
   constructor(
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
     private fb: FormBuilder,
     private authService: UserService,
-    private location: Location
+    private location: Location,
+    private router: Router
   ) {
     this.form = this.fb.group({
       name: [null, Validators.required],
@@ -49,6 +52,12 @@ export class RegistrationComponent implements OnInit {
       password: [null, Validators.required],
       role: [null, Validators.required]
     });
+
+    this.authService.isAdmin();
+    if (!this.isAdmin) {
+      this.router.navigate(['']);
+      return;
+    }
 
     this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
     this.renderer.setStyle(this.document.documentElement, 'overflow', 'hidden');

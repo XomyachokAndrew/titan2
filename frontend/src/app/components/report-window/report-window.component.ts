@@ -33,6 +33,8 @@ import { ReportService } from '@controllers/report.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, of } from 'rxjs';
 import saveAs from 'file-saver';
+import { UserService } from '@controllers/user.service';
+import { Router } from '@angular/router';
 //#endregion
 
 /**
@@ -63,17 +65,25 @@ export class ReportWindowComponent {
   private destroyRef = inject(DestroyRef);
   protected value!: IOffice;
   protected form: FormGroup;
+  protected isAdmin: boolean = false;
   protected reportTypes = ["Финансовый по офису", "Отчёт по Работникам"];
   //#endregion
   constructor(
     private fb: FormBuilder,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private authService: UserService,
+    private router: Router
   ) {
     this.form = this.fb.group({
       reportType: null,
       idOffice: this.data.idOffice,
       idUser: 1
     });
+    this.isAdmin = this.authService.isAdmin();
+    if (!this.isAdmin) {
+      this.context.completeWith(this.data);
+      return;
+    }
   }
 
   public readonly context =
@@ -98,6 +108,7 @@ export class ReportWindowComponent {
       .subscribe({
         next: (blob: any) => {
           saveAs(blob, 'report.xlsx');
+          this.context.completeWith(this.data);
         },
         error: error => console.error(error),
       });
@@ -107,7 +118,6 @@ export class ReportWindowComponent {
     const formData = this.form.value;
     formData.reportType = formData.reportType === "Финансовый по офису" ? 1 : 2;
     console.log(formData.reportType);
-    
     
     this.postReport(formData.reportType, formData.idOffice, formData.idUser);
   }

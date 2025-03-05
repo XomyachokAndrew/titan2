@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { IUserLoginDto, IUserRegistrationDto, IRefreshTokenDto } from '../models/DTO';
 import { ILoginResponse } from '../response';
 import { environment } from '../../../environments/environment';
+import { jwtDecode } from 'jwt-decode';
 
 
 @Injectable({
@@ -31,6 +32,23 @@ export class UserService {
         }),
         catchError(this.handleError<ILoginResponse>('login'))
       );
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.role; // Предположим, что роль хранится в поле 'role'
+    }
+    return null;
+  }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'Admin';
   }
 
   logout() {

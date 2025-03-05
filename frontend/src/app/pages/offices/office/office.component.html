@@ -46,7 +46,9 @@
         </tui-pagination>
       </div>
       }
-      <button tuiButton size="m" (click)="reportClick()" type="button">Создать отчет</button>
+      @if (isAdmin) {
+        <button tuiButton size="m" (click)="reportClick()" type="button">Создать отчет</button>
+      }
     </div>
   </div>
   <div class="office-image">

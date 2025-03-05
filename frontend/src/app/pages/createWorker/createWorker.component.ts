@@ -18,6 +18,8 @@ import { IPost } from '@models/Post';
 import { WorkerService } from '@controllers/worker.service';
 import { IStatusWorkerDto, IWorkerDto } from '@models/DTO';
 import { IWorker } from '@models/Worker';
+import { UserService } from '@controllers/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'createWorker',
@@ -43,6 +45,7 @@ export class CreateWorkerComponent {
   protected selectedDepartmentId: number = 0;
   private destroyRef = inject(DestroyRef);
   private alerts = inject(TuiAlertService);
+  protected isAdmin: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +53,8 @@ export class CreateWorkerComponent {
     private postService: PostService,
     private workerService: WorkerService,
     private cdr: ChangeDetectorRef,
+    private authService: UserService,
+    private router: Router
   ) {
     this.employeeForm = this.fb.group({
       firstName: [null, Validators.required],
@@ -58,6 +63,12 @@ export class CreateWorkerComponent {
       post: [null],
       department: [null],
     });
+
+    this.isAdmin =  this.authService.isAdmin();
+    if (!this.isAdmin) {
+      this.router.navigate(['']);
+      return;
+    }
 
     this.loadDepartments();
     this.loadPosts();

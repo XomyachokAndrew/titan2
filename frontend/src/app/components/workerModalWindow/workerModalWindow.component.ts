@@ -38,6 +38,7 @@ import { IWorkersStatusesType } from '@models/WorkersStatusesType';
 import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { WorkerService } from '@controllers/worker.service';
 import { IStatusWorkerDto, IWorkerDto } from '@models/DTO';
+import { UserService } from '@controllers/user.service';
 
 @Component({
   standalone: true,
@@ -72,6 +73,7 @@ export class ModalWorkerComponent {
   protected selectedWorkerStatusTypeId: number = 0;
   private initialForm!: any;
   private destroyRef = inject(DestroyRef);
+  protected isAdmin: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -79,6 +81,7 @@ export class ModalWorkerComponent {
     private departmentService: DepartmentService,
     private workerStatusTypeService: WorkersStatusesTypeService,
     private workerService: WorkerService,
+    private authService: UserService,
   ) {
     this.form = this.fb.group({
       statusWorkerId: this.data.idStatusWorker,
@@ -91,6 +94,11 @@ export class ModalWorkerComponent {
       statusId: this.data.idStatus, // Статус
       status: this.data.statusName,
     });
+
+    if (!this.isAdmin) {
+      this.context.completeWith(this.data);
+      return;
+    }
 
     this.initialForm = this.form.value;
 

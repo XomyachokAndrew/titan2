@@ -5,7 +5,7 @@ import {
   DestroyRef,
   inject
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FloorService } from '../../../services/controllers/floor.service';
@@ -36,19 +36,20 @@ import { ReportWindowComponent } from '@components/report-window/report-window.c
 })
 export class OfficeComponent implements OnInit {
   //#region Variables
-  isLoading: boolean = true;
-  isAuth: boolean = false;
-  id!: number;
+  protected isLoading: boolean = true;
+  protected isAuth: boolean = false;
+  protected isAdmin: boolean = false;
+  protected id!: number;
   private destroyRef = inject(DestroyRef);
   //#region Pagination
-  currentPage: number = 0;
-  itemsPerPage: number = 10;
-  totalFloors: number = 0;
+  protected currentPage: number = 0;
+  protected itemsPerPage: number = 10;
+  protected totalFloors: number = 0;
   //#endregion
   //#region Interfaces
-  dataOffice!: IOffice;
-  dataFloors!: IFloorDto[];
-  currentFloor: IFloorDto | null = null;
+  protected dataOffice!: IOffice;
+  protected dataFloors!: IFloorDto[];
+  protected currentFloor: IFloorDto | null = null;
   //#endregion
   //#endregion
 
@@ -58,10 +59,11 @@ export class OfficeComponent implements OnInit {
     private floorService: FloorService,
     private officeService: OfficeService,
     private location: Location,
-    private authService: UserService
+    private authService: UserService,
+    private router: Router
   ) {
-    
-   }
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   ngOnInit() {
     this.isAuth = this.authService.isAuthenticated()
@@ -70,7 +72,7 @@ export class OfficeComponent implements OnInit {
       return;
     }
     this.id = this.activateRoute.snapshot.params['id'];
-    
+
     this.loadData();
   }
   //#endregion
