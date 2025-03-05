@@ -3,19 +3,20 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = `${environment.apiUrl}/report`;
+  private url = `${environment.apiUrl}/report`;
 
   constructor(private http: HttpClient) { }
 
-  // GET: api/report/{reportTypeId}/{officeId}
+  // GET: api/report/{reportTypeId}/{officeId}?idUser={idUser}
   getRentalCost(reportTypeId: number, officeId: number, idUser: number): Observable<Blob> {
-    const url = `${this.apiUrl}/${reportTypeId}/${officeId}?idUser=${idUser}`;
-    return this.http.get(url, { responseType: 'blob' })
+    const resultUrl = `${this.url}/${reportTypeId}/${officeId}?idUser=${idUser}`;
+    return this.http.get(resultUrl, { responseType: 'blob' })
       .pipe(catchError(this.handleError));
   }
 

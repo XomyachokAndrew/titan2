@@ -16,10 +16,11 @@ import { TuiPagination } from '@taiga-ui/kit';
 import { FloorSchemaComponent } from '../../../components/floor-schema/floor-schema.component';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiButton, tuiDialog } from '@taiga-ui/core';
 import { Location } from '@angular/common';
 import { UserService } from '../../../services/controllers/user.service';
 import { IOffice } from '../../../services/models/Office';
+import { ReportWindowComponent } from '@components/report-window/report-window.component';
 //#endregion
 
 @Component({
@@ -137,4 +138,25 @@ export class OfficeComponent implements OnInit {
     }
   }
   //#endregion
+
+  private readonly dialog = tuiDialog(ReportWindowComponent, {
+    dismissible: true,
+    size: 'auto'
+  });
+
+  reportClick() {
+    try {
+      this.dialog(this.dataOffice).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+        next: (data) => {
+          console.info(`Dialog emitted data = ${data}`);
+        },
+        complete: () => {
+          console.info('Dialog closed');
+        },
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке данных комнаты: ', error);
+    }
+  }
+
 }
