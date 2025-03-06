@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class OfficesController : ControllerBase
@@ -21,7 +21,7 @@ namespace backend.Controllers
             _context = context;
         }
 
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Office>> GetOfficeById(int id)
         {
