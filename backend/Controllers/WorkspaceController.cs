@@ -19,51 +19,51 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получение рабочих пространств по ID комнаты.
+        /// Получение данных рабочих мест по id комнаты.
         /// </summary>
-        /// <param name="roomId">ID комнаты.</param>
-        /// <returns>Список рабочих пространств, связанных с указанной комнатой.</returns>
+        /// <param name="roomId">id комнаты.</param>
+        /// <returns>Список рабочих мест, связанных с указанной комнатой.</returns>
         [HttpGet("WorkspacesByRoom/{roomId}")]
         public async Task<ActionResult<IEnumerable<CurrentWorkspace>>> GetWorkspacesByRoom(int roomId)
         {
-            // Запрос рабочих пространств, связанных с указанной комнатой
+            // Запрос рабочих мест, связанных с указанной комнатой
             var workspaces = await _context.CurrentWorkspaces
                 .Where(cw => cw.IdRoom == roomId)
                 .OrderBy(cw => cw.WorkspaceName)
                 .ToListAsync();
 
-            // Проверка на наличие рабочих пространств
+            // Проверка на наличие рабочих мест
             if (!workspaces.Any())
             {
-                return NotFound($"Рабочие пространства не найдены для ID комнаты {roomId}.");
+                return NotFound($"Рабочие места не найдены для id комнаты {roomId}.");
             }
 
-            return Ok(workspaces); // Возврат найденных рабочих пространств
+            return Ok(workspaces); // Возврат найденных рабочих мест
         }
 
         /// <summary>
-        /// Получение информации о рабочем пространстве по ID.
+        /// Получение данных о рабочем месте по id.
         /// </summary>
-        /// <param name="id">ID рабочего пространства.</param>
-        /// <returns>Информация о рабочем пространстве.</returns>
+        /// <param name="id">id рабочего места.</param>
+        /// <returns>Информация о рабочем месте.</returns>
         [HttpGet("info/{id}")]
         public async Task<ActionResult<WorkspaceInfoDto>> GetWorkspaceInfo(int id)
         {
-            // Запрос информации о рабочем пространстве
+            // Запрос информации о рабочем месте
             var workspaceInfo = await _context.CurrentWorkspaces
                 .FirstOrDefaultAsync(cw => cw.IdWorkspace == id);
 
-            // Проверка на наличие рабочего пространства
+            // Проверка на наличие рабочего места
             if (workspaceInfo == null)
             {
                 return NotFound();
             }
 
-            // Получение деталей работника, связанных с рабочим пространством
+            // Получение деталей работника, связанных с рабочим местом
             var workerDetail = await _context.WorkerDetails
                 .FirstOrDefaultAsync(wd => wd.IdWorker == workspaceInfo.IdWorker);
 
-            // Создание DTO для возврата информации о рабочем пространстве
+            // Создание DTO для возврата информации о рабочем месте
             var workspaceInfoDto = new WorkspaceInfoDto
             {
                 WorkspaceName = workspaceInfo.WorkspaceName,
@@ -83,14 +83,14 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получение истории статусов рабочего пространства.
+        /// Получение истории статусов рабочего места.
         /// </summary>
-        /// <param name="id">ID рабочего пространства.</param>
-        /// <returns>История статусов рабочего пространства.</returns>
+        /// <param name="id">id рабочего места.</param>
+        /// <returns>История статусов рабочего места.</returns>
         [HttpGet("history/{id}")]
         public async Task<ActionResult<IEnumerable<HistoryWorkspaceStatus>>> GetWorkspaceHistory(int id)
         {
-            // Запрос истории статусов рабочего пространства
+            // Запрос истории статусов рабочего места
             var history = await _context.HistoryWorkspaceStatuses
                 .FromSqlRaw("SELECT * FROM offices_management.history_workspace_statuses WHERE id_workspace = {0} ORDER BY start_date", id)
                 .ToListAsync();
@@ -105,9 +105,9 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Метод для добавления статуса рабочего пространства.
+        /// Метод для добавления статуса рабочего места и обновлении даты окончания предыдущего статуса.
         /// </summary>
-        /// <param name="statusWorkspaceDto">DTO с данными статуса рабочего пространства.</param>
+        /// <param name="statusWorkspaceDto">DTO с данными статуса рабочего места.</param>
         /// <returns>Результат выполнения операции.</returns>
         [HttpPost("status/add")]
         public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
@@ -124,7 +124,7 @@ namespace backend.Controllers
                 return BadRequest("End date must be greater than start date.");
             }
 
-            // Создание нового статуса рабочего пространства
+            // Создание нового статуса рабочего места
             var statusWorkspace = new StatusesWorkspace
             {
                 StartDate = statusWorkspaceDto.StartDate ?? DateOnly.FromDateTime(DateTime.Now),
@@ -139,7 +139,7 @@ namespace backend.Controllers
             _context.StatusesWorkspaces.Add(statusWorkspace); // Добавление статуса в контекст
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
 
-            // Если ID статуса рабочего пространства не равен null, обновляем дату окончания предыдущего статуса
+            // Если id статуса рабочего места не равен null, обновляем дату окончания предыдущего статуса
             if (statusWorkspaceDto.IdStatusWorkspace != null)
             {
                 await UpdateEndDate(statusWorkspaceDto.IdStatusWorkspace, statusWorkspace.StartDate);
@@ -149,15 +149,15 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Метод для обновления даты окончания статуса рабочего пространства.
+        /// Метод для обновления даты окончания статуса рабочего места.
         /// </summary>
-        /// <param name="id">ID статуса рабочего пространства.</param>
+        /// <param name="id">id статуса рабочего места.</param>
         /// <param name="endDate">Новая дата окончания.</param>
         /// <returns>Результат выполнения операции.</returns>
         [HttpPut("update-end-date/{id}")]
         public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
         {
-            // Поиск статуса рабочего пространства по ID
+            // Поиск статуса рабочего места по id
             var statusWorkspace = await _context.StatusesWorkspaces.FindAsync(id);
             if (statusWorkspace == null)
             {
@@ -172,9 +172,9 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Метод для обновления статуса рабочего пространства.
+        /// Метод для обновления статуса рабочего места.
         /// </summary>
-        /// <param name="id">ID статуса рабочего пространства.</param>
+        /// <param name="id">id статуса рабочего места.</param>
         /// <param name="updatedStatusDto">DTO с обновленными данными статуса.</param>
         /// <returns>Результат выполнения операции.</returns>
         [HttpPut("UpdateStatus/{id}")]
@@ -186,7 +186,7 @@ namespace backend.Controllers
                 return BadRequest("Данные обновленного статуса обязательны."); // Возврат 400 Bad Request
             }
 
-            // Поиск текущего статуса по ID
+            // Поиск текущего статуса по id
             var currentStatus = await _context.StatusesWorkspaces.FindAsync(id);
             if (currentStatus == null)
             {
@@ -239,9 +239,9 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Метод для добавления нового рабочего пространства.
+        /// Метод для добавления нового рабочего места.
         /// </summary>
-        /// <param name="workspaceDto">DTO с данными рабочего пространства.</param>
+        /// <param name="workspaceDto">DTO с данными рабочего места.</param>
         /// <returns>Результат выполнения операции.</returns>
         [HttpPost("add")]
         public async Task<IActionResult> AddWorkspace([FromBody] WorkspaceDto workspaceDto)
@@ -259,21 +259,21 @@ namespace backend.Controllers
                 IsDeleted = false // Устанавливаем IsDeleted в false по умолчанию
             };
 
-            await _context.Workspaces.AddAsync(workspace); // Добавление нового рабочего пространства в контекст
+            await _context.Workspaces.AddAsync(workspace); // Добавление нового рабочего места в контекст
             await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
 
             return Ok(); // Возврат успешного ответа
         }
 
         /// <summary>
-        /// Метод для удаления рабочего пространства по ID.
+        /// Метод для удаления рабочего места по id.
         /// </summary>
-        /// <param name="id">ID рабочего пространства.</param>
+        /// <param name="id">id рабочего места.</param>
         /// <returns>Результат выполнения операции.</returns>
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteWorkspace(int id)
         {
-            // Находим рабочее место по ID
+            // Находим рабочее место по id
             var workspace = _context.Workspaces.Find(id);
             if (workspace == null)
             {

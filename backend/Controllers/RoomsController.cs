@@ -18,7 +18,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получение комнат по ID этажа.
+        /// Получение данных всех комнат на этаже.
         /// </summary>
         /// <param name="id">ID этажа.</param>
         /// <returns>Список комнат на указанном этаже.</returns>
@@ -41,7 +41,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получение всех комнат.
+        /// Получение данных всех комнат.
         /// </summary>
         /// <returns>Список всех комнат.</returns>
         [HttpGet]

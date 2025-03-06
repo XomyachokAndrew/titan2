@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Представление WorkerDetail из БД
 public partial class WorkerDetail
 {
     public int? IdWorker { get; set; }

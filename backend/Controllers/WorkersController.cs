@@ -19,7 +19,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает список всех работников.
+        /// Получает данные всех работников.
         /// </summary>
         /// <returns>Список объектов <see cref="WorkerDetail"/>.</returns>
         // GET: api/Workers
@@ -35,9 +35,9 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает конкретного работника по ID.
+        /// Получает данные конкретного работника по id.
         /// </summary>
-        /// <param name="id">ID работника для получения.</param>
+        /// <param name="id">id работника для получения.</param>
         /// <returns>Объект <see cref="WorkerDetail"/>, если найден; иначе 404 Not Found.</returns>
         // GET: api/Workers/5
         [HttpGet("{id}")]
@@ -60,7 +60,6 @@ namespace backend.Controllers
         /// <param name="id">ID работника для обновления.</param>
         /// <param name="workerDto">Обновленные данные работника.</param>
         /// <returns>204 No Content, если успешно; иначе 400 Bad Request или 404 Not Found.</returns>
-        // Метод для обновления данных работника
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateWorker(int id, [FromBody] WorkerDto workerDto)
         {
@@ -97,11 +96,10 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Добавляет статус для конкретного работника.
+        /// Добавляет статус для конкретного работника и обновляет время окончания предыдущего статуса.
         /// </summary>
         /// <param name="statusWorkerDto">Данные статуса для добавления.</param>
         /// <returns>200 OK, если успешно; иначе 400 Bad Request.</returns>
-        // Метод для добавления статуса рабочего
         [HttpPost("status/add")]
         public async Task<IActionResult> AddStatusWorker(StatusWorkerDto statusWorkerDto)
         {

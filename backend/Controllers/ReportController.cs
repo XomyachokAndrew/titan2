@@ -25,7 +25,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Генерирует отчет о стоимости аренды для конкретного офиса.
+        /// Генерирует EXCEL отчет о распределении стоимости аренды для конкретного офиса.
         /// </summary>
         /// <param name="officeId">Идентификатор офиса, для которого генерируется отчет.</param>
         /// <param name="reportTypeId">Идентификатор типа отчета.</param>
@@ -53,7 +53,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает отчет по офису в формате Excel.
+        /// Генерирует EXCEL отчет реестра рабочих мест для конкретного офиса.
         /// </summary>
         /// <param name="officeId">Идентификатор офиса.</param>
         /// <param name="reportTypeId">Идентификатор типа отчета.</param>

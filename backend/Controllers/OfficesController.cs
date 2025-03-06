@@ -20,7 +20,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает офис по идентификатору.
+        /// Получает информацию о офисе по id.
         /// </summary>
         /// <param name="id">Идентификатор офиса.</param>
         /// <returns>Офис с указанным идентификатором или 404, если не найден.</returns>
@@ -40,7 +40,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает список всех офисов.
+        /// Получает данные о всех офисах.
         /// </summary>
         /// <returns>Список офисов в виде DTO.</returns>
         [HttpGet]
