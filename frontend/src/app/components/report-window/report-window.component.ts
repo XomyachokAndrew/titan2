@@ -66,8 +66,17 @@ export class ReportWindowComponent {
   protected value!: IOffice;
   protected form: FormGroup;
   protected isAdmin: boolean = false;
-  protected reportTypes = ["Финансовый по офису", "Отчёт по Работникам"];
+  protected reportTypes = ['Финансовый по офису', 'Отчёт по Работникам'];
   //#endregion
+
+  /**
+   * Конструктор компонента.
+   *
+   * @param fb - Сервис для создания форм.
+   * @param reportService - Сервис для работы с отчетами.
+   * @param authService - Сервис для работы с аутентификацией пользователя.
+   * @param router - Сервис для маршрутизации.
+   */
   constructor(
     private fb: FormBuilder,
     private reportService: ReportService,
@@ -77,7 +86,7 @@ export class ReportWindowComponent {
     this.form = this.fb.group({
       reportType: null,
       idOffice: this.data.idOffice,
-      idUser: 1
+      idUser: 1,
     });
     this.isAdmin = this.authService.isAdmin();
     if (!this.isAdmin) {
@@ -86,18 +95,30 @@ export class ReportWindowComponent {
     }
   }
 
-  public readonly context =
-    injectContext<TuiDialogContext<IOffice, IOffice>>();
+  /**
+   * Контекст диалогового окна, содержащий данные, переданные в модальное окно.
+   */
+  public readonly context = injectContext<TuiDialogContext<IOffice, IOffice>>();
 
   /**
-   * Данные передаваемые со страницы в модальное окно
+   * Данные, передаваемые со страницы в модальное окно.
+   *
+   * @returns Данные офиса.
    */
   protected get data(): IOffice {
     return this.context.data;
   }
 
+  /**
+   * Метод для отправки запроса на создание отчета.
+   *
+   * @param reportTypeId - Идентификатор типа отчета.
+   * @param officeId - Идентификатор офиса.
+   * @param idUser - Идентификатор пользователя.
+   */
   postReport(reportTypeId: number, officeId: number, idUser: number) {
-    this.reportService.getRentalCost(reportTypeId, officeId, idUser)
+    this.reportService
+      .getRentalCost(reportTypeId, officeId, idUser)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -114,11 +135,14 @@ export class ReportWindowComponent {
       });
   }
 
+  /**
+   * Метод для обработки отправки формы.
+   */
   onSubmit() {
     const formData = this.form.value;
-    formData.reportType = formData.reportType === "Финансовый по офису" ? 1 : 2;
+    formData.reportType = formData.reportType === 'Финансовый по офису' ? 1 : 2;
     console.log(formData.reportType);
-    
+
     this.postReport(formData.reportType, formData.idOffice, formData.idUser);
   }
 }

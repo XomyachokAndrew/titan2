@@ -5,27 +5,51 @@ import { environment } from '../../../environments/environment';
 import { IOfficeDto } from '../models/DTO';
 import { IOffice } from '../models/Office';
 
+/**
+ * Сервис для работы с офисами.
+ * Предоставляет методы для получения информации об офисах и конкретного офиса по его идентификатору.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OfficeService {
   private apiUrl = `${environment.apiUrl}/Offices`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
-  // GET: api/offices/{id}
+  /**
+   * Получает информацию об офисе по его идентификатору.
+   *
+   * @param id - Идентификатор офиса.
+   * @returns Observable, который возвращает информацию об офисе.
+   */
   getOfficeById(id: number): Observable<IOffice> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<IOffice>(url)
-      .pipe(catchError(this.handleError));
+    return this.http.get<IOffice>(url).pipe(catchError(this.handleError));
   }
 
-  // GET: api/offices
+  /**
+   * Получает список всех офисов.
+   *
+   * @returns Observable, который возвращает массив офисов.
+   */
   getOffices(): Observable<IOfficeDto[]> {
-    return this.http.get<IOfficeDto[]>(this.apiUrl)
+    return this.http
+      .get<IOfficeDto[]>(this.apiUrl)
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
