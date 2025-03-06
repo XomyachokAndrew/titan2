@@ -277,8 +277,6 @@ export class ModalWorkerComponent {
   }
 
   deleteClick() {
-    console.log(this.form.get('workerId')?.value);
-
     this.deleteWorker(this.form.get('workerId')?.value)
   }
 
