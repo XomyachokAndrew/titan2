@@ -55,7 +55,6 @@ namespace backend.Controllers
                     IdRoom = r.IdRoom,
                     Name = r.Name,
                     TotalWorkspace = r.TotalWorkspace,
-                    Square = r.Square,
                     FreeWorkspace = r.Workspaces.Count(ws => !ws.StatusesWorkspaces.Any(s =>
                         (s.StartDate <= currentDate) &&
                         (s.EndDate > currentDate || s.EndDate == null) &&
