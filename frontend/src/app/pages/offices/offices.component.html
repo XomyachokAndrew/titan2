@@ -1,7 +1,13 @@
-<div class="container">
-    @for (office of data; track $index) {
-        <card-office
-        [id]="office.idOffice"
-        ></card-office>
-    }
-</div>
+@if (isLoading) {
+<app-loading/>
+}
+@else {
+    <div class="container">
+        @for (office of offices; track $index) {
+            <card-office
+            [data]="office"
+            [id]="office.idOffice"
+            ></card-office>
+        }
+    </div>
+}

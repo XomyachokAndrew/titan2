@@ -264,7 +264,7 @@ namespace backend.Controllers
             await _context.Workers.AddAsync(worker);
             await _context.SaveChangesAsync();
 
-            return Ok(); // Возвращаем 200 OK после успешного добавления
+            return Ok(new { worker.IdWorker }); // Возвращаем 200 OK после успешного добавления
         }
 
         /// <summary>

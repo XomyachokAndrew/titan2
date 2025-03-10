@@ -1,30 +1,64 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IFloor } from '../models/Floor';
 import { environment } from '../../../environments/environment';
+import { IFloorDto } from '../models/DTO';
 
+/**
+ * Сервис для работы с этажами.
+ * Предоставляет методы для получения этажей по идентификатору офиса и получения информации об этаже по его идентификатору.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FloorService {
-  private apiUrl = `${environment.apiUrl}/floors`;
+  private url = `${environment.apiUrl}/floors`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
-  getFloorsByOfficeId(id: number): Observable<IFloor[]> {
-    const url = `${this.apiUrl}/office/${id}`;
-    return this.http.get<IFloor[]>(url)
-      .pipe(
-        catchError(this.handleError<IFloor[]>('getFloorsByOfficeId', []))
-      );
+  /**
+   * Получает список этажей по идентификатору офиса.
+   *
+   * @param id - Идентификатор офиса.
+   * @returns Observable, который возвращает массив этажей.
+   */
+  getFloorsByOfficeId(id: number): Observable<IFloorDto[]> {
+    const url = `${this.url}/office/${id}`;
+    return this.http.get<IFloorDto[]>(url).pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  /**
+   * Получает информацию об этаже по его идентификатору.
+   *
+   * @param id - Идентификатор этажа.
+   * @returns Observable, который возвращает информацию об этаже.
+   */
+  getFloor(id: number): Observable<IFloorDto> {
+    const url = `${this.url}/${id}`;
+    return this.http.get<IFloorDto>(url).pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

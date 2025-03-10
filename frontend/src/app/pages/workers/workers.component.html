@@ -1,0 +1,12 @@
+<div class="container">
+  <span class="H2 MP-R">Список всех сотрудников</span>
+  <div class="H3 instruction MP-R">
+    <span class="title">ФИО</span>
+    <span class="title">Должность</span>
+    <span class="title">Организация</span>
+    <span class="title">Статус</span>
+  </div>
+  @for (worker of workers; track $index) {
+  <worker-card (workerClicked)="openWorker($event)" [worker]="worker"></worker-card>
+  }
+</div>

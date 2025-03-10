@@ -1,0 +1,47 @@
+<div class="container">
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    <span class="H3 MP-R create-worker">Создание сотрудника</span>
+    <!-- Фамилия -->
+    <tui-input class="H2 MP-SB custom-input" formControlName="lastName">
+      Фамилия:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <!-- Имя -->
+    <tui-input class="H2 MP-SB custom-input" formControlName="firstName">
+      Имя:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <!-- Отчество -->
+    <tui-input class="H2 MP-SB custom-input" formControlName="middleName">
+      Отчество:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <!-- Должность -->
+    <tui-select class="P MP-R custom-select" tuiTextfieldSize="l" formControlName="post">
+      Должность
+      <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+        <tui-data-list>
+          <button *cdkVirtualFor="let item of posts" tuiOption type="button" [value]="item.name" id="{{item.idPost}}">
+            {{item.name}}
+          </button>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-select>
+    <!-- Отдел -->
+    <tui-select class="P MP-R custom-select" tuiTextfieldSize="l" formControlName="department">
+      Организация
+      <cdk-virtual-scroll-viewport *tuiDataList appendOnly tuiScrollable class="scroll" [itemSize]="3">
+        <tui-data-list>
+          <button *cdkVirtualFor="let item of departments" tuiOption type="button" [value]="item.name"
+            id="{{item.idDepartment}}">
+            {{item.name}}
+          </button>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-select>
+    <div class="button-container">
+      <span class="P MP-R submit click" (click)="onSubmit()" (keydown.enter)="onSubmit()" tabindex="0">Создать</span>
+      <span class="P MP-R clear click" (click)="clearClick()">Очистить</span>
+    </div>
+  </form>
+</div>

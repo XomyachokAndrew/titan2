@@ -1,57 +1,108 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IWorkspaceStatusesType } from '../models/WorkspaceStatusesType';
 import { environment } from '../../../environments/environment';
 
+/**
+ * Сервис для работы с типами статусов рабочих пространств.
+ * Предоставляет методы для получения, создания, обновления и удаления типов статусов рабочих пространств.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WorkspaceStatusesTypeService {
-  private baseUrl = `${environment.apiUrl}/WorkspaceStatusesTypes`;
+  private url = `${environment.apiUrl}/WorkspaceStatusesTypes`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
+  /**
+   * Получает список всех типов статусов рабочих пространств.
+   *
+   * @returns Observable, который возвращает массив типов статусов рабочих пространств.
+   */
   getWorkspaceStatusesTypes(): Observable<IWorkspaceStatusesType[]> {
-    return this.http.get<IWorkspaceStatusesType[]>(this.baseUrl)
-      .pipe(
-        catchError(this.handleError<IWorkspaceStatusesType[]>('getWorkspaceStatusesTypes', []))
-      );
+    return this.http
+      .get<IWorkspaceStatusesType[]>(this.url)
+      .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Получает информацию о типе статуса рабочего пространства по его идентификатору.
+   *
+   * @param id - Идентификатор типа статуса рабочего пространства.
+   * @returns Observable, который возвращает информацию о типе статуса рабочего пространства.
+   */
   getWorkspaceStatusesType(id: number): Observable<IWorkspaceStatusesType> {
-    return this.http.get<IWorkspaceStatusesType>(`${this.baseUrl}/${id}`)
-      .pipe(
-        catchError(this.handleError<IWorkspaceStatusesType>('getWorkspaceStatusesType'))
-      );
+    const url = `${this.url}/${id}`;
+    return this.http
+      .get<IWorkspaceStatusesType>(url)
+      .pipe(catchError(this.handleError));
   }
 
-  updateWorkspaceStatusesType(id: number, workspaceStatusesType: IWorkspaceStatusesType): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}`, workspaceStatusesType)
-      .pipe(
-        catchError(this.handleError<void>('updateWorkspaceStatusesType'))
-      );
+  /**
+   * Обновляет информацию о типе статуса рабочего пространства по его идентификатору.
+   *
+   * @param id - Идентификатор типа статуса рабочего пространства.
+   * @param workspaceStatusesType - Обновленные данные типа статуса рабочего пространства.
+   * @returns Observable, который возвращает результат обновления.
+   */
+  updateWorkspaceStatusesType(
+    id: number,
+    workspaceStatusesType: IWorkspaceStatusesType
+  ): Observable<any> {
+    const url = `${this.url}/${id}`;
+    return this.http
+      .put(url, workspaceStatusesType)
+      .pipe(catchError(this.handleError));
   }
 
-  addWorkspaceStatusesType(workspaceStatusesType: IWorkspaceStatusesType): Observable<IWorkspaceStatusesType> {
-    return this.http.post<IWorkspaceStatusesType>(this.baseUrl, workspaceStatusesType)
-      .pipe(
-        catchError(this.handleError<IWorkspaceStatusesType>('addWorkspaceStatusesType'))
-      );
+  /**
+   * Создает новый тип статуса рабочего пространства.
+   *
+   * @param workspaceStatusesType - Данные нового типа статуса рабочего пространства.
+   * @returns Observable, который возвращает созданный тип статуса рабочего пространства.
+   */
+  createWorkspaceStatusesType(
+    workspaceStatusesType: IWorkspaceStatusesType
+  ): Observable<IWorkspaceStatusesType> {
+    return this.http
+      .post<IWorkspaceStatusesType>(this.url, workspaceStatusesType)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteWorkspaceStatusesType(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`)
-      .pipe(
-        catchError(this.handleError<void>('deleteWorkspaceStatusesType'))
-      );
+  /**
+   * Удаляет тип статуса рабочего пространства по его идентификатору.
+   *
+   * @param id - Идентификатор типа статуса рабочего пространства.
+   * @returns Observable, который возвращает результат удаления.
+   */
+  deleteWorkspaceStatusesType(id: number): Observable<any> {
+    const url = `${this.url}/${id}`;
+    return this.http.delete(url).pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

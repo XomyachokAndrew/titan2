@@ -1,6 +1,12 @@
+import { IStatusesWorker } from "./StatusesWorker";
+import { IStatusesWorkspace } from "./StatusesWorkspace";
+
 export interface IWorker {
-    IdWorker: number;
-    Name: string;
-    Surname: string;
-    Patronymic?: string;
+    idWorker: number;
+    name: string;
+    surname: string;
+    patronymic?: string;
+    isDeleted: boolean;
+    statusesWorkers?: IStatusesWorker[];
+    statusesWorkspaces?: IStatusesWorkspace[];
 }

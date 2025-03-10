@@ -1,0 +1,89 @@
+/* Стили для скроллбара */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--tui-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--tui-base-03);
+}
+
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --tui-background-base: #d9d9d9;
+}
+
+.scroll {
+  block-size: 8.5rem;
+}
+
+.click {
+  cursor: pointer;
+}
+
+.submit {
+  padding-left: 5px;
+  color: #419c41;
+  transition: 0.3s;
+
+  &:hover {
+    color: #337533;
+  }
+}
+
+.clear {
+  color: #9c4141;
+
+  transition: 0.3s;
+
+  &:hover {
+    color: #6e2c2c;
+  }
+}
+
+.PP {
+  font-size: 12px;
+}
+
+.P {
+  font-size: 18px;
+}
+
+.H3 {
+  font-size: 27px;
+}
+
+.H2 {
+  font-size: 40px;
+}
+
+.H1 {
+  font-size: 60px;
+}
+
+.MP-R {
+  font-family: 'MyriadPro-r';
+}
+
+.MP-SB {
+  font-family: 'MyriadPro-sb';
+}
+
+.MP-B {
+  font-family: 'MyriadPro-b';
+}
+
+tui-root {
+  position: relative;
+  display: block;
+  font: var(--tui-font-text-s);
+  color: var(--tui-text-primary);
+  flex: 1;
+  border-image: conic-gradient(var(--tui-background-base) 0 0) fill 0 / 0 / 0 0 100vh 0;
+  -webkit-tap-highlight-color: transparent;
+}

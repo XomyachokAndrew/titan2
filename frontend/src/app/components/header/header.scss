@@ -52,8 +52,6 @@ header[tuiNavigationHeader][tuiNavigationHeader]:before {
 
 .admin-button {
     background-color: #ffffff;
-    font-family: "MyriadPro-r";
-    font-size: 1.125rem;
     color: rgb(0, 0, 0);
     border: none;
     padding: 0.001rem 1.75rem;
@@ -104,7 +102,6 @@ tui-icon[tuiIcons]:after {
     justify-content: left;
     width: 20rem;
     padding-right: 20rem;
-    // transform: scale(0.6);
 
     svg {
         width: 18rem;
@@ -121,8 +118,6 @@ tui-icon[tuiIcons]:after {
 
 .header-button {
     color: #FFF;
-    font-family: "MyriadPro-r";
-    font-size: 1.6875rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -135,3 +130,7 @@ tui-icon[tuiIcons]:after {
 .header-button:hover {
     color: rgb(195, 194, 199);
 }
+
+.header-hidden {
+    transform: translateY(-100%);
+  }

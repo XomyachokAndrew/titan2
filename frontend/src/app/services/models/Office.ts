@@ -1,9 +1,16 @@
+import { IFloor } from "./Floor";
+import { IRentalAgreement } from "./RentalAgreement";
+
 export interface IOffice {
-    IdOffice: number;
-    OfficeName: string;
-    Address: string;
-    IdOfficeStatus: number;
-    Square?: number;
-    Image: string;
-    TotalWorkspace?: number;
+    idOffice: number;
+    officeName: string;
+    address: string;
+    idOfficeStatus: number;
+    square?: number;
+    image?: string;
+    totalWorkspace: number;
+    city: string;
+    freeWorkspaces: number;
+    floors?: IFloor[];
+    rentalAgreements?: IRentalAgreement[];
 }
