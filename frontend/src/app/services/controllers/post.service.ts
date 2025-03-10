@@ -15,52 +15,6 @@ import { environment } from '../../../environments/environment';
 export class PostService {
   private apiUrl = `${environment.apiUrl}/posts`;
 
-    /**
-   * Конструктор сервиса.
-   *
-   * @param http - Сервис для выполнения HTTP-запросов.
-   */
-  constructor(private http: HttpClient) { }
-
-    /**
-   * Получает список всех должностей.
-   *
-   * @returns Observable, который возвращает массив должностей.
-   */
-  getPosts(): Observable<IPost[]> {
-    return this.http.get<IPost[]>(this.apiUrl)
-      .pipe(catchError(this.handleError));
-  }
-
-    /**
-   * Получает информацию о должности по её идентификатору.
-   *
-   * @param id - Идентификатор должности.
-   * @returns Observable, который возвращает информацию о должности.
-   */
-  getPost(id: number): Observable<IPost> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<IPost>(url)
-      .pipe(catchError(this.handleError));
-  }
-
-  import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { IPost } from '../models/Post';
-import { environment } from '../../../environments/environment';
-
-/**
- * Сервис для работы с должностями.
- * Предоставляет методы для получения, создания, обновления и удаления должностей.
- */
-@Injectable({
-  providedIn: 'root'
-})
-export class PostService {
-  private apiUrl = `${environment.apiUrl}/posts`;
-
   /**
    * Конструктор сервиса.
    *
