@@ -138,21 +138,9 @@ public partial class Context : DbContext
                 .ToView("history_workspace_statuses", "offices_management");
 
             entity.Property(e => e.EndDate).HasColumnName("end_date");
-            entity.Property(e => e.IdStatusWorkspace).HasColumnName("id_status_workspace");
             entity.Property(e => e.IdWorkspace).HasColumnName("id_workspace");
-            entity.Property(e => e.IdWorkspaceReservationsStatuses).HasColumnName("id_workspace_reservations_statuses");
-            entity.Property(e => e.IdWorkspaceStatusType).HasColumnName("id_workspace_status_type");
             entity.Property(e => e.StartDate).HasColumnName("start_date");
-            entity.Property(e => e.UserName)
-                .HasMaxLength(50)
-                .HasColumnName("user_name");
             entity.Property(e => e.WorkerFullName).HasColumnName("worker_full_name");
-            entity.Property(e => e.WorkspaceReservationStatuseName)
-                .HasMaxLength(45)
-                .HasColumnName("workspace_reservation_statuse_name");
-            entity.Property(e => e.WorkspaceStatusTypeName)
-                .HasMaxLength(45)
-                .HasColumnName("workspace_status_type_name");
         });
 
         modelBuilder.Entity<Office>(entity =>
