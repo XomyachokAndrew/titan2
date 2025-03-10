@@ -1,69 +1,146 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IWorker } from '../models/Worker';
 import { environment } from '../../../environments/environment';
+import { IStatusWorkerDto, IWorkerDto } from '../models/DTO';
+import { IWorkerDetail } from '../models/WorkerDetail';
+import { IWorker } from '@models/Worker';
 
-
+/**
+ * Сервис для работы с работниками.
+ * Предоставляет методы для получения, создания, обновления и удаления работников, а также управления их статусами.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WorkerService {
-  private apiUrl = `${environment.apiUrl}/worker`;
+  private apiUrl = `${environment.apiUrl}/workers`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
-  getWorkers(): Observable<IWorker[]> {
-    return this.http.get<IWorker[]>(this.apiUrl)
-      .pipe(
-        catchError(this.handleError<IWorker[]>('getWorkers', []))
-      );
+  /**
+   * Получает список всех работников.
+   *
+   * @returns Observable, который возвращает массив работников.
+   */
+  getWorkers(): Observable<IWorkerDetail[]> {
+    return this.http
+      .get<IWorkerDetail[]>(this.apiUrl)
+      .pipe(catchError(this.handleError));
   }
 
-  getWorker(id: number): Observable<IWorker> {
+  /**
+   * Получает информацию о работнике по его идентификатору.
+   *
+   * @param id - Идентификатор работника.
+   * @returns Observable, который возвращает информацию о работнике.
+   */
+  getWorker(id: number): Observable<IWorkerDetail> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<IWorker>(url)
-      .pipe(
-        catchError(this.handleError<IWorker>(`getWorker id=${id}`))
-      );
+    return this.http.get<IWorkerDetail>(url).pipe(catchError(this.handleError));
   }
 
-  updateWorker(worker: IWorker): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.put(this.apiUrl, worker, httpOptions)
-      .pipe(
-        catchError(this.handleError<any>('updateWorker'))
-      );
+  /**
+   * Обновляет информацию о работнике по его идентификатору.
+   *
+   * @param id - Идентификатор работника.
+   * @param workerDto - Обновленные данные работника.
+   * @returns Observable, который возвращает результат обновления.
+   */
+  updateWorker(id: number, workerDto: IWorkerDto): Observable<any> {
+    const url = `${this.apiUrl}/update/${id}`;
+    return this.http.put(url, workerDto).pipe(catchError(this.handleError));
   }
 
-  addWorker(worker: IWorker): Observable<IWorker> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.post<IWorker>(this.apiUrl, worker, httpOptions)
-      .pipe(
-        catchError(this.handleError<IWorker>('addWorker'))
-      );
+  /**
+   * Добавляет новый статус работника.
+   *
+   * @param statusWorkerDto - Данные нового статуса работника.
+   * @returns Observable, который возвращает результат добавления статуса.
+   */
+  addStatusWorker(statusWorkerDto: IStatusWorkerDto): Observable<any> {
+    const url = `${this.apiUrl}/status/add`;
+    return this.http
+      .post(url, statusWorkerDto)
+      .pipe(catchError(this.handleError));
   }
 
-  deleteWorker(id: number): Observable<IWorker> {
+  /**
+   * Обновляет дату окончания работы работника по его идентификатору.
+   *
+   * @param id - Идентификатор работника.
+   * @param endDate - Новая дата окончания работы.
+   * @returns Observable, который возвращает результат обновления даты.
+   */
+  updateEndDate(id: number, endDate?: string): Observable<any> {
+    const url = `${this.apiUrl}/update-end-date/${id}`;
+    return this.http.put(url, { endDate }).pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Обновляет статус работника по его идентификатору.
+   *
+   * @param id - Идентификатор работника.
+   * @param updatedStatusDto - Обновленные данные статуса работника.
+   * @returns Observable, который возвращает результат обновления статуса.
+   */
+  updateStatus(
+    id: number,
+    updatedStatusDto: IStatusWorkerDto
+  ): Observable<any> {
+    const url = `${this.apiUrl}/status/update/${id}`;
+    return this.http
+      .put(url, updatedStatusDto)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Добавляет нового работника.
+   *
+   * @param workerDto - Данные нового работника.
+   * @returns Observable, который возвращает результат добавления работника.
+   */
+  addWorker(workerDto: IWorkerDto): Observable<any> {
+    const url = `${this.apiUrl}/add`;
+    return this.http.post(url, workerDto).pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Удаляет работника по его идентификатору.
+   *
+   * @param id - Идентификатор работника.
+   * @returns Observable, который возвращает результат удаления работника.
+   */
+  deleteWorker(id: number): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
-    const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-    return this.http.delete<IWorker>(url, httpOptions)
-      .pipe(
-        catchError(this.handleError<IWorker>('deleteWorker'))
-      );
+    return this.http.delete(url).pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

@@ -1,98 +1,153 @@
-import { NgClass } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  HostListener,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router, NavigationEnd } from '@angular/router';
 import {
-    TuiDataList,
-    TuiDropdown,
-    TuiDropdownService,
-    TuiIcon,
-    TuiTextfield,
+  TuiDataList,
+  TuiDropdown,
+  TuiIcon,
+  TuiTextfield,
 } from '@taiga-ui/core';
-import {
-    TuiTabs,
-} from '@taiga-ui/kit';
+import { TuiTabs } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 import { filter } from 'rxjs/operators';
-import { SearchComponent } from '../searchBar/search.component';
-import { Location } from '@angular/common';
-import { UserService } from '../../services/controllers/user.service';
+import { SearchComponent } from '@components/searchBar/search.component';
+import { Location, NgClass } from '@angular/common';
+import { UserService } from '@controllers/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { jwtDecode } from 'jwt-decode';
 
+/**
+ * Компонент для отображения заголовка (header) приложения.
+ */
 @Component({
-    selector: 'app-header',
-    standalone: true,
-    exportAs: "Example1",
-    imports: [
-        FormsModule,
-        TuiDataList,
-        TuiDropdown,
-        TuiIcon,
-        TuiNavigation,
-        TuiTabs,
-        TuiTextfield,
-        SearchComponent
-    ],
-    templateUrl: './header.html',
-    styleUrl: './header.scss',
+  selector: 'app-header',
+  standalone: true,
+  exportAs: 'Example1',
+  imports: [
+    FormsModule,
+    TuiDataList,
+    TuiDropdown,
+    TuiIcon,
+    TuiNavigation,
+    TuiTabs,
+    TuiTextfield,
+    SearchComponent,
+    NgClass,
+  ],
+  templateUrl: './header.html',
+  styleUrl: './header.scss',
 })
 export default class HeaderComponent implements OnInit {
-    loginPage: boolean = false;
-    title: string = "Интерактивная карта офисов";
-    user: string = '';
-    isSearch: boolean = false;
-    isAuthenticated: boolean = false;
-    private destroyRef = inject(DestroyRef);
+  loginPage: boolean = false; // Флаг для отображения страницы входа
+  isSearch: boolean = false; // Флаг для отображения поиска
+  isAuthenticated: boolean = false; // Флаг для проверки аутентификации
+  title: string = 'Интерактивная карта офисов'; // Заголовок приложения
+  user: string = ''; // Имя пользователя или текст кнопки
+  private destroyRef = inject(DestroyRef);
+  isHeaderVisible = true; // Флаг для отображения заголовка
+  private lastScrollPosition = 0; // Последняя позиция прокрутки
+  protected role!: string | null; // Роль пользователя
 
-    constructor(
-        private router: Router,
-        private location: Location,
-        private userService: UserService
-    ) { }
+  constructor(
+    private router: Router,
+    private location: Location,
+    private userService: UserService
+  ) {}
 
-    ngOnInit() {
-        this.router.events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((event: NavigationEnd) => {
-                switch (event.urlAfterRedirects) {
-                    case '/login':
-                        this.loginPage = true;
-                        break;
-                    case '/registration':
-                        this.loginPage = true;
-                        break;
-                    default:
-                        this.loginPage = false;
-                        break;
-                }
-            });
+  /**
+   * Метод, вызываемый при инициализации компонента.
+   */
+  ngOnInit() {
+    this.setupRouterEvents();
+    this.setupAuthentication();
+    this.lastScrollPosition = window.pageYOffset;
+  }
 
-        this.userService.isAuthenticated$
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(isAuthenticated => {
-                this.isAuthenticated = isAuthenticated;
-            });
+  /**
+   * Метод для декодирования JWT-токена и получения роли пользователя.
+   */
+  private decodeToken(): void {
+    const token = localStorage.getItem('token'); // Assuming you have a method to get the token
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      this.role = decodedToken.role;
+    }
+  }
 
-        if(this.isAuthenticated == true){
-            this.user = 'Выйти'; 
+  /**
+   * Настройка подписки на события маршрутизации.
+   * Обновляет флаг `loginPage` в зависимости от текущего URL.
+   */
+  private setupRouterEvents(): void {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((event: NavigationEnd) => {
+        this.loginPage = ['/login', '/registration'].includes(
+          event.urlAfterRedirects
+        );
+      });
+  }
+
+  /**
+   * Настройка подписки на состояние аутентификации.
+   * Обновляет флаг `isAuthenticated` и текст кнопки.
+   */
+  private setupAuthentication(): void {
+    this.userService.isAuthenticated$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isAuthenticated => {
+        this.isAuthenticated = isAuthenticated;
+        this.user = isAuthenticated ? 'Выйти' : '';
+        if (isAuthenticated) {
+          this.decodeToken();
         }
+      });
+  }
+
+  /**
+   * Метод для возврата на предыдущую страницу.
+   */
+  goBack() {
+    this.location.back(); // Метод для возврата на предыдущую страницу
+  }
+
+  /**
+   * Метод для аутентификации или выхода из системы.
+   */
+  authOrLogout() {
+    if (this.isAuthenticated) {
+      this.userService.logout();
+      this.router.navigate(['/']);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  /**
+   * Обработчик события прокрутки окна.
+   * Скрывает или показывает заголовок в зависимости от направления прокрутки.
+   */
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const currentScrollPosition = window.pageYOffset;
+
+    if (currentScrollPosition > this.lastScrollPosition) {
+      // Прокрутка вниз
+      this.isHeaderVisible = false;
+    } else {
+      // Прокрутка вверх
+      this.isHeaderVisible = true;
     }
 
-    goBack() {
-        this.location.back(); // Метод для возврата на предыдущую страницу
-    }
-
-    authOrLogout() {
-        if (this.isAuthenticated) {
-            this.userService.logout();
-            this.router.navigate(['/']);
-        }
-        else{
-            this.router.navigate(['/login']);
-        }
-    }
+    this.lastScrollPosition = currentScrollPosition;
+  }
 }

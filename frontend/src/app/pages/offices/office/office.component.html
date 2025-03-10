@@ -1,24 +1,60 @@
+@if (isLoading) {
+<app-loading />
+} @else {
 <div class="container">
   <div class="office-info">
-      <h1 class="h1-name">Информация</h1>
-      <hr class="office-info-line">
-      <div class="info">
-        {{office.title}}
+    <h1 class="H2 MB-SB name">Информация</h1>
+    <hr class="office-info-line" />
+    <div class="P MB-B info">
+      {{ dataOffice.officeName }}
+    </div>
+    <hr class="office-info-line" />
+    <div class="P MB-B info">Адрес: {{ dataOffice.address }}</div>
+    <hr class="office-info-line" />
+    <div class="P MB-B info">
+      <!-- Здесь должна быть информация о Floor -->
+      @if (paginatedFloor) {
+      <div class="P MB-B info-text">
+        Кабинеты:
+        <span class="span-number">{{
+          paginatedFloor.rooms.length || 0
+          }}</span>
       </div>
-      <hr class="office-info-line">
-      <div class="info">
-        Адрес: {{office.address}}
+      <div class="P MB-B info-text">
+        Рабочие места:
+        <span class="span-number">{{
+          paginatedFloor.totalWorkspace || 0
+          }}</span>
       </div>
-      <hr class="office-info-line">
-      <div class="info">
-        <div class="info-text">Кабинеты: <span class="span-number">{{office.countCab}}</span></div>
-        <div class="info-text">Рабочие места: <span class="span-number">{{office.countWorkspace}}</span></div>
-        <div class="info-text">Кол-во сотрудников: <span class="span-number">15</span></div>
-        <div class="info-text">Свободных мест: <span class="span-number">{{office.countAvaibleWorkspace}}</span></div>
-        <div class="info-text">Забронированные места: <span class="span-number">2</span></div>
+      <div class="P MB-B info-text">
+        Кол-во сотрудников: <span class="span-number">{{ paginatedFloor.totalWorkspace - paginatedFloor.freeWorkspaces }}</span>
       </div>
+      <div class="P MB-B info-text">
+        Свободных мест:
+        <span class="span-number">{{
+          paginatedFloor.freeWorkspaces || 0
+          }}</span>
+      </div>
+      <div class="P MB-B info-text">
+        Забронированные места: <span class="span-number">{{ paginatedFloor.reservedWorkspaces || 0}}</span>
+      </div>
+      }
+      <!-- Здесь конец информации -->
+      @if (totalFloors > 1) {
+      <div class="pagination">
+        <tui-pagination [index]="currentPage" [length]="totalFloors" (indexChange)="onPageChange($event)">
+        </tui-pagination>
+      </div>
+      }
+      @if (isAdmin) {
+        <button tuiButton size="m" (click)="reportClick()" type="button">Создать отчет</button>
+      }
+    </div>
   </div>
-  <div class="office-image" >
-    <div [innerHTML]="svgContent"></div>
+  <div class="office-image">
+    @if (paginatedFloor) {
+    <app-floor-schema [floorInfo]="paginatedFloor"></app-floor-schema>
+    }
   </div>
 </div>
+}

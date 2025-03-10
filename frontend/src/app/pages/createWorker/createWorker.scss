@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 79.3vh;
+}
+
+.custom-input {
+  width: 30rem;
+  padding-top: 15px;
+  --tui-font-text-m: normal 1rem / 0.5rem 'MyriadPro-r';
+  --tui-radius-m: 0.75rem;
+  --tui-text-secondary: black;
+  --tui-background-accent-1: black;
+  --tui-background-base: white;
+  --tui-padding-l: 2rem;
+}
+
+.custom-select {
+  width: 30rem;
+  padding-top: 15px;
+  --tui-font-text-m: normal 1rem / 0.5rem 'MyriadPro-r';
+  --tui-radius-m: 0.75rem;
+  --tui-text-secondary: black;
+  --tui-background-accent-1: black;
+  --tui-background-base: white;
+  --tui-padding-l: 2rem;
+}
+
+.scroll {
+  block-size: 8.5rem;
+}
+
+.create-worker {
+  padding-bottom: 15px;
+}
+
+.button-container {
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}

@@ -19,13 +19,14 @@ namespace backend.Controllers
             _context = context;
         }
 
+        
         /// <summary>
         /// Получение данных рабочих мест по id комнаты.
         /// </summary>
         /// <param name="roomId">id комнаты.</param>
         /// <returns>Список рабочих мест, связанных с указанной комнатой.</returns>
         [Authorize]
-        [HttpGet("WorkspacesByRoom/{roomId}")]
+        [HttpGet("room/{roomId}")]
         public async Task<ActionResult<IEnumerable<CurrentWorkspace>>> GetWorkspacesByRoom(int roomId)
         {
             // Запрос рабочих мест, связанных с указанной комнатой

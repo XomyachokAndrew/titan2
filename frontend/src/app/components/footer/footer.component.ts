@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     TuiDataList,
@@ -10,6 +10,9 @@ import {
 } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 
+/**
+ * Компонент для отображения подвала (footer) приложения.
+ */
 @Component({
     selector: 'app-footer',
     standalone: true,

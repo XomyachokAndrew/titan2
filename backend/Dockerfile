@@ -17,6 +17,12 @@ RUN dotnet tool install --global dotnet-ef
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /back
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends fonts-liberation && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /back/out .
 
 # Set environment variables for the database connection

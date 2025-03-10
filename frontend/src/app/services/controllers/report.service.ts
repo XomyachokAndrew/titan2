@@ -1,35 +1,61 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { saveAs } from 'file-saver';
 
+/**
+ * Сервис для генерации отчетов.
+ * Предоставляет методы для получения отчетов в формате Blob.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportService {
-  private apiUrl = `${environment.apiUrl}/report`;
+  private url = `${environment.apiUrl}/report`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
-  getRentalCost(officeId: number, reportTypeId: number, idUser: number): Observable<Blob> {
-    const params = new HttpParams()
-      .set('officeId', officeId.toString())
-      .set('reportTypeId', reportTypeId.toString())
-      .set('idUser', idUser.toString());
-
-    const headers = new HttpHeaders().set('Accept', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-    return this.http.get<Blob>(`${this.apiUrl}/${reportTypeId}/${officeId}`, { params, headers, responseType: 'blob' as 'json' })
-      .pipe(
-        catchError(this.handleError<Blob>('getRentalCost'))
-      );
+  /**
+   * Получает отчет по аренде помещений.
+   *
+   * @param reportTypeId - Идентификатор типа отчета.
+   * @param officeId - Идентификатор офиса.
+   * @param idUser - Идентификатор пользователя.
+   * @returns Observable, который возвращает отчет в формате Blob.
+   */
+  getRentalCost(
+    reportTypeId: number,
+    officeId: number,
+    idUser: number
+  ): Observable<Blob> {
+    const resultUrl = `${this.url}/${reportTypeId}/${officeId}?idUser=${idUser}`;
+    return this.http
+      .get(resultUrl, { responseType: 'blob' })
+      .pipe(catchError(this.handleError));
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      throw error.message;
-    };
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Ошибки на стороне клиента
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Ошибки на стороне сервера
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

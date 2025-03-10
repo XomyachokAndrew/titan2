@@ -1,8 +1,12 @@
+import { IRoom } from "./Room";
+
 export interface IFloor {
-    IdFloor: number;
-    NumberFloor: number;
-    TotalWorkspace: number;
-    Scheme?: string;
-    IdOffice: number;
-    Square?: number;
+    idFloor: number;
+    numberFloor: number;
+    totalWorkspace: number;
+    idOffice: number;
+    square?: number;
+    freeWorkspaces: number;
+    scheme: string;
+    rooms?: IRoom[];
 }
