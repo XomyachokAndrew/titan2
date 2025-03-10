@@ -53,7 +53,7 @@ export class RegistrationComponent implements OnInit {
       role: [null, Validators.required]
     });
 
-    this.authService.isAdmin();
+    this.isAdmin = this.authService.isAdmin();
     if (!this.isAdmin) {
       this.router.navigate(['']);
       return;
@@ -77,8 +77,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.form.value);
-
     if (this.form.valid) {
       const registerDto = this.form.value;
       registerDto.role = registerDto.role === 'Администратор' ? true : false;
