@@ -1,4 +1,3 @@
-import type { TemplateRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -333,8 +332,6 @@ export class ModalWorkerComponent {
    * Метод для обработки нажатия кнопки удаления.
    */
   deleteClick() {
-    console.log(this.form.get('workerId')?.value);
-
     this.deleteWorker(this.form.get('workerId')?.value);
   }
 
