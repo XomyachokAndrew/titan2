@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Представление HistoryWorkspaceStatus из БД
 public partial class HistoryWorkspaceStatus
 {
     public int? IdWorkspace { get; set; }

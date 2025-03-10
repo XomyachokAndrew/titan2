@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Представление CurrentWorkspace из БД
 public partial class CurrentWorkspace
 {
     public int? IdWorkspace { get; set; }

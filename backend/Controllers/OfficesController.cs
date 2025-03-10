@@ -21,26 +21,39 @@ namespace backend.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Получает информацию о офисе по id.
+        /// </summary>
+        /// <param name="id">Идентификатор офиса.</param>
+        /// <returns>Офис с указанным идентификатором или 404, если не найден.</returns>
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Office>> GetOfficeById(int id)
         {
+            // Ищем офис по идентификатору
             var office = await _context.Offices.FirstOrDefaultAsync(o => o.IdOffice == id);
 
+            // Проверяем, найден ли офис
             if (office == null)
             {
-                return NotFound();
+                return NotFound(); // Возвращаем 404, если офис не найден
             }
 
-            return Ok(office);
+            return Ok(office); // Возвращаем офис с кодом 200
         }
 
+        /// <summary>
+        /// Получает данные о всех офисах.
+        /// </summary>
+        /// <returns>Список офисов в виде DTO.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OfficeDto>>> GetOffices()
         {
             // Формируем базовый URL для изображений
+            // Используем схему и хост из запроса для создания полного URL
             var baseImageUrl = $"{Request.Scheme}://{Request.Host}/resources/offices/";
 
+            // Получаем список офисов с проекцией в DTO
             var offices = await _context.Offices.Select(o => new OfficeDto
             {
                 IdOffice = o.IdOffice,
@@ -60,14 +73,15 @@ namespace backend.Controllers
                     .Count(w => o.Floors
                         .SelectMany(f => f.Rooms)
                         .Select(r => r.IdRoom)
-                        .Contains(w.IdRoom.Value)
+                        .Contains(w.IdRoom.Value) // Проверяем, что идентификатор комнаты совпадает
                     ),
+                // Плотность рабочих мест (количество квадратных метров на одно рабочее место)
                 Density = o.TotalWorkspace != 0 ? Math.Round((decimal)o.Square / (decimal)o.TotalWorkspace, 2) : 0
             })
-                .OrderBy(o => o.OfficeName)
+                .OrderBy(o => o.OfficeName) // Сортируем офисы по имени
                 .ToListAsync();
 
-            return Ok(offices);
+            return Ok(offices); // Возвращаем список офисов с кодом 200
         }
     }
 }
