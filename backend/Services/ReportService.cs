@@ -194,7 +194,7 @@ namespace backend.Services
             sanitizedOfficeName = sanitizedOfficeName.Replace(" ", "_");
             var currentDateTime = DateTime.Now;
             var timeString = currentDateTime.ToString("HHmm");
-            var fileName = $"Отчет_{sanitizedOfficeName}_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
+            var fileName = $"Отчет_{sanitizedOfficeName}_1_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
             var filePath = Path.Combine("wwwroot", "resources", "reports", fileName);
 
             using (var workbook = new XSSFWorkbook())
@@ -425,7 +425,7 @@ namespace backend.Services
             sanitizedOfficeName = sanitizedOfficeName.Replace(" ", "_");
             var currentDateTime = DateTime.Now;
             var timeString = currentDateTime.ToString("HHmm");
-            var fileName = $"Отчет_{sanitizedOfficeName}_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
+            var fileName = $"Отчет_{sanitizedOfficeName}_2_{currentDateTime:yyyyMMdd}_{timeString}.xlsx";
             var filePath = Path.Combine("wwwroot", "resources", "reports", fileName);
 
             using (var workbook = new XSSFWorkbook())

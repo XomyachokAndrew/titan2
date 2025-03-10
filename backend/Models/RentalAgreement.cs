@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Данные по аренде офиса
 public partial class RentalAgreement
 {
     public int IdRentalAgreement { get; set; }

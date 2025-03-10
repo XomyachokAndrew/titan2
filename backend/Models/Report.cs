@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Модель для хранения создаваемых отчётов
 public partial class Report
 {
     public int IdReport { get; set; }

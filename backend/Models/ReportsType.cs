@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Типов отчётов
 public partial class ReportsType
 {
     public int IdReportsTypes { get; set; }

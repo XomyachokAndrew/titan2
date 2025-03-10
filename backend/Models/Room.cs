@@ -9,7 +9,7 @@ public partial class Room
 
     public string Name { get; set; } = null!;
 
-    public int TotalWorkspace { get; set; }
+    public int TotalWorkspace { get; set; } // общее количество рабочих мест
 
     public int IdFloor { get; set; }
 
