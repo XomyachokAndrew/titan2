@@ -62,7 +62,7 @@ export class RegistrationComponent implements OnInit {
       patronymic: [null, Validators.required],
       login: [null, Validators.required],
       password: [null, Validators.required],
-      role: [null, Validators.required],
+      isAdmin: [null, Validators.required],
     });
 
     this.isAdmin = this.authService.isAdmin();
@@ -100,7 +100,7 @@ export class RegistrationComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       const registerDto = this.form.value;
-      registerDto.role = registerDto.role === 'Администратор' ? true : false;
+      registerDto.isAdmin = registerDto.isAdmin === 'Администратор' ? true : false;
       this.authService
         .register(registerDto)
         .pipe(
