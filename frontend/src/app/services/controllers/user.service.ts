@@ -46,7 +46,6 @@ export class UserService {
       tap(response => {
         console.log(response.token);
         localStorage.setItem('token', response.token);
-        localStorage.setItem('refreshToken', response.refreshToken);
         this.isAuthenticatedSubject.next(true);
       }),
       catchError(this.handleError<ILoginResponse>('login'))
