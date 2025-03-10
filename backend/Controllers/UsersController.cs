@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="registrationDto">DTO с данными для регистрации пользователя.</param>
         /// <returns>Результат выполнения операции.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto registrationDto)
         {
@@ -53,7 +55,7 @@ namespace backend.Controllers
                 Name = registrationDto.Name,
                 Surname = registrationDto.Surname,
                 Patronymic = registrationDto.Patronymic,
-                IsAdmin = registrationDto.IsAdmin, // По умолчанию, можно изменить по необходимости
+                IsAdmin = registrationDto.IsAdmin ?? false // По умолчанию, можно изменить по необходимости
             };
 
             // Добавляем пользователя в контекст и сохраняем изменения
@@ -71,44 +73,49 @@ namespace backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDto loginDto)
         {
-            // Поиск пользователя по логину
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == loginDto.Login);
-            if (user == null)
+            try
             {
-                return Unauthorized("Неверный логин или пароль.");
-            }
-
-            // Проверка пароля
-            CredentialHasher credentialHasher = new CredentialHasher();
-            if (!credentialHasher.VerifyPassword(loginDto.Password, user.Password, loginDto.Login))
-            {
-                return Unauthorized("Неверный логин или пароль.");
-            }
-
-            // Генерация JWT токена
-            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == loginDto.Login);
+                if (user == null)
                 {
-                    new Claim(ClaimTypes.Name, user.Login),
-                    new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()), // ID пользователя
-                    new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") // Роль пользователя
-                }),
-                Expires = DateTime.UtcNow.AddHours(1), // Установка времени жизни токена
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+                    return Unauthorized("Неверный логин или пароль.");
+                }
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+                CredentialHasher credentialHasher = new CredentialHasher();
+                if (!credentialHasher.VerifyPassword(loginDto.Password, user.Password, loginDto.Login))
+                {
+                    return Unauthorized("Неверный логин или пароль.");
+                }
 
-            // Создание рефреш-токена
-            var refreshToken = Guid.NewGuid().ToString();
-            user.RefreshToken = refreshToken; // Сохраняем рефреш-токен в базе данных
-            await _context.SaveChangesAsync(); // Сохраняем изменения
+                var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
+                var tokenHandler = new JwtSecurityTokenHandler();
 
-            return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = refreshToken });
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                new Claim(ClaimTypes.Name, user.Login),
+                new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+                new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(1),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                // Создание рефреш-токена
+                var refreshToken = Guid.NewGuid().ToString();
+                user.RefreshToken = refreshToken; // Сохраняем рефреш-токен в базе данных
+                await _context.SaveChangesAsync(); // Сохраняем изменения
+
+                return Ok(new { Token = tokenHandler.WriteToken(token), RefreshToken = refreshToken });
+            }
+            catch (Exception ex)
+            {
+                // Логирование ошибки
+                return StatusCode(500, "Внутренняя ошибка сервера.");
+            }
         }
 
         /// <summary>

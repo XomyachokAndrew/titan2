@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
@@ -22,6 +23,7 @@ namespace backend.Controllers
         }
 
         // GET: api/WorkersStatusesTypes
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkersStatusesType>>> GetWorkersStatusesTypes()
         {
@@ -29,6 +31,7 @@ namespace backend.Controllers
         }
 
         // GET: api/WorkersStatusesTypes/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<WorkersStatusesType>> GetWorkersStatusesType(int id)
         {
@@ -44,6 +47,7 @@ namespace backend.Controllers
 
         // PUT: api/WorkersStatusesTypes/5
         // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkersStatusesType(int id, WorkersStatusesType workersStatusesType)
         {
@@ -75,6 +79,7 @@ namespace backend.Controllers
 
         // POST: api/WorkersStatusesTypes
         // To protect from overposting attacks, see http://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<WorkersStatusesType>> PostWorkersStatusesType(WorkersStatusesType workersStatusesType)
         {
@@ -85,6 +90,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/WorkersStatusesTypes/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkersStatusesType(int id)
         {

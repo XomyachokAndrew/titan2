@@ -2,6 +2,7 @@
 using backend.Models;
 using backend.ModelsDto;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
@@ -12,6 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
@@ -36,11 +38,21 @@ namespace backend.Controllers
         {
             try
             {
-                // Генерация отчета и получение пути к файлу
-                var filePath = await _reportService.GenerateRentalCostReportAsync(officeId, reportTypeId, idUser);
+                string filePath = null; // Объявляем переменную filePath вне switch
 
-                // Чтение байтов файла для отправки клиенту
-                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                switch (reportTypeId)
+                {
+                    case 1:
+                        // Генерация финансового отчета и получение пути к файлу
+                        filePath = await _reportService.GenerateRentalCostReportAsync(officeId, reportTypeId, idUser);
+                        break;
+                    case 2:
+                        // Генерация отчета рассадки и получение пути к файлу
+                        filePath = await _reportService.GenerateOfficeReportAsync(officeId, reportTypeId, idUser);
+                        break;
+                    default:
+                        return BadRequest("Неверный идентификатор типа отчета.");
+                }
 
                 // Возвращение файла в ответе
                 return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Path.GetFileName(filePath));
@@ -64,9 +76,13 @@ namespace backend.Controllers
         {
             try
             {
-                // Генерация отчета и получение пути к файлу
                 // Вызов сервиса для генерации отчета, который возвращает путь к созданному файлу
                 var filePath = await _reportService.GenerateOfficeReportAsync(officeId, reportTypeId, idUser);
+                // Проверка, был ли сгенерирован файл
+                if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
+                {
+                    return NotFound("Файл отчета не найден.");
+                }
 
                 // Чтение байтов файла для отправки клиенту
                 // Асинхронное чтение содержимого файла в виде массива байтов

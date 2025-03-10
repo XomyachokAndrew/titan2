@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace backend.Controllers
         /// <param name="id">ID этажа.</param>
         /// <returns>Список комнат на указанном этаже.</returns>
         [HttpGet("floor/{id}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> GetRoomsByFloorId(int id)
         {
             // Поиск комнат по ID этажа
@@ -45,6 +47,7 @@ namespace backend.Controllers
         /// </summary>
         /// <returns>Список всех комнат.</returns>
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             // Получение всех комнат, отсортированных по имени
@@ -56,6 +59,8 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">ID комнаты.</param>
         /// <returns>Информация о комнате.</returns>
+        // GET: api/Rooms/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDto>> GetRoom(int id)
         {
@@ -69,7 +74,6 @@ namespace backend.Controllers
                     IdRoom = r.IdRoom,
                     Name = r.Name,
                     TotalWorkspace = r.TotalWorkspace,
-                    Square = r.Square,
                     FreeWorkspace = r.Workspaces.Count(ws => !ws.StatusesWorkspaces.Any(s =>
                         (s.StartDate <= currentDate) &&
                         (s.EndDate > currentDate || s.EndDate == null) &&
@@ -94,6 +98,8 @@ namespace backend.Controllers
         /// <param name="id">ID комнаты.</param>
         /// <param name="room">Объект комнаты с обновленными данными.</param>
         /// <returns>Результат выполнения операции.</returns>
+        // PUT: api/Rooms/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
@@ -130,6 +136,8 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="room">Объект комнаты для создания.</param>
         /// <returns>Созданная комната.</returns>
+        // POST: api/Rooms
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
@@ -144,6 +152,8 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">ID комнаты.</param>
         /// <returns>Результат выполнения операции.</returns>
+        // DELETE: api/Rooms/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {

@@ -2,12 +2,14 @@
 using backend.Models;
 using backend.ModelsDto;
 using MathNet.Numerics.Statistics.Mcmc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class OfficesController : ControllerBase
@@ -24,6 +26,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">Идентификатор офиса.</param>
         /// <returns>Офис с указанным идентификатором или 404, если не найден.</returns>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Office>> GetOfficeById(int id)
         {

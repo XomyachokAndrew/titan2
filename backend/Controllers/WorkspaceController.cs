@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="roomId">id комнаты.</param>
         /// <returns>Список рабочих мест, связанных с указанной комнатой.</returns>
+        [Authorize]
         [HttpGet("WorkspacesByRoom/{roomId}")]
         public async Task<ActionResult<IEnumerable<CurrentWorkspace>>> GetWorkspacesByRoom(int roomId)
         {
@@ -46,6 +48,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">id рабочего места.</param>
         /// <returns>Информация о рабочем месте.</returns>
+        [Authorize]
         [HttpGet("info/{id}")]
         public async Task<ActionResult<WorkspaceInfoDto>> GetWorkspaceInfo(int id)
         {
@@ -87,6 +90,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">id рабочего места.</param>
         /// <returns>История статусов рабочего места.</returns>
+        [Authorize]
         [HttpGet("history/{id}")]
         public async Task<ActionResult<IEnumerable<HistoryWorkspaceStatus>>> GetWorkspaceHistory(int id)
         {
@@ -109,6 +113,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="statusWorkspaceDto">DTO с данными статуса рабочего места.</param>
         /// <returns>Результат выполнения операции.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("status/add")]
         public async Task<IActionResult> AddStatusWorkspace(StatusWorkspaceDto statusWorkspaceDto)
         {
@@ -154,6 +159,7 @@ namespace backend.Controllers
         /// <param name="id">id статуса рабочего места.</param>
         /// <param name="endDate">Новая дата окончания.</param>
         /// <returns>Результат выполнения операции.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("update-end-date/{id}")]
         public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
         {
@@ -177,6 +183,7 @@ namespace backend.Controllers
         /// <param name="id">id статуса рабочего места.</param>
         /// <param name="updatedStatusDto">DTO с обновленными данными статуса.</param>
         /// <returns>Результат выполнения операции.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateStatus/{id}")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusWorkspaceDto updatedStatusDto)
         {
@@ -237,12 +244,13 @@ namespace backend.Controllers
 
             return NoContent(); // Возврат 204 No Content
         }
-
+        
         /// <summary>
         /// Метод для добавления нового рабочего места.
         /// </summary>
         /// <param name="workspaceDto">DTO с данными рабочего места.</param>
         /// <returns>Результат выполнения операции.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("add")]
         public async Task<IActionResult> AddWorkspace([FromBody] WorkspaceDto workspaceDto)
         {
@@ -270,6 +278,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="id">id рабочего места.</param>
         /// <returns>Результат выполнения операции.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteWorkspace(int id)
         {

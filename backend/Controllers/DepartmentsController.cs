@@ -1,10 +1,12 @@
 ﻿using backend.Data;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
@@ -17,6 +19,7 @@ namespace backend.Controllers
         }
 
         // GET: api/Departments
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
@@ -24,6 +27,7 @@ namespace backend.Controllers
         }
 
         // GET: api/Departments/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Department>> GetDepartment(int id)
         {
@@ -39,6 +43,7 @@ namespace backend.Controllers
 
         // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDepartment(int id, Department department)
         {
@@ -70,6 +75,7 @@ namespace backend.Controllers
 
         // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Department>> PostDepartment(Department department)
         {
@@ -80,6 +86,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/Departments/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {

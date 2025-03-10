@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2025-02-28 10:30:34
+-- Started on 2025-03-07 12:58:22
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -547,45 +547,17 @@ ALTER SEQUENCE offices_management.floors_id_floor_seq OWNED BY offices_managemen
 
 
 --
--- TOC entry 223 (class 1259 OID 16816)
--- Name: users; Type: TABLE; Schema: offices_management; Owner: postgres
---
-
-CREATE TABLE offices_management.users (
-    id_user integer NOT NULL,
-    login character varying(20) NOT NULL,
-    password bytea NOT NULL,
-    name character varying(50) NOT NULL,
-    surname character varying(50) NOT NULL,
-    patronymic character varying(50),
-    is_admin boolean DEFAULT false NOT NULL,
-    refresh_token character varying
-);
-
-
-ALTER TABLE offices_management.users OWNER TO postgres;
-
---
--- TOC entry 256 (class 1259 OID 17398)
+-- TOC entry 257 (class 1259 OID 25671)
 -- Name: history_workspace_statuses; Type: VIEW; Schema: offices_management; Owner: postgres
 --
 
 CREATE VIEW offices_management.history_workspace_statuses AS
  SELECT sw.id_workspace,
-    sw.id_status_workspace,
     sw.start_date,
     sw.end_date,
-    sw.id_workspace_status_type,
-    wst.name AS workspace_status_type_name,
-    sw.id_workspace_reservations_statuses,
-    wrs.name AS workspace_reservation_statuse_name,
-    concat(wo.name, ' ', wo.surname, ' ', COALESCE(wo.patronymic, ''::character varying)) AS worker_full_name,
-    u.name AS user_name
-   FROM ((((offices_management.statuses_workspaces sw
-     LEFT JOIN offices_management.workspace_reservations_statuses wrs ON ((sw.id_workspace_reservations_statuses = wrs.id_workspace_reservations_statuses)))
-     LEFT JOIN offices_management.workspace_statuses_types wst ON ((sw.id_workspace_status_type = wst.id_workspace_status_type)))
-     LEFT JOIN offices_management.workers wo ON ((sw.id_worker = wo.id_worker)))
-     LEFT JOIN offices_management.users u ON ((sw.id_user = u.id_user)));
+    concat(wo.name, ' ', wo.surname, ' ', COALESCE(wo.patronymic, ''::character varying)) AS worker_full_name
+   FROM (offices_management.statuses_workspaces sw
+     LEFT JOIN offices_management.workers wo ON ((sw.id_worker = wo.id_worker)));
 
 
 ALTER VIEW offices_management.history_workspace_statuses OWNER TO postgres;
@@ -980,6 +952,25 @@ ALTER SEQUENCE offices_management.statuses_workspaces_id_status_workspace_seq OW
 
 
 --
+-- TOC entry 223 (class 1259 OID 16816)
+-- Name: users; Type: TABLE; Schema: offices_management; Owner: postgres
+--
+
+CREATE TABLE offices_management.users (
+    id_user integer NOT NULL,
+    login character varying(20) NOT NULL,
+    password bytea NOT NULL,
+    name character varying(50) NOT NULL,
+    surname character varying(50) NOT NULL,
+    patronymic character varying(50),
+    is_admin boolean DEFAULT false NOT NULL,
+    refresh_token character varying
+);
+
+
+ALTER TABLE offices_management.users OWNER TO postgres;
+
+--
 -- TOC entry 222 (class 1259 OID 16815)
 -- Name: users_id_user_seq; Type: SEQUENCE; Schema: offices_management; Owner: postgres
 --
@@ -1019,7 +1010,7 @@ CREATE TABLE offices_management.workers_statuses_types (
 ALTER TABLE offices_management.workers_statuses_types OWNER TO postgres;
 
 --
--- TOC entry 257 (class 1259 OID 25663)
+-- TOC entry 256 (class 1259 OID 25663)
 -- Name: worker_details; Type: VIEW; Schema: offices_management; Owner: postgres
 --
 
@@ -1257,9 +1248,9 @@ INSERT INTO offices_management.departments VALUES (3, 'Отдел разрабо
 --
 
 INSERT INTO offices_management.floors VALUES (1, 1, 15, 1, 250, 4, '1floor.svg');
-INSERT INTO offices_management.floors VALUES (2, 2, 16, 1, 250, 11, '2floor.svg');
 INSERT INTO offices_management.floors VALUES (3, 1, 0, 2, 300, 0, '1floor.svg');
 INSERT INTO offices_management.floors VALUES (4, 2, 0, 2, 300, 0, '2floor.svg');
+INSERT INTO offices_management.floors VALUES (2, 2, 17, 1, 250, 11, '2floor.svg');
 
 
 --
@@ -1268,8 +1259,8 @@ INSERT INTO offices_management.floors VALUES (4, 2, 0, 2, 300, 0, '2floor.svg');
 -- Data for Name: offices; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
-INSERT INTO offices_management.offices VALUES (1, 'Офис 1', 'Улица Ленина, 1', 1, 500, 'office1.jpg', 31, 'Москва', 15);
 INSERT INTO offices_management.offices VALUES (2, 'Офис 2', 'Улица Пушкина, 2', 1, 600, 'office2.jpeg', 0, 'Москва', 0);
+INSERT INTO offices_management.offices VALUES (1, 'Офис 1', 'Улица Ленина, 1', 1, 500, 'office1.jpg', 32, 'Москва', 15);
 
 
 --
@@ -1341,6 +1332,10 @@ INSERT INTO offices_management.reports VALUES (29, 1, '2025-02-27', 'Отчет_
 INSERT INTO offices_management.reports VALUES (30, 1, '2025-02-27', 'Отчет_Офис_1_20250227_1011.xlsx', 1);
 INSERT INTO offices_management.reports VALUES (31, 1, '2025-02-27', 'Отчет_Офис_1_20250227_1012.xlsx', 1);
 INSERT INTO offices_management.reports VALUES (32, 1, '2025-02-27', 'Отчет_Офис_1_20250227_1014.xlsx', 1);
+INSERT INTO offices_management.reports VALUES (33, 1, '2025-02-28', 'Отчет_Офис_1_20250228_1104.xlsx', 1);
+INSERT INTO offices_management.reports VALUES (34, 2, '2025-02-28', 'Отчет_Офис_1_20250228_1105.xlsx', 1);
+INSERT INTO offices_management.reports VALUES (35, 1, '2025-03-05', 'Отчет_Офис_1_20250305_1648.xlsx', 1);
+INSERT INTO offices_management.reports VALUES (36, 2, '2025-03-05', 'Отчет_Офис_1_20250305_1648.xlsx', 1);
 
 
 --
@@ -1350,7 +1345,7 @@ INSERT INTO offices_management.reports VALUES (32, 1, '2025-02-27', 'Отчет_
 --
 
 INSERT INTO offices_management.reports_types OVERRIDING SYSTEM VALUE VALUES (1, 'Финансовый по офису');
-INSERT INTO offices_management.reports_types OVERRIDING SYSTEM VALUE VALUES (2, 'Отчёт по Работникам');
+INSERT INTO offices_management.reports_types OVERRIDING SYSTEM VALUE VALUES (2, 'Отчёт по Рассадке');
 
 
 --
@@ -1370,7 +1365,6 @@ INSERT INTO offices_management.room_status OVERRIDING SYSTEM VALUE VALUES (3, '�
 -- Data for Name: rooms; Type: TABLE DATA; Schema: offices_management; Owner: postgres
 --
 
-INSERT INTO offices_management.rooms VALUES (10, 'Кабинет 205', 4, 2, 50, 1);
 INSERT INTO offices_management.rooms VALUES (1, 'Кабинет 101', 3, 1, 50, 1);
 INSERT INTO offices_management.rooms VALUES (2, 'Кабинет 102', 3, 1, 50, 1);
 INSERT INTO offices_management.rooms VALUES (3, 'Кабинет 103', 3, 1, 50, 1);
@@ -1390,6 +1384,7 @@ INSERT INTO offices_management.rooms VALUES (17, 'Кабинет 402', 0, 4, 60,
 INSERT INTO offices_management.rooms VALUES (18, 'Кабинет 403', 0, 4, 60, 1);
 INSERT INTO offices_management.rooms VALUES (19, 'Кабинет 404', 0, 4, 60, 1);
 INSERT INTO offices_management.rooms VALUES (20, 'Кабинет 405', 0, 4, 60, 1);
+INSERT INTO offices_management.rooms VALUES (10, 'Кабинет 205', 5, 2, 50, 1);
 
 
 --
@@ -1450,6 +1445,7 @@ INSERT INTO offices_management.statuses_workspaces VALUES (66, '2024-10-10', '20
 INSERT INTO offices_management.statuses_workspaces VALUES (11, '2023-01-01', NULL, 11, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (13, '2023-03-01', NULL, 13, NULL, NULL, 1, NULL);
 INSERT INTO offices_management.statuses_workspaces VALUES (69, '2024-10-10', '2025-02-28', 47, NULL, 13, 1, NULL);
+INSERT INTO offices_management.statuses_workspaces VALUES (70, '2023-01-01', NULL, 48, NULL, NULL, 1, 1);
 
 
 --
@@ -1459,6 +1455,8 @@ INSERT INTO offices_management.statuses_workspaces VALUES (69, '2024-10-10', '20
 --
 
 INSERT INTO offices_management.users VALUES (1, 'admin', '\x20c39d2046c2bbc39b6f67c3a320c38420c2acc2a620c3aa2020c2b6c3b22020c2b43620c3a077c3814a6820c389', 'Александр', 'Сидоров', 'Сидорович', true, NULL);
+INSERT INTO offices_management.users VALUES (6, 'user', '\xdbfd133d0ba85d210117caefe2c6caeca886f51fea1bc7a709237ba3cae71e8d', 'user', 'user', NULL, false, 'c36c01cf-c6db-48b7-854a-c9aad32bb375');
+INSERT INTO offices_management.users VALUES (5, 'root', '\x28f76b7b3cd00d7b23de9d794e3c956fabfe946bf5c6ac9f4d329cbee0813e87', 'root', 'root', NULL, true, '6724e8f2-841f-4ae0-9133-1c34adb1d915');
 
 
 --
@@ -1550,6 +1548,7 @@ INSERT INTO offices_management.workspaces VALUES (28, 'Рабочее место
 INSERT INTO offices_management.workspaces VALUES (29, 'Рабочее место 29', 10, false);
 INSERT INTO offices_management.workspaces VALUES (30, 'Рабочее место 30', 10, false);
 INSERT INTO offices_management.workspaces VALUES (47, 'test', 10, false);
+INSERT INTO offices_management.workspaces VALUES (48, 'erg', 10, false);
 
 
 --
@@ -1612,7 +1611,7 @@ SELECT pg_catalog.setval('offices_management.rental_agreements_id_rental_agreeme
 -- Name: reports_id_report_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.reports_id_report_seq', 32, true);
+SELECT pg_catalog.setval('offices_management.reports_id_report_seq', 36, true);
 
 
 --
@@ -1666,7 +1665,7 @@ SELECT pg_catalog.setval('offices_management.statuses_workers_id_status_worker_s
 -- Name: statuses_workspaces_id_status_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_workspace_seq', 69, true);
+SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_workspace_seq', 70, true);
 
 
 --
@@ -1675,7 +1674,7 @@ SELECT pg_catalog.setval('offices_management.statuses_workspaces_id_status_works
 -- Name: users_id_user_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.users_id_user_seq', 1, true);
+SELECT pg_catalog.setval('offices_management.users_id_user_seq', 6, true);
 
 
 --
@@ -1702,7 +1701,7 @@ SELECT pg_catalog.setval('offices_management.workers_statuses_types_id_status_se
 -- Name: workspaces_id_workspace_seq; Type: SEQUENCE SET; Schema: offices_management; Owner: postgres
 --
 
-SELECT pg_catalog.setval('offices_management.workspaces_id_workspace_seq', 47, true);
+SELECT pg_catalog.setval('offices_management.workspaces_id_workspace_seq', 48, true);
 
 
 --
@@ -2124,7 +2123,7 @@ ALTER TABLE ONLY offices_management.workspaces
     ADD CONSTRAINT workspaces_id_room_fkey FOREIGN KEY (id_room) REFERENCES offices_management.rooms(id_room);
 
 
--- Completed on 2025-02-28 10:30:35
+-- Completed on 2025-03-07 12:58:23
 
 --
 -- PostgreSQL database dump complete

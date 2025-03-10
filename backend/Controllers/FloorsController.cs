@@ -1,11 +1,13 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FloorsController : ControllerBase
@@ -78,13 +80,11 @@ namespace backend.Controllers
                 NumberFloor = floor.NumberFloor,
                 SchemeContent = svgContent,
                 IdOffice = floor.IdOffice,
-                Square = floor.Square,
                 Rooms = floor.Rooms.Select(r => new RoomDto
                 {
                     IdRoom = r.IdRoom,
                     Name = r.Name,
                     TotalWorkspace = r.TotalWorkspace,
-                    Square = r.Square
                 }).ToList(),
                 TotalWorkspace = floor.TotalWorkspace,
                 FreeWorkspaces = floor.FreeWorkspaces,

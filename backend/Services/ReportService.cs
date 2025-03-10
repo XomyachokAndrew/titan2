@@ -563,5 +563,3 @@ namespace backend.Services
         }
     }
 }
-
-
