@@ -20,14 +20,14 @@ import { UserService } from '@controllers/user.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+/**
+ * Компонент для авторизации пользователя.
+ * Позволяет вводить логин и пароль, а также обрабатывать процесс авторизации.
+ */
 @Component({
   selector: 'login',
   standalone: true,
-  imports: [
-    TuiButton,
-    ReactiveFormsModule,
-    TuiInputModule,
-  ],
+  imports: [TuiButton, ReactiveFormsModule, TuiInputModule],
   templateUrl: './login.component.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +39,15 @@ export class LoginComponent implements OnInit {
   private alerts = inject(TuiAlertService);
   protected isAdmin: boolean = false;
 
+  /**
+   * Конструктор компонента.
+   *
+   * @param renderer - Сервис для работы с DOM.
+   * @param document - Документ, в котором находится компонент.
+   * @param fb - Сервис для создания форм.
+   * @param authService - Сервис для работы с аутентификацией пользователя.
+   * @param router - Сервис для маршрутизации.
+   */
   constructor(
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
@@ -58,6 +67,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // Установка стилей для документа.
     this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
     this.renderer.setStyle(this.document.documentElement, 'overflow', 'hidden');
     this.renderer.setStyle(this.document.body, 'height', '100%');
@@ -66,6 +76,9 @@ export class LoginComponent implements OnInit {
     this.renderer.setStyle(this.document.documentElement, 'margin', '0');
   }
 
+  /**
+   * Метод, вызываемый при инициализации компонента.
+   */
   ngOnInit(): void {
     this.isAuth = this.authService.isAuthenticated();
     if (this.isAuth) {
@@ -74,6 +87,9 @@ export class LoginComponent implements OnInit {
     this.initializeForm();
   }
 
+  /**
+   * Метод для инициализации формы.
+   */
   initializeForm(): void {
     // Пример инициализации формы
     this.form.patchValue({
@@ -82,16 +98,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  /**
+   * Метод для обработки отправки формы.
+   */
   onSubmit(): void {
     if (!this.form.valid) {
       this.alerts
-        .open(
-          `Поля не заполнены`,
-          {
-            label: 'Авторизация',
-            appearance: 'negative'
-          }
-        )
+        .open(`Поля не заполнены`, {
+          label: 'Авторизация',
+          appearance: 'negative',
+        })
         .subscribe();
       return;
     }
@@ -110,13 +126,10 @@ export class LoginComponent implements OnInit {
         error: error => {
           console.error('Failed', error);
           this.alerts
-            .open(
-              `Логин или пароль введены неправильно`,
-              {
-                label: 'Авторизация',
-                appearance: 'negative'
-              }
-            )
+            .open(`Логин или пароль введены неправильно`, {
+              label: 'Авторизация',
+              appearance: 'negative',
+            })
             .subscribe();
         },
       });

@@ -10,6 +10,9 @@ import {
 } from '@taiga-ui/kit';
 import { TuiNavigation } from '@taiga-ui/layout';
 
+/**
+ * Компонент для отображения подвала (footer) приложения.
+ */
 @Component({
     selector: 'app-footer',
     standalone: true,

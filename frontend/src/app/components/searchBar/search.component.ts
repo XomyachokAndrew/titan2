@@ -11,6 +11,9 @@ import { TuiInputModule } from '@taiga-ui/legacy';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiDataList } from '@taiga-ui/core';
 
+/**
+ * Компонент для выполнения поиска и отображения результатов.
+ */
 @Component({
   selector: 'app-search',
   templateUrl: './search.html',
@@ -24,21 +27,34 @@ import { TuiDataList } from '@taiga-ui/core';
   ],
 })
 export class SearchComponent {
-  searchTerm: string = '';
-  isSearchVisible: boolean = false;
-  searchResults: any[] = [];
+  searchTerm: string = ''; // Поисковый запрос
+  isSearchVisible: boolean = false; // Видимость строки поиска
+  searchResults: any[] = []; // Результаты поиска
   private destroyRef = inject(DestroyRef);
 
+  /**
+   * Конструктор для SearchComponent.
+   * @param searchService - Сервис для выполнения поиска.
+   * @param router - Сервис для навигации по маршрутам.
+   */
   constructor(
     private searchService: SearchService,
     private router: Router
   ) {}
 
+  /**
+   * Метод для переключения видимости строки поиска.
+   * @param event - Событие клика мыши.
+   */
   toggleSearch(event: MouseEvent) {
     event.stopPropagation(); // Остановить всплытие события клика
     this.isSearchVisible = !this.isSearchVisible; // Переключаем видимость строки поиска
   }
 
+  /**
+   * Обработчик клика по документу для скрытия строки поиска.
+   * @param event - Событие клика мыши.
+   */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     // Если клик был вне области поиска, скрываем поле ввода
@@ -48,6 +64,9 @@ export class SearchComponent {
     }
   }
 
+  /**
+   * Метод для обработки изменения ввода в строке поиска.
+   */
   onInputChange() {
     if (this.searchTerm.trim()) {
       this.searchService.searchOffices(this.searchTerm).subscribe({
@@ -64,16 +83,26 @@ export class SearchComponent {
     }
   }
 
+  /**
+   * Диалоговое окно для комнат.
+   */
   private readonly dialogRoom = tuiDialog(ModalComponent, {
     dismissible: true,
     size: 'auto',
   });
 
+  /**
+   * Диалоговое окно для работников.
+   */
   private readonly dialogWorker = tuiDialog(ModalWorkerComponent, {
     dismissible: true,
     size: 'auto',
   });
 
+  /**
+   * Метод для обработки выбора результата поиска.
+   * @param result - Выбранный результат.
+   */
   async selectResult(result: any) {
     this.searchTerm = ''; // Устанавливаем выбранный результат в поле ввода
 
@@ -83,9 +112,7 @@ export class SearchComponent {
     }
     if (result.idWorkspace) {
       console.log(result);
-      
-    }
-    else if (result.idRoom) {
+    } else if (result.idRoom) {
       this.dialogRoom(result)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({

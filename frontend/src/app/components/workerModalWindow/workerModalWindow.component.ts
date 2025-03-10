@@ -35,11 +35,18 @@ import { WorkersStatusesTypeService } from '@controllers/workersStatusesType.ser
 import { IDepartment } from '@models/Department';
 import { IPost } from '@models/Post';
 import { IWorkersStatusesType } from '@models/WorkersStatusesType';
-import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualForOf,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 import { WorkerService } from '@controllers/worker.service';
 import { IStatusWorkerDto, IWorkerDto } from '@models/DTO';
 import { UserService } from '@controllers/user.service';
 
+/**
+ * Компонент для управления данными работника в модальном окне.
+ */
 @Component({
   standalone: true,
   imports: [
@@ -75,19 +82,28 @@ export class ModalWorkerComponent {
   private destroyRef = inject(DestroyRef);
   protected isAdmin: boolean = false;
 
+  /**
+   * Конструктор для ModalWorkerComponent.
+   * @param fb - Сервис FormBuilder для создания элементов управления формы.
+   * @param postService - Сервис для управления должностями.
+   * @param departmentService - Сервис для управления отделами.
+   * @param workerStatusTypeService - Сервис для управления типами статусов работников.
+   * @param workerService - Сервис для управления работниками.
+   * @param authService - Сервис для управления аутентификацией пользователей.
+   */
   constructor(
     private fb: FormBuilder,
     private postService: PostService,
     private departmentService: DepartmentService,
     private workerStatusTypeService: WorkersStatusesTypeService,
     private workerService: WorkerService,
-    private authService: UserService,
+    private authService: UserService
   ) {
     this.form = this.fb.group({
       statusWorkerId: this.data.idStatusWorker,
       workerId: this.data.idWorker, // Работник
       worker: this.data.fullWorkerName,
-      postId: this.data.idPost, // Должнось
+      postId: this.data.idPost, // Должность
       post: this.data.postName,
       departmentId: this.data.idDepartment, // Отдел
       department: this.data.departmentName,
@@ -109,46 +125,58 @@ export class ModalWorkerComponent {
     this.loadWorkerStatusTypes();
 
     this.form.get('status')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedWorkerStatusType = this.workerStatusTypes.find(wst =>
-          wst.name === selectedValue
+      next: selectedValue => {
+        const selectedWorkerStatusType = this.workerStatusTypes.find(
+          wst => wst.name === selectedValue
         );
         if (selectedWorkerStatusType) {
-          this.selectedWorkerStatusTypeId = selectedWorkerStatusType.idStatus
+          this.selectedWorkerStatusTypeId = selectedWorkerStatusType.idStatus;
         }
-      }
+      },
     });
 
     this.form.get('post')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedPost = this.posts.find(post => post.name === selectedValue);
+      next: selectedValue => {
+        const selectedPost = this.posts.find(
+          post => post.name === selectedValue
+        );
         if (selectedPost) {
           this.selectedPostId = selectedPost.idPost;
         }
-      }
+      },
     });
 
     this.form.get('department')?.valueChanges.subscribe({
-      next: (selectedValue) => {
-        const selectedDepartment = this.departments.find(department => department.name === selectedValue);
+      next: selectedValue => {
+        const selectedDepartment = this.departments.find(
+          department => department.name === selectedValue
+        );
         if (selectedDepartment) {
           this.selectedDepartmentId = selectedDepartment.idDepartment;
         }
-      }
+      },
     });
   }
 
-  public readonly context = injectContext<TuiDialogContext<IWorkerDetail, IWorkerDetail>>();
+  /**
+   * Контекст для диалога.
+   */
+  public readonly context =
+    injectContext<TuiDialogContext<IWorkerDetail, IWorkerDetail>>();
 
+  /**
+   * Геттер для данных из контекста.
+   */
   protected get data() {
     return this.context.data;
   }
 
   /**
- * Асинхронный метод, для подгрузки должностей
- */
+   * Асинхронный метод для загрузки должностей.
+   */
   async loadPosts() {
-    this.postService.getPosts()
+    this.postService
+      .getPosts()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -162,15 +190,16 @@ export class ModalWorkerComponent {
             this.posts = data.map(post => ({ ...post }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
   /**
- * Асинхронный метод, для подгрузки отделов
- */
+   * Асинхронный метод для загрузки отделов.
+   */
   async loadDepartments() {
-    this.departmentService.getDepartments()
+    this.departmentService
+      .getDepartments()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -184,32 +213,41 @@ export class ModalWorkerComponent {
             this.departments = data.map(department => ({ ...department }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
   /**
-   * Асинхронный метод, для подгрузки статуса рабочего
+   * Асинхронный метод для загрузки типов статусов работников.
    */
   async loadWorkerStatusTypes() {
-    this.workerStatusTypeService.getWorkersStatusesTypes()
+    this.workerStatusTypeService
+      .getWorkersStatusesTypes()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
-          console.error('Ошибка при обработке данных типа статуса рабочего: ', error);
+          console.error(
+            'Ошибка при обработке данных типа статуса рабочего: ',
+            error
+          );
           return of(null);
         })
       )
       .subscribe({
         next: data => {
           if (data) {
-            this.workerStatusTypes = data.map(workerStatusTypes => ({ ...workerStatusTypes }));
+            this.workerStatusTypes = data.map(workerStatusTypes => ({
+              ...workerStatusTypes,
+            }));
           }
         },
-        error: err => console.error(err)
+        error: err => console.error(err),
       });
   }
 
+  /**
+   * Метод для обработки отправки формы.
+   */
   onSubmit() {
     const formData = this.form.value;
 
@@ -218,32 +256,41 @@ export class ModalWorkerComponent {
       const workerDto: IWorkerDto = {
         name: firstName,
         surname: lastName,
-        patronymic: middleName
-      }
-      this.updatedWorkerName(formData.workerId, workerDto)
+        patronymic: middleName,
+      };
+      this.updatedWorkerName(formData.workerId, workerDto);
     }
 
     if (
-      formData.post == this.initialForm.post
-      && formData.department == this.initialForm.department
-      && formData.status == this.initialForm.status
-    ) { }
-    else {
+      formData.post == this.initialForm.post &&
+      formData.department == this.initialForm.department &&
+      formData.status == this.initialForm.status
+    ) {
+    } else {
       const statusWorker: IStatusWorkerDto = {
         idStatusWorker: formData.statusWorkerId,
         idWorker: formData.workerId,
         idPost: this.selectedPostId ? this.selectedPostId : formData.postId,
-        idDepartment: this.selectedDepartmentId ? this.selectedDepartmentId : formData.departmentId,
+        idDepartment: this.selectedDepartmentId
+          ? this.selectedDepartmentId
+          : formData.departmentId,
         idUser: 1,
-        idStatus: this.selectedWorkerStatusTypeId ? this.selectedWorkerStatusTypeId : formData.statusId,
-      }
+        idStatus: this.selectedWorkerStatusTypeId
+          ? this.selectedWorkerStatusTypeId
+          : formData.statusId,
+      };
 
       this.updatedWorker(statusWorker);
     }
   }
 
+  /**
+   * Метод для обновления статуса работника.
+   * @param statusWorker - Данные статуса работника.
+   */
   updatedWorker(statusWorker: IStatusWorkerDto) {
-    this.workerService.addStatusWorker(statusWorker)
+    this.workerService
+      .addStatusWorker(statusWorker)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -255,12 +302,18 @@ export class ModalWorkerComponent {
         next: () => {
           this.context.completeWith(this.data);
         },
-        error: (error) => console.error(error)
+        error: error => console.error(error),
       });
   }
 
+  /**
+   * Метод для обновления имени работника.
+   * @param id - Идентификатор работника.
+   * @param workerDto - Данные работника.
+   */
   updatedWorkerName(id: number, workerDto: IWorkerDto) {
-    this.workerService.updateWorker(id, workerDto)
+    this.workerService
+      .updateWorker(id, workerDto)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -272,18 +325,26 @@ export class ModalWorkerComponent {
         next: () => {
           this.context.completeWith(this.data);
         },
-        error: (error) => console.error(error)
+        error: error => console.error(error),
       });
   }
 
+  /**
+   * Метод для обработки нажатия кнопки удаления.
+   */
   deleteClick() {
     console.log(this.form.get('workerId')?.value);
 
-    this.deleteWorker(this.form.get('workerId')?.value)
+    this.deleteWorker(this.form.get('workerId')?.value);
   }
 
+  /**
+   * Метод для удаления работника.
+   * @param id - Идентификатор работника.
+   */
   deleteWorker(id: number) {
-    this.workerService.deleteWorker(id)
+    this.workerService
+      .deleteWorker(id)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         catchError(error => {
@@ -295,7 +356,7 @@ export class ModalWorkerComponent {
         next: () => {
           this.context.completeWith(this.data);
         },
-        error: (error) => console.error(error)
+        error: error => console.error(error),
       });
   }
 }

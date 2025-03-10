@@ -22,6 +22,9 @@ import { catchError, of } from 'rxjs';
 import { Location } from '@angular/common'; // <-- Добавлено
 import { Router } from '@angular/router';
 
+/**
+ * Компонент для регистрации нового пользователя.
+ */
 @Component({
   selector: 'registration',
   standalone: true,
@@ -31,11 +34,20 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegistrationComponent implements OnInit {
-  form: FormGroup;
-  private isAuth: boolean = false;
+  form: FormGroup; // Форма регистрации
+  private isAuth: boolean = false; // Статус аутентификации
   private destroyRef = inject(DestroyRef);
-  protected isAdmin: boolean = false;
+  protected isAdmin: boolean = false; // Статус администратора
 
+  /**
+   * Конструктор для RegistrationComponent.
+   * @param renderer - Сервис для работы с DOM.
+   * @param document - Документ DOM.
+   * @param fb - Сервис для создания форм.
+   * @param authService - Сервис для управления аутентификацией.
+   * @param location - Сервис для управления навигацией.
+   * @param router - Сервис для маршрутизации.
+   */
   constructor(
     private renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
@@ -50,7 +62,7 @@ export class RegistrationComponent implements OnInit {
       patronymic: [null, Validators.required],
       login: [null, Validators.required],
       password: [null, Validators.required],
-      role: [null, Validators.required]
+      role: [null, Validators.required],
     });
 
     this.authService.isAdmin();
@@ -67,15 +79,24 @@ export class RegistrationComponent implements OnInit {
     this.renderer.setStyle(this.document.documentElement, 'margin', '0');
   }
 
+  /**
+   * Элементы для выбора роли пользователя.
+   */
   protected items = ['Администратор', 'Гость'];
 
+  /**
+   * Метод, вызываемый при инициализации компонента.
+   */
   ngOnInit(): void {
-    this.isAuth = this.authService.isAuthenticated()
+    this.isAuth = this.authService.isAuthenticated();
     if (!this.isAuth) {
       this.location.back();
     }
   }
 
+  /**
+   * Метод для обработки отправки формы.
+   */
   onSubmit(): void {
     console.log(this.form.value);
 
@@ -92,10 +113,10 @@ export class RegistrationComponent implements OnInit {
           })
         )
         .subscribe({
-          next: (data) => {
+          next: data => {
             this.location.back();
-          }
-        })
+          },
+        });
     }
   }
 }

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+/**
+ * Компонент для отображения индикатора загрузки.
+ */
 @Component({
     selector: 'app-loading',
     standalone: true,

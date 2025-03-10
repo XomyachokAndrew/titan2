@@ -3,74 +3,140 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ICurrentWorkspace } from '../models/CurrentWorkspace';
-import { IWorkspaceInfoDto, IStatusWorkspaceDto, IWorkspaceDto } from '../models/DTO';
+import {
+  IWorkspaceInfoDto,
+  IStatusWorkspaceDto,
+  IWorkspaceDto,
+} from '../models/DTO';
 import { environment } from '../../../environments/environment';
 import { IHistoryWorkspaceStatus } from '../models/HistoryWorkspaceStatus';
 
+/**
+ * Сервис для работы с рабочими пространствами.
+ * Предоставляет методы для получения, создания, обновления и удаления рабочих пространств, а также управления их статусами.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WorkspaceService {
   private url = `${environment.apiUrl}/workspace`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
-  // GET: api/workspaces/room/{roomId}
+  /**
+   * Получает список рабочих пространств по идентификатору комнаты.
+   *
+   * @param roomId - Идентификатор комнаты.
+   * @returns Observable, который возвращает массив рабочих пространств.
+   */
   getWorkspacesByRoom(roomId: number): Observable<ICurrentWorkspace[]> {
     const url = `${this.url}/room/${roomId}`;
-    return this.http.get<ICurrentWorkspace[]>(url)
+    return this.http
+      .get<ICurrentWorkspace[]>(url)
       .pipe(catchError(this.handleError));
   }
 
-  // GET: api/workspaces/info/{id}
+  /**
+   * Получает информацию о рабочем пространстве по его идентификатору.
+   *
+   * @param id - Идентификатор рабочего пространства.
+   * @returns Observable, который возвращает информацию о рабочем пространстве.
+   */
   getWorkspaceInfo(id: number): Observable<IWorkspaceInfoDto> {
     const url = `${this.url}/info/${id}`;
-    return this.http.get<IWorkspaceInfoDto>(url)
+    return this.http
+      .get<IWorkspaceInfoDto>(url)
       .pipe(catchError(this.handleError));
   }
 
-  // GET: api/workspaces/history/{id}
+  /**
+   * Получает историю статусов рабочего пространства по его идентификатору.
+   *
+   * @param id - Идентификатор рабочего пространства.
+   * @returns Observable, который возвращает историю статусов рабочего пространства.
+   */
   getWorkspaceHistory(id: number): Observable<IHistoryWorkspaceStatus[]> {
     const url = `${this.url}/history/${id}`;
-    return this.http.get<IHistoryWorkspaceStatus[]>(url)
+    return this.http
+      .get<IHistoryWorkspaceStatus[]>(url)
       .pipe(catchError(this.handleError));
   }
 
-  // POST: api/workspaces/status/add
+  /**
+   * Добавляет новый статус рабочего пространства.
+   *
+   * @param statusWorkspaceDto - Данные нового статуса рабочего пространства.
+   * @returns Observable, который возвращает результат добавления статуса.
+   */
   addStatusWorkspace(statusWorkspaceDto: IStatusWorkspaceDto): Observable<any> {
     const url = `${this.url}/status/add`;
-    return this.http.post(url, statusWorkspaceDto)
+    return this.http
+      .post(url, statusWorkspaceDto)
       .pipe(catchError(this.handleError));
   }
 
-  // PUT: api/workspaces/update-end-date/{id}
+  /**
+   * Обновляет дату окончания работы рабочего пространства по его идентификатору.
+   *
+   * @param id - Идентификатор рабочего пространства.
+   * @param endDate - Новая дата окончания работы.
+   * @returns Observable, который возвращает результат обновления даты.
+   */
   updateEndDate(id: number, endDate?: string): Observable<any> {
     const url = `${this.url}/update-end-date/${id}`;
-    return this.http.put(url, { endDate })
-      .pipe(catchError(this.handleError));
+    return this.http.put(url, { endDate }).pipe(catchError(this.handleError));
   }
 
-  // PUT: api/workspaces/UpdateStatus/{id}
-  updateStatus(id: number, updatedStatusDto: IStatusWorkspaceDto): Observable<any> {
+  /**
+   * Обновляет статус рабочего пространства по его идентификатору.
+   *
+   * @param id - Идентификатор рабочего пространства.
+   * @param updatedStatusDto - Обновленные данные статуса рабочего пространства.
+   * @returns Observable, который возвращает результат обновления статуса.
+   */
+  updateStatus(
+    id: number,
+    updatedStatusDto: IStatusWorkspaceDto
+  ): Observable<any> {
     const url = `${this.url}/UpdateStatus/${id}`;
-    return this.http.put(url, updatedStatusDto)
+    return this.http
+      .put(url, updatedStatusDto)
       .pipe(catchError(this.handleError));
   }
 
-  // POST: api/workspaces/add
+  /**
+   * Добавляет новое рабочее пространство.
+   *
+   * @param workspaceDto - Данные нового рабочего пространства.
+   * @returns Observable, который возвращает результат добавления рабочего пространства.
+   */
   addWorkspace(workspaceDto: IWorkspaceDto): Observable<any> {
     const url = `${this.url}/add`;
-    return this.http.post(url, workspaceDto)
-      .pipe(catchError(this.handleError));
+    return this.http.post(url, workspaceDto).pipe(catchError(this.handleError));
   }
 
-  // DELETE: api/workspaces/delete/{id}
+  /**
+   * Удаляет рабочее пространство по его идентификатору.
+   *
+   * @param id - Идентификатор рабочего пространства.
+   * @returns Observable, который возвращает результат удаления рабочего пространства.
+   */
   deleteWorkspace(id: number): Observable<any> {
     const url = `${this.url}/delete/${id}`;
-    return this.http.delete(url)
-      .pipe(catchError(this.handleError));
+    return this.http.delete(url).pipe(catchError(this.handleError));
   }
 
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {

@@ -5,47 +5,95 @@ import { catchError } from 'rxjs/operators';
 import { IWorkersStatusesType } from '../models/WorkersStatusesType';
 import { environment } from '../../../environments/environment';
 
+/**
+ * Сервис для работы с типами статусов работников.
+ * Предоставляет методы для получения, создания, обновления и удаления типов статусов работников.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WorkersStatusesTypeService {
   private apiUrl = `${environment.apiUrl}/WorkersStatusesTypes`;
 
-  constructor(private http: HttpClient) { }
+  /**
+   * Конструктор сервиса.
+   *
+   * @param http - Сервис для выполнения HTTP-запросов.
+   */
+  constructor(private http: HttpClient) {}
 
-  // GET: api/workersstatestypes
+  /**
+   * Получает список всех типов статусов работников.
+   *
+   * @returns Observable, который возвращает массив типов статусов работников.
+   */
   getWorkersStatusesTypes(): Observable<IWorkersStatusesType[]> {
-    return this.http.get<IWorkersStatusesType[]>(this.apiUrl)
+    return this.http
+      .get<IWorkersStatusesType[]>(this.apiUrl)
       .pipe(catchError(this.handleError));
   }
 
-  // GET: api/workersstatestypes/{id}
+  /**
+   * Получает информацию о типе статуса работника по его идентификатору.
+   *
+   * @param id - Идентификатор типа статуса работника.
+   * @returns Observable, который возвращает информацию о типе статуса работника.
+   */
   getWorkersStatusesType(id: number): Observable<IWorkersStatusesType> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<IWorkersStatusesType>(url)
+    return this.http
+      .get<IWorkersStatusesType>(url)
       .pipe(catchError(this.handleError));
   }
 
-  // PUT: api/workersstatestypes/{id}
-  updateWorkersStatusesType(id: number, workersStatusesType: IWorkersStatusesType): Observable<any> {
+  /**
+   * Обновляет информацию о типе статуса работника по его идентификатору.
+   *
+   * @param id - Идентификатор типа статуса работника.
+   * @param workersStatusesType - Обновленные данные типа статуса работника.
+   * @returns Observable, который возвращает результат обновления.
+   */
+  updateWorkersStatusesType(
+    id: number,
+    workersStatusesType: IWorkersStatusesType
+  ): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.put(url, workersStatusesType)
+    return this.http
+      .put(url, workersStatusesType)
       .pipe(catchError(this.handleError));
   }
 
-  // POST: api/workersstatestypes
-  createWorkersStatusesType(workersStatusesType: IWorkersStatusesType): Observable<IWorkersStatusesType> {
-    return this.http.post<IWorkersStatusesType>(this.apiUrl, workersStatusesType)
+  /**
+   * Создает новый тип статуса работника.
+   *
+   * @param workersStatusesType - Данные нового типа статуса работника.
+   * @returns Observable, который возвращает созданный тип статуса работника.
+   */
+  createWorkersStatusesType(
+    workersStatusesType: IWorkersStatusesType
+  ): Observable<IWorkersStatusesType> {
+    return this.http
+      .post<IWorkersStatusesType>(this.apiUrl, workersStatusesType)
       .pipe(catchError(this.handleError));
   }
 
-  // DELETE: api/workersstatestypes/{id}
+  /**
+   * Удаляет тип статуса работника по его идентификатору.
+   *
+   * @param id - Идентификатор типа статуса работника.
+   * @returns Observable, который возвращает результат удаления.
+   */
   deleteWorkersStatusesType(id: number): Observable<any> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.delete(url)
-      .pipe(catchError(this.handleError));
+    return this.http.delete(url).pipe(catchError(this.handleError));
   }
 
+  /**
+   * Обработчик ошибок для HTTP-запросов.
+   *
+   * @param error - Объект ошибки.
+   * @returns Observable, который возвращает сообщение об ошибке.
+   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
     if (error.error instanceof ErrorEvent) {
