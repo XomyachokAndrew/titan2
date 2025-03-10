@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ namespace backend.Controllers
 
         // GET: api/rooms/floor/{id}
         [HttpGet("floor/{id}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> GetRoomsByFloorId(int id)
         {
             var rooms = await _context.Rooms
@@ -36,12 +38,14 @@ namespace backend.Controllers
         
         // GET: api/Rooms
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             return await _context.Rooms.OrderBy(r => r.Name).ToListAsync();
         }
 
         // GET: api/Rooms/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDto>> GetRoom(int id)
         {
@@ -75,6 +79,7 @@ namespace backend.Controllers
 
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRoom(int id, Room room)
         {
@@ -106,6 +111,7 @@ namespace backend.Controllers
 
         // POST: api/Rooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
@@ -116,6 +122,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/Rooms/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
