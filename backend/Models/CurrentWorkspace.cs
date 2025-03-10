@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
+// Представление CurrentWorkspace из БД
 public partial class CurrentWorkspace
 {
     public int? IdWorkspace { get; set; }
@@ -23,7 +24,7 @@ public partial class CurrentWorkspace
 
     public int? IdWorkspaceReservationsStatuses { get; set; }
 
-    public string? ReservationStatuseName { get; set; } 
+    public string? ReservationStatuseName { get; set; }
 
     public DateOnly? StartDate { get; set; }
 

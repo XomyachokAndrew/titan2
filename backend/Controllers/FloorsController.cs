@@ -1,11 +1,13 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FloorsController : ControllerBase
@@ -17,7 +19,11 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // GET: api/floors/office/{id}
+        /// <summary>
+        /// Получает список этажей по id офиса.
+        /// </summary>
+        /// <param name="id">Идентификатор офиса.</param>
+        /// <returns>Список этажей, относящихся к указанному офису, или 404, если не найдены.</returns>
         [HttpGet("office/{id}")]
         public async Task<ActionResult<IEnumerable<Floor>>> GetFloorsByOfficeId(int id)
         {
@@ -34,7 +40,11 @@ namespace backend.Controllers
             return Ok(floors);
         }
 
-        // GET: api/floors/{id}
+        /// <summary>
+        /// Получает информацию об этаже и всех кабинетах в нём по id этажа.
+        /// </summary>
+        /// <param name="id">Идентификатор этажа.</param>
+        /// <returns>Информацию об этаже в виде DTO или 404, если этаж не найден.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<FloorDto>> GetFloor(int id)
         {
@@ -70,13 +80,11 @@ namespace backend.Controllers
                 NumberFloor = floor.NumberFloor,
                 SchemeContent = svgContent,
                 IdOffice = floor.IdOffice,
-                Square = floor.Square,
                 Rooms = floor.Rooms.Select(r => new RoomDto
                 {
                     IdRoom = r.IdRoom,
                     Name = r.Name,
                     TotalWorkspace = r.TotalWorkspace,
-                    Square = r.Square
                 }).ToList(),
                 TotalWorkspace = floor.TotalWorkspace,
                 FreeWorkspaces = floor.FreeWorkspaces,

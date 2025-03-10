@@ -1,6 +1,7 @@
 ﻿using backend.Data;
 using backend.Models;
 using backend.ModelsDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,11 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает список всех работников.
+        /// Получает данные всех работников.
         /// </summary>
         /// <returns>Список объектов <see cref="WorkerDetail"/>.</returns>
         // GET: api/Workers
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkerDetail>>> GetWorkers()
         {
@@ -35,11 +37,12 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Получает конкретного работника по ID.
+        /// Получает данные конкретного работника по id.
         /// </summary>
-        /// <param name="id">ID работника для получения.</param>
+        /// <param name="id">id работника для получения.</param>
         /// <returns>Объект <see cref="WorkerDetail"/>, если найден; иначе 404 Not Found.</returns>
         // GET: api/Workers/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<WorkerDetail>> GetWorker(int id)
         {
@@ -60,7 +63,7 @@ namespace backend.Controllers
         /// <param name="id">ID работника для обновления.</param>
         /// <param name="workerDto">Обновленные данные работника.</param>
         /// <returns>204 No Content, если успешно; иначе 400 Bad Request или 404 Not Found.</returns>
-        // Метод для обновления данных работника
+        [Authorize(Roles = "Admin")]
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateWorker(int id, [FromBody] WorkerDto workerDto)
         {
@@ -97,11 +100,11 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Добавляет статус для конкретного работника.
+        /// Добавляет статус для конкретного работника и обновляет время окончания предыдущего статуса.
         /// </summary>
         /// <param name="statusWorkerDto">Данные статуса для добавления.</param>
         /// <returns>200 OK, если успешно; иначе 400 Bad Request.</returns>
-        // Метод для добавления статуса рабочего
+        [Authorize(Roles = "Admin")]
         [HttpPost("status/add")]
         public async Task<IActionResult> AddStatusWorker(StatusWorkerDto statusWorkerDto)
         {
@@ -149,7 +152,7 @@ namespace backend.Controllers
         /// <param name="id">ID статуса для обновления.</param>
         /// <param name="endDate">Новая дата окончания; если null, будет использована текущая дата.</param>
         /// <returns>204 No Content, если успешно; иначе 404 Not Found.</returns>
-        // Метод для обновления даты окончания статуса рабочего
+        [Authorize(Roles = "Admin")]
         [HttpPut("update-end-date/{id}")]
         public async Task<IActionResult> UpdateEndDate(int id, DateOnly? endDate = null)
         {
@@ -173,7 +176,7 @@ namespace backend.Controllers
         /// <param name="id">ID статуса для обновления.</param>
         /// <param name="updatedStatusDto">Обновленные данные статуса.</param>
         /// <returns>204 No Content, если успешно; иначе 400 Bad Request или 404 Not Found.</returns>
-        // Метод для обновления статуса рабочего
+        [Authorize(Roles = "Admin")]
         [HttpPut("status/update/{id}")]
         public async Task<IActionResult> UpdateStatus(int id, [FromBody] StatusWorkerDto updatedStatusDto)
         {
@@ -240,7 +243,7 @@ namespace backend.Controllers
         /// </summary>
         /// <param name="workerDto">Данные работника для добавления.</param>
         /// <returns>200 OK, если успешно; иначе 400 Bad Request.</returns>
-        // Метод для добавления рабочего
+        [Authorize(Roles = "Admin")]
         [HttpPost("add")]
         public async Task<IActionResult> AddWorker([FromBody] WorkerDto workerDto)
         {
@@ -270,6 +273,7 @@ namespace backend.Controllers
         /// <param name="id">ID работника для удаления.</param>
         /// <returns>204 No Content, если успешно; иначе 404 Not Found.</returns>
         // DELETE: api/Workers/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorker(int id)
         {

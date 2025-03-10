@@ -394,7 +394,7 @@ namespace backend.Services
         }
 
         /// <summary>
-        /// Сохраняет отчет в базе данных.
+        /// Сохраняет финансовый отчет в базе данных.
         /// </summary>
         /// <param name="reportTypeId">Идентификатор типа отчета.</param>
         /// <param name="idUser">Идентификатор пользователя, создавшего отчет.</param>
@@ -413,8 +413,14 @@ namespace backend.Services
             await _context.SaveChangesAsync(); // Сохраняем изменения в базе данных
         }
 
+        /// <summary>
+        /// Создает отчет рассадки в формате Excel для указанного офиса.
+        /// </summary>
+        /// <param name="office">Офис, для которого создается отчет.</param>
+        /// <returns>Путь к созданному файлу отчета.</returns>
         private async Task<string> CreateExcelReportAsync(Office office)
         {
+            // Удаляем недопустимые символы из имени офиса и заменяем пробелы на подчеркивания
             var sanitizedOfficeName = Regex.Replace(office.OfficeName, @"[<>:""/\\|?*]", "");
             sanitizedOfficeName = sanitizedOfficeName.Replace(" ", "_");
             var currentDateTime = DateTime.Now;
@@ -524,6 +530,7 @@ namespace backend.Services
                     }
                 }
 
+                // Запись созданного отчета в файл
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
                 {
                     await Task.Run(() => workbook.Write(fileStream)); // Асинхронное выполнение записи в файл
@@ -533,20 +540,26 @@ namespace backend.Services
             return filePath; // Возвращаем путь к созданному файлу
         }
 
+        /// <summary>
+        /// Генерирует отчет рассадки для указанного офиса и сохраняет его в базе данных.
+        /// </summary>
+        /// <param name="officeId">Идентификатор офиса.</param>
+        /// <param name="reportTypeId">Идентификатор типа отчета.</param>
+        /// <param name="idUser">Идентификатор пользователя, запрашивающего отчет.</param>
+        /// <returns>Путь к созданному файлу отчета.</returns>
+        /// <exception cref="InvalidOperationException">Выбрасывается, если офис не найден.</exception>
         public async Task<string> GenerateOfficeReportAsync(int officeId, int reportTypeId, int idUser)
         {
-            var office = await GetOfficeWithDetailsAsync(officeId);
+            var office = await GetOfficeWithDetailsAsync(officeId); // Получаем офис с деталями
             if (office == null)
             {
-                throw new InvalidOperationException("Офис не найден.");
+                throw new InvalidOperationException("Офис не найден."); // Выбрасываем исключение, если офис не найден
             }
 
-            var filePath = await CreateExcelReportAsync(office);
-            await SaveReportToDatabaseAsync(reportTypeId, idUser, filePath);
+            var filePath = await CreateExcelReportAsync(office); // Создаем отчет
+            await SaveReportToDatabaseAsync(reportTypeId, idUser, filePath); // Сохраняем отчет в базе данных
 
             return filePath; // Возвращаем путь к файлу
         }
     }
 }
-
-
