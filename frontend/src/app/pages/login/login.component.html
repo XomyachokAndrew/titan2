@@ -1,0 +1,24 @@
+<div class="container">
+    <img class="back" src="public\IKO.svg"/>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" method="post">
+    <div class="H2 MP-SB title">Авторизация</div>
+    <tui-input class="H2 MP-SB custom-input" formControlName="login">
+      Логин:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="password">
+      Пароль:
+      <input tuiTextfieldLegacy type="password" />
+    </tui-input>
+    <!-- <input type="text" placeholder="Логин"> -->
+    <!-- <input type="password" placeholder="Пароль"> -->
+    <button
+      size="m"
+      tuiButton
+      (click)="onSubmit()"
+      type="button"
+      class="button">
+      <div class="P MP-SB button-text">Войти</div>
+    </button>
+  </form>
+</div>

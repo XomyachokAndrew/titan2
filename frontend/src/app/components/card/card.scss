@@ -1,0 +1,97 @@
+@import '../../styles/font.css';
+
+[tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm]) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.card {
+    display: flex;
+    width: 20.25rem;
+    height: 30.75rem;
+    padding: 2rem 1.625rem;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 1.875rem;
+    background: #3379B8;
+    box-shadow: 4px 4px 8px 0px rgba(11, 45, 65, 0.21);
+    flex: 1;
+    --t-space: 1rem;
+    --tui-font-heading-5: 2.5rem / 1.75rem "MyriadPro-r";
+    --tui-text-primary: white;
+    --tui-text-action: white;
+    --tui-border-normal: white;
+
+    .scroll-card {
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        padding-bottom: 15px;
+
+        .name {
+            color: white;
+        }
+    }
+
+    .card-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8125rem;
+
+        hr {
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+            width: 11.5rem;
+            height: 0.0625rem;
+            background: rgba(255, 255, 255, 0.30);
+            margin-left: 0;
+        }
+
+        .card-info {
+            font-style: normal;
+            line-height: normal;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            align-self: stretch;
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+
+        img {
+            margin-bottom: 1rem;
+            height: 9.625rem;
+            align-self: stretch;
+            border-radius: 1.875rem;
+            background: lightgray 50% / cover no-repeat;
+
+            filter: blur(0px);
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+}
+
+[tuiCardLarge][data-space]:not([tuiCell], [tuiHeader], [tuiForm])>:last-child:not([tuiCell]) {
+    margin-top: 0;
+}

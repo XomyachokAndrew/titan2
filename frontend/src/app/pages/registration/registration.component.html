@@ -1,0 +1,33 @@
+<div class="container">
+  <img class="back" src="public\IKO.svg"/>
+  <form [formGroup]="form" method="post">
+    <div class="H2 MP-SB title">Регистрация</div>
+    <tui-input class="H2 MP-SB custom-input" formControlName="surname">
+      Фамилия:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="name">
+      Имя:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="patronymic">
+      Отчество:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="login">
+      Логин:
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-input class="H2 MP-SB custom-input" formControlName="password">
+      Пароль:
+      <input tuiTextfieldLegacy type="password" />
+    </tui-input>
+    <tui-select class="H2 MP-SB custom-input" formControlName="isAdmin">
+      Роль:
+      <tui-data-list-wrapper *tuiDataList [items]="items" />
+    </tui-select>
+    <button size="m" (click)="onSubmit()" tuiButton type="button" class="button">
+      <div class="P2 MP-SB button-text">Создать</div>
+    </button>
+  </form>
+</div>

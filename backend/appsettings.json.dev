@@ -1,0 +1,8 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=db;Port=5432;Database=offices_management;Username=postgres;Password=root"
+  },
+  "JwtSettings": {
+    "SecretKey": "aB3dE_fG7hI8jK9lMnO_pQ1rS2tU3vW4xY5zA6bC7dE8fG9hI0jK1lM"
+  }
+}

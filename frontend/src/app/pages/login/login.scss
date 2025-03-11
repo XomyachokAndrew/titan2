@@ -1,0 +1,133 @@
+@import '../../styles/font.css';
+
+svg {
+  position: absolute;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.custom-input {
+  width: 22rem;
+  --tui-font-text-m: normal 1rem / 0.5rem 'MyriadPro-sb';
+  --tui-radius-m: 8rem;
+  --tui-text-secondary: black;
+  --tui-background-accent-1: black;
+  --tui-background-base: white;
+  --tui-padding-l: 2rem;
+}
+
+[data-size='m']._focused[_nghost-ng-c522594058]:not(._label-outside)
+  .t-placeholder[_ngcontent-ng-c522594058],
+[data-size='l']._focused[_nghost-ng-c522594058]:not(._label-outside)
+  .t-placeholder[_ngcontent-ng-c522594058] {
+  color: #000000;
+}
+
+.t-placeholder_raised {
+  transform: translateY(-1rem);
+}
+
+form {
+  position: absolute;
+  width: 20rem;
+  padding: 6.875rem 3.75rem;
+  background: rgba(53, 53, 53, 0.68);
+  border-radius: 6.1875rem;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 70px;
+  max-width: 30rem;
+  width: 70%;
+  max-height: 40rem;
+  height: 35%;
+}
+
+.title {
+  color: white;
+  word-wrap: break-word;
+}
+
+.label {
+  color: black;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  word-wrap: break-word;
+}
+
+.button {
+  border: none;
+  width: 12.125rem;
+  padding: 1.5625rem 5.9375rem;
+  background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12.15px;
+}
+
+.button:hover {
+  cursor: pointer;
+  transition: 0.3s;
+  background: rgb(214, 212, 212);
+}
+
+.button-text {
+  color: black;
+  word-wrap: break-word;
+}
+
+.back {
+  height: 200%;
+  width: 200%;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 2rem;
+    border-radius: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  input {
+    font-size: 0.8rem;
+  }
+
+  .button-text {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  input {
+    font-size: 0.6rem;
+  }
+
+  .button-text {
+    font-size: 2.5rem;
+  }
+}

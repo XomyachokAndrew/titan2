@@ -1,0 +1,27 @@
+@if (!loginPage) {
+<header class="header" [ngClass]="{ 'header-hidden': !isHeaderVisible }" tuiNavigationHeader>
+    <a href="/" class="logo">
+        <img src="public/titan2.svg" alt="" srcset="">
+    </a>
+    <div class="header-buttons">
+        <a href="workers" class="H3 MP-R header-button">Все сотрудники</a>
+        |
+        <a href="worker/create" class="H3 MP-R header-button">Создать сотрудника</a>
+    </div>
+    <div class="search-container">
+        <app-search class="search" />
+    </div>
+    <button (click)="authOrLogout()" style="margin-right: 20px;" class="P MP-R admin-button">
+        @if(isAuthenticated){
+        <tui-icon icon="@tui.user" />
+        <p>Выйти</p>
+        }
+        @else {
+        <p>Войти</p>
+        }
+    </button>
+    @if (isAuthenticated && role === 'Admin') {
+    <a class="P MP-R admin-button" href="/registration">Регистрация</a>
+    }
+</header>
+}

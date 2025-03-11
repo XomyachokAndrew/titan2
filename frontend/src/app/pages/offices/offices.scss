@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100rem;
+    margin: 5rem 12.5rem;
+    gap: 4.12rem;
+    /* Расстояние между кнопками */
+    justify-content: center;
+    /* Выравнивание по горизонтали */
+    align-items: flex-start;
+    /* Выравнивание по вертикали */
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}

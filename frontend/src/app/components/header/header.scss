@@ -1,0 +1,136 @@
+@import '../../styles/font.css';
+
+tui-icon {
+    --t-icon: url('../../assets/account.svg');
+}
+
+a {
+    text-decoration: none;
+}
+
+header[tuiNavigationHeader][tuiNavigationHeader] {
+    background: linear-gradient(90deg, #0057A6 60.5%, #002240 100%);
+    font-family: 'RockStar-eb';
+    font-size: 30pt;
+    height: 6rem;
+    padding: 0 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+[tuiNavigationLogo] {
+    width: 26rem;
+    display: inline-block;
+    white-space: normal;
+    line-height: 1;
+    word-wrap: break-word;
+}
+
+[tuiAppearance][data-appearance=primary] {
+    --t-bg: white;
+    background: white;
+    color: black;
+}
+
+header[tuiNavigationHeader][tuiNavigationHeader]:before {
+    content: '';
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    block-size: 0rem;
+    pointer-events: none;
+    box-shadow: 0 0rem;
+    border-radius: 0;
+}
+
+[tuiNavigationLogo] {
+    overflow: visible;
+}
+
+.admin-button {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 0.001rem 1.75rem;
+    border-radius: 8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+    height: 2.5rem;
+}
+
+.admin-button:hover {
+    background-color: #97999b;
+}
+
+.admin-button tui-icon {
+    margin-right: 8px;
+}
+
+tui-icon:after,
+tui-icon[tuiIcons]:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    content: "";
+    display: block;
+    -webkit-mask: var(--t-icon) no-repeat center / contain;
+    mask: var(--t-icon) no-repeat center / contain;
+    background: currentColor;
+}
+
+.center-text {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.search-container {
+    flex: 1; /* Занимает оставшееся пространство */
+    display: flex;
+    justify-content: right; /* Центрирует элемент поиска по горизонтали */
+    padding-right: 2rem;
+}
+
+.logo {
+    justify-content: left;
+    width: 20rem;
+    padding-right: 20rem;
+
+    svg {
+        width: 18rem;
+        height: 43px;
+    }
+}
+
+.header-buttons {
+    display: inline-block;
+    justify-content: center;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.header-button {
+    color: #FFF;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    background: none;
+    transition: 0.3s;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.header-button:hover {
+    color: rgb(195, 194, 199);
+}
+
+.header-hidden {
+    transform: translateY(-100%);
+  }

@@ -1,0 +1,25 @@
+<div class="MP-R card" tuiAppearance="floating" tuiCardLarge>
+    <div class="scroll-card">
+        <div class="MP-R card-header" tuiHeader>
+            <span class="H1 MP-R name" tuiTitle>{{data.officeName}}</span>
+        </div>
+
+        <section class="card-container">
+            <div class="P MP-R card-info address">
+                {{data.city}}<br>
+                <span>{{data.address}}</span>
+            </div>
+            <hr>
+            <div class="P MP-R card-info">Свободных мест: {{data.freeWorkspaces}} /
+                {{data.totalWorkspace}}</div>
+            <div class="P MP-R card-info">Плотность посадки: {{data.density}} м²</div>
+        </section>
+    </div>
+
+    <div class="P MP-R card-footer">
+        <img src="{{data.imageUrl}}" alt="">
+        <a (click)="goToOffice(id())" iconEnd="@tui.chevron-right" appearance="outline" size="xl" tuiButton>
+            К офису
+        </a>
+    </div>
+</div>
